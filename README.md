@@ -5,14 +5,15 @@ tnt.js是一个基于javascript的编程语言 目标是兼容javascript的功�
 
 #### 样例
 
-```
+```html
 <html>
 <head>
 <script scr="tnt.min.js"></script>
 </head>
-<body><div id="boom">
+<body>
+<tnt>
 print("<h5>Hello world!</h5>");
-<>
+</tnt>
 </div></body>
 </html>
 ```
