@@ -85,12 +85,10 @@ function tnt(code){
 function v()
 {
     let val = document.getElementsByTagName("v");
-    let vnd = 0;
     for(va in val){
-        let re = tnt_value(va);
-        document.write(val[vnd].innerHTML)
-        // val[vnd].innerHTML = re;
-        // vnd = vnd + 1;
+        let re = tnt_value(va.innerHTML);
+        // document.write(val[vnd].innerHTML)
+        va.innerHTML = re;
     }
 }
 
