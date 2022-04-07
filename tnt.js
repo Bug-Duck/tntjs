@@ -14,6 +14,31 @@ var TNTSymbolTable = {
     }
 }
 
+// startSymbol and endSymbol are strings that determines the start symbol and the end symbol. For example,
+// if you want to match parentheses "()", then the start symbol will be "(" and the end symbol will be ")".
+// data is the data array like ["(", "a", "(", "b", ..., ")", ")"]. And startIndex is the index you want to
+// match.
+function TNTMatchStartSymbol(startSymbol, endSymbol, data, startIndex) {
+    let stack = [];
+    stack.push(1);
+    for (let i = startIndex + 1; i < data.length; i++) {
+        // Iterate each data element.
+        if (data[i] == startSymbol) {
+            // If it's the start symbol, then push a flag into the stack.
+            stack.push(1);
+        }
+        if (data[i] == endSymbol) {
+            // If it's the end symbol, then pop a flag from the stack.
+            stack.pop();
+            if (stack.length == 0) {
+                // If the stack is empty after popping the element
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
 // This function evaluates the value of the expression.
 function TNTValueProcess(reg) {
     // Regular Expression
