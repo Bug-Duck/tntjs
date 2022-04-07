@@ -1,114 +1,117 @@
-// tnt.js
 /* 
-	bugduck Organization
-	v-0.1
-	time:2022
-*/
-var tnt_data_house_ = {
-    test:444,
-    log: function (x)
-    {
+ * BugDuck Organization
+ * v0.2
+ * File: tnt.js
+ * Last Update Time: 04/07/2022
+ * License: GPL v2.0
+ * All right reserved.
+ */
+
+var TNTSymbolTable = {
+    test: 444,
+    log: function (x) {
 
     }
 }
 
-function tnt_value(reg)
-{
-    //此函数用于运算表达式中的值,以下是示例,此函数可能是使用频率最高的函数
-    /* 输入 "\"Hello\""
-        输出 "Hello"
-        输入 "666"
-        输出 666
-        输入 变量x
-        输出 x的值
-        输入 变量x == 3
-        输出 true或者false
-    */
-   //正则表达式
+// This function evaluates the value of the expression.
+function TNTValueProcess(reg) {
+    // Regular Expression
     let isstring = /(\"|\').+(\"|\')/;
     let isnumber = /[0-9]+/;
     let isbool = /(true|false)/
     let isvar = /[_A-z0-9]/
-    if(isnumber.test(reg)){//数字类型处理 
+    if (isnumber.test(reg)) {
+        // Number literal processing
         return Number(reg)
-    }
-    else if(isstring.test(reg)){
-        //预留
-    }
-    else if (isbool.test(reg))
-    {
+    } else if (isstring.test(reg)) {
+        // TODO: Implement the string literal processing
+    } else if (isbool.test(reg)) {
+        // Boolean literal processing
         return Boolean(reg)
-    }
-    else if (isvar.test(reg)){
-        return tnt_data_house_[reg]
+    } else if (isvar.test(reg)) {
+        // Variable processing
+        return TNTSymbolTable[reg]
     }
 }
 
-function boom(codeList)
-{
-    for(code in codeList)
-    {
-        // ...arguments.length.toFixed.apply.call.bind.call.bind.call.bind.call.
-        if(/([A-z0-9])+ ?= ?.+/.test(code)){//变量赋值语句
+function TNTBoom(codeList) {
+    for (code in codeList) {
+        if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
             let v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             let name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code))
-            tnt_data_house_[name] = v
-        }
-        else if (/.+\(.+\)/.test(code)){//函数解释
+            TNTSymbolTable[name] = v
+        } else if (/.+\(.+\)/.test(code)) { // Interpreting function content
             let name = /^(\(\))/.exec(code);
-            if(tnt_data_house_[name][type] == 'javascript_function'){
-                
+            if (TNTSymbolTable[name][type] == 'javascript_function') {
+                // TODO: Javascript function implementation
+            } else if (TNTSymbolTable[name][type] == 'tnt_function') {
+                TNTBoom(TNTSymbolTable.name.type.code) // Recursion
             }
-            else if (tnt_data_house_[name][type] == 'tnt_function'){
-                boom(tnt_data_house_.name.type.code) //递归
-            }
-    }
-}
-
-function tnt(code){
-    var word="";
-	var linecode="";
-	var linecodes=[];
-	var isinstr=false;
-	for(word in code){
-		if (isinstr){
-			if (word == "\""){
-				""
-			}
-			else{
-				if(word == ";"){
-					linecodes.unshift(linecode);
-				}
-				else if(word=="\""){
-					isinstr = true
-				}
-				else{
-					linecode = linecode + word
-				}
-			}
         }
-	}
+    }
 }
 
-//这里处理了html中的v标签 将他们替换成值
-function v()
-{
+// This function splits code with ";"
+function TNTCodeSplit(code) {
+    let ignoreNext = false;
+    let stringIgnoreNext = false;
+    let buffer = [];
+    let currentString = "";
+    // Iterate every charaters in the code
+    for (let i of code) {
+        // Next will be ignored (In this case, means in a string.)
+        if (ignoreNext) {
+            // Add the current char to the string.
+            currentString += i;
+            if (i == '\\') {
+                // Escaping characters
+                stringIgnoreNext = true;
+                continue;
+            }
+            if (i == '"' && !stringIgnoreNext) {
+                // End the string.
+                ignoreNext = false;
+            }
+            if (stringIgnoreNext) {
+                stringIgnoreNext = false;
+            }
+            continue;
+        } else {
+            if (i == ';') {
+                buffer.push(currentString);
+                currentString = "";
+            } else if (i == '"') {
+                currentString += i;
+                ignoreNext = true;
+            } else {
+                currentString += i;
+            }
+        }
+    }
+    if (currentString != "") {
+        buffer.push(currentString);
+        currentString = "";
+    }
+    return buffer;
+}
+
+// Processes the <v></v> tag and replaces them into values
+function TNTValueTagProcessing() {
     let val = document.getElementsByTagName("v");
-    for(va in val){
-        // let re = tnt_value(va.innerHTML);
-        let re = tnt_data_house_[va.innerHTML];
+    for (va in val) {
+        let re = TNTSymbolTable[va.innerHTML];
         document.write(re)
-        // va.innerHTML = re;
     }
 }
 
-function tntag(){
+// Processes the <tnt> tag.
+function TNTTagProcessing() {
     tnt_codes = document.getElementsByTagName("tnt");
-    for(tnt_code in tnt_codes)
-    {
-        boom(tnt(tnt_code.innerHTML));
+    for (tnt_code in tnt_codes) {
+        TNTBoom(TNTCodeSplit(tnt_code.innerHTML));
     }
 }
 
-v();
-tntag();
+TNTValueTagProcessing();
+TNTTagProcessing();
