@@ -48,6 +48,13 @@ function TNTBoom(codeList) {
             } else if (TNTSymbolTable[name][type] == 'tnt_function') {
                 TNTBoom(TNTSymbolTable.name.type.code) // Recursion
             }
+        } else if (/(for|while)/.test(code)) {
+            if (/while/.test(code)) {
+                let YesorNo = TNTValueProcess(/([^while ]).+/.exec(code))
+                if (YesorNo) {
+                    
+                }
+            }
         }
     }
 }
