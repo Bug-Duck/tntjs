@@ -28,6 +28,7 @@ function tnt_value(reg)
     let isstring = /(\"|\').+(\"|\')/;
     let isnumber = /[0-9]+/;
     let isbool = /(true|false)/
+    let isvar = /[_A-z0-9]/
     if(isnumber.test(reg)){//数字类型处理 
         return Number(reg)
     }
@@ -38,7 +39,7 @@ function tnt_value(reg)
     {
         return Boolean(reg)
     }
-    else{
+    else if (isvar.test(reg)){
         return tnt_data_house_[reg]
     }
 }
@@ -53,6 +54,14 @@ function boom(codeList)
             let name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code))
             tnt_data_house_[name] = v
         }
+        else if (/.+\(.+\)/.test(code)){//函数解释
+            let name = /^(\(\))/.exec(code);
+            if(tnt_data_house_[name][type] == 'javascript_function'){
+                
+            }
+            else if (tnt_data_house_[name][type] == 'tnt_function'){
+                boom(tnt_data_house_.name.type.code) //递归
+            }
     }
 }
 
@@ -86,9 +95,10 @@ function v()
 {
     let val = document.getElementsByTagName("v");
     for(va in val){
-        let re = tnt_value(va.innerHTML);
-        // document.write(val[vnd].innerHTML)
-        va.innerHTML = re;
+        // let re = tnt_value(va.innerHTML);
+        let re = tnt_data_house_[va.innerHTML];
+        document.write(re)
+        // va.innerHTML = re;
     }
 }
 
@@ -101,4 +111,4 @@ function tntag(){
 }
 
 v();
-tntag()
+tntag();
