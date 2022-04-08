@@ -122,7 +122,7 @@ function TNTCodeSplit(code) {
             }
         }
     }
-    if (currentString != "") {
+    if (currentString !== "") {
         buffer.push(currentString);
         currentString = "";
     }
