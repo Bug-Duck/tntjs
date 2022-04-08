@@ -7,7 +7,7 @@
  * All right reserved.
  */
 
-var TNTSymbolTable = {
+let TNTSymbolTable = {
     test: 444,
     log: function (x) {
     }
@@ -18,7 +18,7 @@ var TNTSymbolTable = {
 // data is the data array like ["(", "a", "(", "b", ..., ")", ")"]. And startIndex is the index you want to
 // match.
 function TNTMatchStartSymbol(startSymbol, endSymbol, data, startIndex) {
-    let stack = [];
+    const stack = [];
     stack.push(1);
     for (let i = startIndex + 1; i < data.length; i++) {
         // Iterate each data element.
@@ -63,11 +63,11 @@ function TNTBoom(codeList) {
     let index = 0;
     for (let code in codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
-            let v = /^(([A-z0-9])+ ?= ?)/.exec(code);
-            let name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
+            const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
+            const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
             TNTSymbolTable[name] = v;
         } else if (/.+\(.+\)/.test(code)) { // Interpreting function content
-            let name = /^(\(\))/.exec(code);
+            const name = /^(\(\))/.exec(code);
             if (TNTSymbolTable[name]['type'] === 'javascript_function') {
                 // TODO: Javascript function implementation
             } else if (TNTSymbolTable[name]['type'] === 'tnt_function') {
@@ -75,7 +75,7 @@ function TNTBoom(codeList) {
             }
         } else if (/(for|while)/.test(code)) {
             if (/while/.test(code)) {
-                let YesorNo = TNTValueProcess(/([^while ]).+/.exec(code));
+                const YesorNo = TNTValueProcess(/([^while ]).+/.exec(code));
                 if (YesorNo) {
                     TNTMatchStartSymbol(code,"endwhile",codeList,index);
                 }
@@ -89,10 +89,10 @@ function TNTBoom(codeList) {
 function TNTCodeSplit(code) {
     let ignoreNext = false;
     let stringIgnoreNext = false;
-    let buffer = [];
+    const buffer = [];
     let currentString = "";
     // Iterate every charaters in the code
-    for (let i of code) {
+    for (const i of code) {
         // Next will be ignored (In this case, means in a string.)
         if (ignoreNext) {
             // Add the current char to the string.
@@ -131,18 +131,18 @@ function TNTCodeSplit(code) {
 
 // Processes the <v></v> tag and replaces them into values
 function TNTValueTagProcessing() {
-    let val = document.getElementsByTagName("v");
-    for (let va in val) {
-        let re = TNTSymbolTable[va.innerHTML];
+    const val = document.getElementsByTagName("v");
+    for (const va in val) {
+        const re = TNTSymbolTable[va.innerHTML];
         document.write(re);
     }
 }
 
 // Processes the <tnt> tag.
 function TNTTagProcessing() {
-    let tnt_codes = document.getElementsByTagName("tnt");
-    for (let tnt_code in tnt_codes) {
-        TNTBoom(TNTCodeSplit(tnt_code.innerHTML));
+    const tntCodes = document.getElementsByTagName("tnt");
+    for (const tntCode in tntCodes) {
+        TNTBoom(TNTCodeSplit(tntCode.innerHTML));
     }
 }
 
