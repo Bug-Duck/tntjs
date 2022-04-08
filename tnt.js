@@ -10,9 +10,8 @@
 var TNTSymbolTable = {
     test: 444,
     log: function (x) {
-
     }
-}
+};
 
 // startSymbol and endSymbol are strings that determines the start symbol and the end symbol. For example,
 // if you want to match parentheses "()", then the start symbol will be "(" and the end symbol will be ")".
@@ -42,21 +41,21 @@ function TNTMatchStartSymbol(startSymbol, endSymbol, data, startIndex) {
 // This function evaluates the value of the expression.
 function TNTValueProcess(reg) {
     // Regular Expression
-    let isstring = /(\"|\').+(\"|\')/;
-    let isnumber = /[0-9]+/;
-    let isbool = /(true|false)/
-    let isvar = /[_A-z0-9]/
+    const isstring = /(\"|\').+(\"|\')/;
+    const isnumber = /[0-9]+/;
+    const isbool = /(true|false)/;
+    const isvar = /[_A-z0-9]/;
     if (isnumber.test(reg)) {
         // Number literal processing
-        return Number(reg)
+        return Number(reg);
     } else if (isstring.test(reg)) {
         // TODO: Implement the string literal processing
     } else if (isbool.test(reg)) {
         // Boolean literal processing
-        return Boolean(reg)
+        return Boolean(reg);
     } else if (isvar.test(reg)) {
         // Variable processing
-        return TNTSymbolTable[reg]
+        return TNTSymbolTable[reg];
     }
 }
 
@@ -65,18 +64,18 @@ function TNTBoom(codeList) {
     for (let code in codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
             let v = /^(([A-z0-9])+ ?= ?)/.exec(code);
-            let name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code))
-            TNTSymbolTable[name] = v
+            let name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
+            TNTSymbolTable[name] = v;
         } else if (/.+\(.+\)/.test(code)) { // Interpreting function content
             let name = /^(\(\))/.exec(code);
             if (TNTSymbolTable[name]['type'] === 'javascript_function') {
                 // TODO: Javascript function implementation
             } else if (TNTSymbolTable[name]['type'] === 'tnt_function') {
-                TNTBoom(TNTSymbolTable.name.type.code) // Recursion
+                TNTBoom(TNTSymbolTable.name.type.code); // Recursion
             }
         } else if (/(for|while)/.test(code)) {
             if (/while/.test(code)) {
-                let YesorNo = TNTValueProcess(/([^while ]).+/.exec(code))
+                let YesorNo = TNTValueProcess(/([^while ]).+/.exec(code));
                 if (YesorNo) {
                     TNTMatchStartSymbol(code,"endwhile",codeList,index);
                 }
@@ -98,12 +97,12 @@ function TNTCodeSplit(code) {
         if (ignoreNext) {
             // Add the current char to the string.
             currentString += i;
-            if (i == '\\') {
+            if (i === '\\') {
                 // Escaping characters
                 stringIgnoreNext = true;
                 continue;
             }
-            if (i == '"' && !stringIgnoreNext) {
+            if (i === '"' && !stringIgnoreNext) {
                 // End the string.
                 ignoreNext = false;
             }
@@ -112,10 +111,10 @@ function TNTCodeSplit(code) {
             }
             continue;
         } else {
-            if (i == ';') {
+            if (i === ';') {
                 buffer.push(currentString);
                 currentString = "";
-            } else if (i == '"') {
+            } else if (i === '"') {
                 currentString += i;
                 ignoreNext = true;
             } else {
@@ -135,7 +134,7 @@ function TNTValueTagProcessing() {
     let val = document.getElementsByTagName("v");
     for (let va in val) {
         let re = TNTSymbolTable[va.innerHTML];
-        document.write(re)
+        document.write(re);
     }
 }
 
