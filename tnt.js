@@ -61,7 +61,7 @@ function TNTValueProcess(reg) {
 }
 
 function TNTBoom(codeList) {
-    for (code in codeList) {
+    for (let code in codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
             let v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             let name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code))
@@ -131,7 +131,7 @@ function TNTCodeSplit(code) {
 // Processes the <v></v> tag and replaces them into values
 function TNTValueTagProcessing() {
     let val = document.getElementsByTagName("v");
-    for (va in val) {
+    for (let va in val) {
         let re = TNTSymbolTable[va.innerHTML];
         document.write(re)
     }
