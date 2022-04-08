@@ -140,7 +140,7 @@ function TNTValueTagProcessing() {
 // Processes the <tnt> tag.
 function TNTTagProcessing() {
     tnt_codes = document.getElementsByTagName("tnt");
-    for (tnt_code in tnt_codes) {
+    for (let tnt_code in tnt_codes) {
         TNTBoom(TNTCodeSplit(tnt_code.innerHTML));
     }
 }
