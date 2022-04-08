@@ -68,9 +68,9 @@ function TNTBoom(codeList) {
             TNTSymbolTable[name] = v
         } else if (/.+\(.+\)/.test(code)) { // Interpreting function content
             let name = /^(\(\))/.exec(code);
-            if (TNTSymbolTable[name][type] == 'javascript_function') {
+            if (TNTSymbolTable[name]['type'] === 'javascript_function') {
                 // TODO: Javascript function implementation
-            } else if (TNTSymbolTable[name][type] == 'tnt_function') {
+            } else if (TNTSymbolTable[name]['type'] === 'tnt_function') {
                 TNTBoom(TNTSymbolTable.name.type.code) // Recursion
             }
         } else if (/(for|while)/.test(code)) {
