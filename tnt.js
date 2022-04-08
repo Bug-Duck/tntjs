@@ -2,7 +2,7 @@
  * BugDuck Organization
  * v0.2
  * File: tnt.js
- * Last Update Time: 04/07/2022
+ * Last Update Time: 04/08/2022
  * License: GPL v2.0
  * All right reserved.
  */
@@ -61,6 +61,7 @@ function TNTValueProcess(reg) {
 }
 
 function TNTBoom(codeList) {
+    let index = 0;
     for (let code in codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
             let v = /^(([A-z0-9])+ ?= ?)/.exec(code);
@@ -77,9 +78,10 @@ function TNTBoom(codeList) {
             if (/while/.test(code)) {
                 let YesorNo = TNTValueProcess(/([^while ]).+/.exec(code))
                 if (YesorNo) {
-                    
+                    TNTMatchStartSymbol(code,"endwhile",codeList,index);
                 }
             }
+        index = index + 1;
         }
     }
 }
