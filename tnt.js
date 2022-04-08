@@ -81,7 +81,7 @@ function TNTBoom(codeList) {
                     TNTMatchStartSymbol(code,"endwhile",codeList,index);
                 }
             }
-        index = index + 1;
+            index = index + 1;
         }
     }
 }
