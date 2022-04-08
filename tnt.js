@@ -23,14 +23,14 @@ function TNTMatchStartSymbol(startSymbol, endSymbol, data, startIndex) {
     stack.push(1);
     for (let i = startIndex + 1; i < data.length; i++) {
         // Iterate each data element.
-        if (data[i] == startSymbol) {
+        if (data[i] === startSymbol) {
             // If it's the start symbol, then push a flag into the stack.
             stack.push(1);
         }
-        if (data[i] == endSymbol) {
+        if (data[i] === endSymbol) {
             // If it's the end symbol, then pop a flag from the stack.
             stack.pop();
-            if (stack.length == 0) {
+            if (stack.length === 0) {
                 // If the stack is empty after popping the element
                 return i;
             }
@@ -139,7 +139,7 @@ function TNTValueTagProcessing() {
 
 // Processes the <tnt> tag.
 function TNTTagProcessing() {
-    tnt_codes = document.getElementsByTagName("tnt");
+    let tnt_codes = document.getElementsByTagName("tnt");
     for (let tnt_code in tnt_codes) {
         TNTBoom(TNTCodeSplit(tnt_code.innerHTML));
     }
