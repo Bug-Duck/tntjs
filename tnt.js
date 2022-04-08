@@ -61,7 +61,7 @@ function TNTValueProcess(reg) {
 
 function TNTBoom(codeList) {
     let index = 0;
-    for (let code in codeList) {
+    for (const code in codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
             const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
