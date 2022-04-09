@@ -178,4 +178,4 @@ function TNTTagProcessing() {
 window.onload = () => {
     TNTValueTagProcessing();
     TNTTagProcessing();
-}
+};
