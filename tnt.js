@@ -19,6 +19,7 @@ const TNT = (() => {
             } else {
                 vTag.setAttribute("data-v-content", newValue);
             }
+            TNTValueTagProcessing();
         }
     };
 })();
@@ -180,17 +181,17 @@ function TNTTagProcessing() {
 function TNTGetBrowserType() {
     const userAgent = navigator.userAgent;
     let browser = 'unknown';
-    if (userAgent.indexOf("IE") != -1) {
+    if (userAgent.indexOf("IE") !== -1) {
         browser = "IE";
-    } else if (userAgent.indexOf('Firefox') != -1) {
+    } else if (userAgent.indexOf('Firefox') !== -1) {
         browser = "Firefox";
-    } else if (userAgent.indexOf('OPR') != -1) {
+    } else if (userAgent.indexOf('OPR') !== -1) {
         browser = "Opera";
-    } else if (userAgent.indexOf('Chrome') != -1) {
+    } else if (userAgent.indexOf('Chrome') !== -1) {
         browser = "Chrome";
-    } else if (userAgent.indexOf('Safari') != -1) {
+    } else if (userAgent.indexOf('Safari') !== -1) {
         browser = "Safari";
-    } else if (userAgent.indexOf('Trident') != -1) {
+    } else if (userAgent.indexOf('Trident') !== -1) {
         browser = 'IE 11';
     }
     return browser;
