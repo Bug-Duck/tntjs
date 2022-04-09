@@ -175,5 +175,7 @@ function TNTTagProcessing() {
     }
 }
 
-TNTValueTagProcessing();
-TNTTagProcessing();
+window.onload = () => {
+    TNTValueTagProcessing();
+    TNTTagProcessing();
+}
