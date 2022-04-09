@@ -7,7 +7,7 @@
  * All right reserved.
  */
 
-const TNT = (function() {
+const TNT = (() => {
     return {
         // An API to edit the content of V tag correctly.
         setVtagContent(vTag, newValue) {
@@ -150,14 +150,14 @@ function TNTValueTagProcessing() {
     const val = document.getElementsByTagName("v");
     for (const va of val) {
         if (va.getAttribute('data-rendered') === null) {
-            const re = TNTValueTagValueRenderer(va.innerHTML)
-            va.setAttribute('data-rendered', 'YES')
-            va.setAttribute('data-v-content', va.innerHTML)
-            va.innerHTML = `<span>${re}</span>`
+            const re = TNTValueTagValueRenderer(va.innerHTML);
+            va.setAttribute('data-rendered', 'YES');
+            va.setAttribute('data-v-content', va.innerHTML);
+            va.innerHTML = `<span>${re}</span>`;
         } else {
-            const vContent = re.getAttribute('data-v-content');
-            const re = TNTValueTagValueRenderer(vContent)
-            va.innerHTML = `<span>${re}</span>`
+            const vContent = va.getAttribute('data-v-content');
+            const re = TNTValueTagValueRenderer(vContent);
+            va.innerHTML = `<span>${re}</span>`;
         }
     }
 }
