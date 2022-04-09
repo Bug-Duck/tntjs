@@ -11,7 +11,7 @@ const TNT = (() => {
     return {
         // An API to edit the content of V tag correctly.
         setVtagContent(vTag, newValue) {
-            if (vTag.tagName !== "V" || typeof(newValue) !== "string") {
+            if (vTag.tagName !== "V" || typeof (newValue) !== "string") {
                 throw new Error("vTag should be a V html element.");
             }
             if (vTag.getAttribute("data-rendered") === null) {
@@ -19,14 +19,14 @@ const TNT = (() => {
             } else {
                 vTag.setAttribute("data-v-content", newValue);
             }
-        } 
+        }
     };
 })();
 
 let TNTSymbolTable = {
     test: 444,
-    log: function (x) {
-    }
+    print: function (x) {},
+    explorerType: TNTGetBrowserType()
 };
 
 // startSymbol and endSymbol are strings that determines the start symbol and the end symbol. For example,
@@ -57,19 +57,19 @@ function TNTMatchStartSymbol(startSymbol, endSymbol, data, startIndex) {
 // This function evaluates the value of the expression.
 function TNTValueProcess(reg) {
     // Regular Expression
-    const isstring = /(\"|\').+(\"|\')/;
-    const isnumber = /[0-9]+/;
-    const isbool = /(true|false)/;
-    const isvar = /[_A-z0-9]/;
-    if (isnumber.test(reg)) {
+    const isString = /(\"|\').+(\"|\')/;
+    const isNumber = /[0-9]+/;
+    const isBool = /(true|false)/;
+    const isVar = /[_A-z0-9]/;
+    if (isNumber.test(reg)) {
         // Number literal processing
         return Number(reg);
-    } else if (isstring.test(reg)) {
+    } else if (isString.test(reg)) {
         // TODO: Implement the string literal processing
-    } else if (isbool.test(reg)) {
+    } else if (isBool.test(reg)) {
         // Boolean literal processing
         return Boolean(reg);
-    } else if (isvar.test(reg)) {
+    } else if (isVar.test(reg)) {
         // Variable processing
         return TNTSymbolTable[reg];
     }
@@ -82,6 +82,8 @@ function TNTBoom(codeList) {
             const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
             TNTSymbolTable[name] = v;
+            // Refresh the page.
+            TNTValueTagProcessing();
         } else if (/.+\(.+\)/.test(code)) { // Interpreting function content
             const name = /^(\(\))/.exec(code);
             if (TNTSymbolTable[name]['type'] === 'javascript_function') {
@@ -93,7 +95,7 @@ function TNTBoom(codeList) {
             if (/while/.test(code)) {
                 const YesorNo = TNTValueProcess(/([^while ]).+/.exec(code));
                 if (YesorNo) {
-                    TNTMatchStartSymbol(code,"endwhile",codeList,index);
+                    TNTMatchStartSymbol(code, "endwhile", codeList, index);
                 }
             }
             index = index + 1;
@@ -173,6 +175,25 @@ function TNTTagProcessing() {
     for (const tntCode of tntCodes) {
         TNTBoom(TNTCodeSplit(tntCode.innerHTML.toString()));
     }
+}
+
+function TNTGetBrowserType() {
+    const userAgent = navigator.userAgent;
+    let browser = 'unknown';
+    if (userAgent.indexOf("IE") != -1) {
+        browser = "IE";
+    } else if (userAgent.indexOf('Firefox') != -1) {
+        browser = "Firefox";
+    } else if (userAgent.indexOf('OPR') != -1) {
+        browser = "Opera";
+    } else if (userAgent.indexOf('Chrome') != -1) {
+        browser = "Chrome";
+    } else if (userAgent.indexOf('Safari') != -1) {
+        browser = "Safari";
+    } else if (userAgent.indexOf('Trident') != -1) {
+        browser = 'IE 11';
+    }
+    return browser;
 }
 
 window.onload = () => {
