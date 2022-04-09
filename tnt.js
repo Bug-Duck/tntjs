@@ -7,6 +7,22 @@
  * All right reserved.
  */
 
+const TNT = (function() {
+    return {
+        // An API to edit the content of V tag correctly.
+        setVtagContent(vTag, newValue) {
+            if (vTag.tagName !== "V" || typeof(newValue) !== "string") {
+                throw new Error("vTag should be a V html element.");
+            }
+            if (vTag.getAttribute("data-rendered") === null) {
+                vTag.innerHTML = newValue;
+            } else {
+                vTag.setAttribute("data-v-content", newValue);
+            }
+        } 
+    };
+})();
+
 let TNTSymbolTable = {
     test: 444,
     log: function (x) {
@@ -61,7 +77,7 @@ function TNTValueProcess(reg) {
 
 function TNTBoom(codeList) {
     let index = 0;
-    for (const code in codeList) {
+    for (const code of codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
             const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
@@ -132,17 +148,30 @@ function TNTCodeSplit(code) {
 // Processes the <v></v> tag and replaces them into values
 function TNTValueTagProcessing() {
     const val = document.getElementsByTagName("v");
-    for (const va in val) {
-        const re = TNTSymbolTable[va.innerHTML];
-        document.write(re);
+    for (const va of val) {
+        if (va.getAttribute('data-rendered') === null) {
+            const re = TNTValueTagValueRenderer(va.innerHTML)
+            va.setAttribute('data-rendered', 'YES')
+            va.setAttribute('data-v-content', va.innerHTML)
+            va.innerHTML = `<span>${re}</span>`
+        } else {
+            const vContent = re.getAttribute('data-v-content');
+            const re = TNTValueTagValueRenderer(vContent)
+            va.innerHTML = `<span>${re}</span>`
+        }
     }
+}
+
+// Rendering the <v> tag content to the value.
+function TNTValueTagValueRenderer(tagValue) {
+    return TNTSymbolTable[tagValue];
 }
 
 // Processes the <tnt> tag.
 function TNTTagProcessing() {
     const tntCodes = document.getElementsByTagName("tnt");
-    for (const tntCode in tntCodes) {
-        TNTBoom(TNTCodeSplit(tntCode.innerHTML));
+    for (const tntCode of tntCodes) {
+        TNTBoom(TNTCodeSplit(tntCode.innerHTML.toString()));
     }
 }
 
