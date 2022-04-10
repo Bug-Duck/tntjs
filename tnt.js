@@ -100,7 +100,7 @@ function TNTBoom(codeList) {
             if (/while/.test(code)) {
                 const YesorNo = TNTValueProcess((/([^while ]).+/.exec(code))[0]);
                 if (YesorNo) {
-                    let endindex = TNTMatchStartSymbol(code, "endwhile", codeList, index);
+                    const endindex = TNTMatchStartSymbol(code, "endwhile", codeList, index);
                     TNTBoom(codeList.split(index,endindex));
                 }
             }
@@ -149,18 +149,17 @@ function TNTFunctionSplit(code) {
         buffer.push(currentString);
         currentString = "";
     }
-    let values = {agv:[],functioncanvalue:{}};
-    for (let value of buffer) {
+    const values = {agv:[],functioncanvalue:{}};
+    for (const value of buffer) {
         if (/.+ ?= ?.+/.test(value)) {
             const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
             values.functioncanvalue[name[0]] = TNTValueProcess(v);
         } else {
-            values.agv.push(TNTValueProcess(value))
+            values.agv.push(TNTValueProcess(value));
         }
     }
-    return values
-
+    return values;
 }
 
 
@@ -262,8 +261,8 @@ window.onload = () => {
     TNTValueTagProcessing();
     TNTTagProcessing();
     setTimeout(() => {
-        TNTSymbolTable["test"] = 114514
+        TNTSymbolTable["test"] = 114514;
         TNTValueTagProcessing();
-        console.log("Changed")
+        console.log("Changed");
     }, 1000);
 };
