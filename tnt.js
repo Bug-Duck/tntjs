@@ -26,6 +26,7 @@ const TNT = (() => {
 
 let TNTSymbolTable = {
     PI: 3.14159265,
+    test: 2333,
     print: {jsfunction: function (x) {
         console.log(x);
     },
