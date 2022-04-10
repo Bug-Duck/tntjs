@@ -83,7 +83,7 @@ function TNTBoom(codeList) {
     let index = 0;
     for (const code of codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
-            const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
+            const v = /[^ =]/.exec(/^(([A-z0-9])+ ?= ?)/.exec(code));
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
             console.log(v);
             TNTSymbolTable[name[0]] = v;
