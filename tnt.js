@@ -146,7 +146,7 @@ function TNTFunctionSplit(code) {
             continue;
         } else {
             if (i === ',') {
-                buffer.push(currentString);
+                buffer.push(currentString.trim());
                 currentString = "";
             } else if (i === '"') {
                 currentString += i;
@@ -157,7 +157,7 @@ function TNTFunctionSplit(code) {
         }
     }
     if (currentString !== "") {
-        buffer.push(currentString);
+        buffer.push(currentString.trim());
         currentString = "";
     }
     const values = {agv:[],functioncanvalue:{}};
