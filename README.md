@@ -31,6 +31,8 @@ tnt.js是一个基于javascript的编程语言,目的是为了创造一个和Pyt
 You are using the: Chrome
 ```
 此时在v标签内的变量名会被渲染为他的值
+### 官方文档
+bug-duck.github.io/tntjs
 
 ### 打赏
 开发者们都是初中生 希望能给我们一点奖励
