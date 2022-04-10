@@ -1,5 +1,5 @@
 # tntjs
-
+![输入图片说明](%E6%97%A0%E6%A0%87%E9%A2%98.png)
 ### 介绍
 tnt.js是一个基于javascript的编程语言,目的是为了创造一个和Python一样简单的,又不失前端特性的编程语言,同时避免了TypeScript不能直接运行在浏览器上的缺点,且与javascript的语法非常的不一样哦!<br/>
 
