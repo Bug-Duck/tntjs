@@ -83,20 +83,20 @@ function TNTBoom(codeList) {
             const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
             console.log(v);
-            console.log(name[0]);
-            TNTSymbolTable[name] = v;
+            // console.log(name[0]);
+            TNTSymbolTable[name[0]] = v;
             // Refresh the page.
             TNTValueTagProcessing();
         } else if (/.+\(.+\)/.test(code)) { // Interpreting function content
             const name = /^(\(\))/.exec(code);
-            if (TNTSymbolTable[name]['type'] === 'javascript_function') {
+            if (TNTSymbolTable[name[0]]['type'] === 'javascript_function') {
                 // TODO: Javascript function implementation
-            } else if (TNTSymbolTable[name]['type'] === 'tnt_function') {
+            } else if (TNTSymbolTable[name[0]]['type'] === 'tnt_function') {
                 TNTBoom(TNTSymbolTable.name.type.code); // Recursion
             }
         } else if (/(for|while)/.test(code)) {
             if (/while/.test(code)) {
-                const YesorNo = TNTValueProcess(/([^while ]).+/.exec(code));
+                const YesorNo = TNTValueProcess((/([^while ]).+/.exec(code))[0]);
                 if (YesorNo) {
                     let endindex = TNTMatchStartSymbol(code, "endwhile", codeList, index);
                     TNTBoom(codeList.split(index,endindex));
@@ -152,7 +152,7 @@ function TNTCodeSplit(code) {
         if (/.+ ?= ?.+/.test(value)) {
             const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
-            values.functioncanvalue[name] = TNTValueProcess(v);
+            values.functioncanvalue[name[0]] = TNTValueProcess(v);
         } else {
             values.agv.push(TNTValueProcess(value))
         }
