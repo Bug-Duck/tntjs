@@ -91,14 +91,15 @@ function TNTBoom(codeList) {
     for (const code of codeList) {
         // console.log(code);
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
-            const nameAndValue = /[^ =]+/.exec(code);
-            console.log(nameAndValue);
+            // const nameAndValue = /[^ =]+/.exec(code);
+            // console.log(nameAndValue);
             // const v = /[^ =]/.exec(code);
             // const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
-            // const v = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
-            // console.log(v);
-            // console.log(name[0]);
-            // TNTSymbolTable[name[0]] = v[0];
+            const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
+            const v = /[^= ]+/.exec(/= ?.+/.exec(code))
+            console.log(v);
+            console.log(name);
+            TNTSymbolTable[name[0]] = v[0];
             // console.log(TNTSymbolTable);
             // Refresh the page.
             TNTValueTagProcessing();
