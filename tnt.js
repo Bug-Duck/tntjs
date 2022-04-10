@@ -231,6 +231,7 @@ function TNTValueTagValueRenderer(tagValue) {
 function TNTTagProcessing() {
     const tntCodes = document.getElementsByTagName("tnt");
     for (const tntCode of tntCodes) {
+        tntCode.style.display = "none";
         TNTBoom(TNTCodeSplit(tntCode.innerHTML.toString()));
     }
 }
