@@ -83,7 +83,6 @@ function TNTBoom(codeList) {
             const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
             console.log(v);
-            // console.log(name[0]);
             TNTSymbolTable[name[0]] = v;
             // Refresh the page.
             TNTValueTagProcessing();
@@ -225,7 +224,7 @@ function TNTValueTagProcessing() {
 
 // Rendering the <v> tag content to the value.
 function TNTValueTagValueRenderer(tagValue) {
-    return TNTSymbolTable[tagValue];
+    return TNTSymbolTable[tagValue.trim()];
 }
 
 // Processes the <tnt> tag.
