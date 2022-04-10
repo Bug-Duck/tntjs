@@ -86,17 +86,20 @@ function TNTValueProcess(reg) {
 
 function TNTBoom(codeList) {
     let index = 0;
-    let TNTSymbolTable = {}
+    // let TNTSymbolTable = {}
+    // console.log(codeList);
     for (const code of codeList) {
+        // console.log(code);
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
-            const v = /[^ =]/.exec(/^(([A-z0-9])+ ?= ?)/.exec(code));
+            const nameAndValue = /[^ =]+/.exec(code);
+            console.log(nameAndValue);
             // const v = /[^ =]/.exec(code);
             // const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
-            const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
-            console.log(v);
-            console.log(name[0]);
-            TNTSymbolTable[name[0]] = v[0];
-            console.log(TNTSymbolTable);
+            // const v = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
+            // console.log(v);
+            // console.log(name[0]);
+            // TNTSymbolTable[name[0]] = v[0];
+            // console.log(TNTSymbolTable);
             // Refresh the page.
             TNTValueTagProcessing();
         } else if (/(for|while|def) .+/.test(code)) {
