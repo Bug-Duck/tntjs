@@ -82,27 +82,85 @@ function TNTBoom(codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
             const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
-            TNTSymbolTable[name] = v;
+            console.log(v);
+            // console.log(name[0]);
+            TNTSymbolTable[name[0]] = v;
             // Refresh the page.
             TNTValueTagProcessing();
         } else if (/.+\(.+\)/.test(code)) { // Interpreting function content
             const name = /^(\(\))/.exec(code);
-            if (TNTSymbolTable[name]['type'] === 'javascript_function') {
+            if (TNTSymbolTable[name[0]]['type'] === 'javascript_function') {
                 // TODO: Javascript function implementation
-            } else if (TNTSymbolTable[name]['type'] === 'tnt_function') {
+            } else if (TNTSymbolTable[name[0]]['type'] === 'tnt_function') {
                 TNTBoom(TNTSymbolTable.name.type.code); // Recursion
             }
         } else if (/(for|while)/.test(code)) {
             if (/while/.test(code)) {
-                const YesorNo = TNTValueProcess(/([^while ]).+/.exec(code));
+                const YesorNo = TNTValueProcess((/([^while ]).+/.exec(code))[0]);
                 if (YesorNo) {
-                    TNTMatchStartSymbol(code, "endwhile", codeList, index);
+                    let endindex = TNTMatchStartSymbol(code, "endwhile", codeList, index);
+                    TNTBoom(codeList.split(index,endindex));
                 }
             }
             index = index + 1;
         }
     }
 }
+
+function TNTCodeSplit(code) {
+    let ignoreNext = false;
+    let stringIgnoreNext = false;
+    const buffer = [];
+    let currentString = "";
+    // Iterate every charaters in the code
+    for (const i of code) {
+        // Next will be ignored (In this case, means in a string.)
+        if (ignoreNext) {
+            // Add the current char to the string.
+            currentString += i;
+            if (i === '\\') {
+                // Escaping characters
+                stringIgnoreNext = true;
+                continue;
+            }
+            if (i === '"' && !stringIgnoreNext) {
+                // End the string.
+                ignoreNext = false;
+            }
+            if (stringIgnoreNext) {
+                stringIgnoreNext = false;
+            }
+            continue;
+        } else {
+            if (i === ',') {
+                buffer.push(currentString);
+                currentString = "";
+            } else if (i === '"') {
+                currentString += i;
+                ignoreNext = true;
+            } else {
+                currentString += i;
+            }
+        }
+    }
+    if (currentString !== "") {
+        buffer.push(currentString);
+        currentString = "";
+    }
+    let values = {agv:[],functioncanvalue:{}};
+    for (let value of buffer) {
+        if (/.+ ?= ?.+/.test(value)) {
+            const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
+            const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
+            values.functioncanvalue[name[0]] = TNTValueProcess(v);
+        } else {
+            values.agv.push(TNTValueProcess(value))
+        }
+    }
+    return values
+
+}
+
 
 // This function splits code with ";"
 function TNTCodeSplit(code) {
