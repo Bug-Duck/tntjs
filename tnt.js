@@ -96,8 +96,8 @@ function TNTBoom(codeList) {
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
             console.log(v);
             console.log(name[0]);
-            TNTSymbolTable[name[0]] = v;
-            console.log(TNTValueProcess);
+            TNTSymbolTable[name[0]] = v[0];
+            console.log(TNTSymbolTable);
             // Refresh the page.
             TNTValueTagProcessing();
         } else if (/(for|while|def) .+/.test(code)) {
