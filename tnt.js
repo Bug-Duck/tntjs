@@ -135,7 +135,7 @@ function TNTValueTagProcessing() {
     let val = document.getElementsByTagName("v");
     for (let va in val) {
         let re = TNTSymbolTable[va.innerHTML];
-        document.write(re)
+        // document.write(re)
     }
 }
 
