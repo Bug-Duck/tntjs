@@ -3,7 +3,7 @@
  * v0.2
  * File: tnt.js
  * Last Update Time: 04/08/2022
- * License: LGPL v2.0
+ * License: GPL-2.0
  * All right reserved.
  */
 
