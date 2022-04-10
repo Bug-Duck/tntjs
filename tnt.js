@@ -25,7 +25,7 @@ const TNT = (() => {
 })();
 
 let TNTSymbolTable = {
-    test: 444,
+    PI: 3.14159265,
     print: {jsfunction: function (x) {
         console.log(x);
     },
@@ -76,36 +76,42 @@ function TNTValueProcess(reg) {
     } else if (isVar.test(reg)) {
         // Variable processing
         return TNTSymbolTable[reg];
-    }
+    } else if (/.+\(.+\)/.test(code)) { // Interpreting function content
+        const name = /[^\(.+\)]+/.exec(code);
+        if (TNTSymbolTable[name[0]]['type'] === 'javascript_function') {
+            // TODO: Javascript function implementation
+        }
+    } 
 }
 
 function TNTBoom(codeList) {
     let index = 0;
+    let TNTSymbolTable = {}
     for (const code of codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
             const v = /[^ =]/.exec(/^(([A-z0-9])+ ?= ?)/.exec(code));
+            // const v = /[^ =]/.exec(code);
+            // const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
             console.log(v);
+            console.log(name[0]);
             TNTSymbolTable[name[0]] = v;
+            console.log(TNTValueProcess);
             // Refresh the page.
             TNTValueTagProcessing();
-        } else if (/.+\(.+\)/.test(code)) { // Interpreting function content
-            const name = /^(\(\))/.exec(code);
-            if (TNTSymbolTable[name[0]]['type'] === 'javascript_function') {
-                // TODO: Javascript function implementation
-            } else if (TNTSymbolTable[name[0]]['type'] === 'tnt_function') {
-                TNTBoom(TNTSymbolTable.name.type.code); // Recursion
-            }
-        } else if (/(for|while)/.test(code)) {
+        } else if (/(for|while|def) .+/.test(code)) {
             if (/while/.test(code)) {
                 const YesorNo = TNTValueProcess((/([^while ]).+/.exec(code))[0]);
                 if (YesorNo) {
                     const endindex = TNTMatchStartSymbol(code, "endwhile", codeList, index);
                     TNTBoom(codeList.split(index,endindex));
                 }
+            } else if (/def/.test(code)) {
+                let func = /[^ ]+/.exec(code)
+                console.log(func);
             }
-            index = index + 1;
         }
+        index = index + 1;
     }
 }
 
