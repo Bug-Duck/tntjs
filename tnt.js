@@ -200,4 +200,9 @@ function TNTGetBrowserType() {
 window.onload = () => {
     TNTValueTagProcessing();
     TNTTagProcessing();
+    setTimeout(() => {
+        TNTSymbolTable["test"] = 114514
+        TNTValueTagProcessing();
+        console.log("Changed")
+    }, 1000);
 };
