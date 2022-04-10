@@ -82,7 +82,9 @@ function TNTBoom(codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
             const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
-            TNTSymbolTable[name] = TNTValueProcess(v);
+            console.log(v);
+            console.log(name[0]);
+            TNTSymbolTable[name] = v;
             // Refresh the page.
             TNTValueTagProcessing();
         } else if (/.+\(.+\)/.test(code)) { // Interpreting function content
@@ -155,7 +157,7 @@ function TNTCodeSplit(code) {
             values.agv.push(TNTValueProcess(value))
         }
     }
-    return vvalues
+    return values
 
 }
 
