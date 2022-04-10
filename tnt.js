@@ -26,7 +26,10 @@ const TNT = (() => {
 
 let TNTSymbolTable = {
     test: 444,
-    print: function (x) {},
+    print: {jsfunction: function (x) {
+        console.log(x);
+    },
+},
     explorerType: TNTGetBrowserType()
 };
 
