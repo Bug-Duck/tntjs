@@ -106,7 +106,7 @@ function TNTBoom(codeList) {
     }
 }
 
-function TNTCodeSplit(code) {
+function TNTFunctionSplit(code) {
     let ignoreNext = false;
     let stringIgnoreNext = false;
     const buffer = [];
