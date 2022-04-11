@@ -66,6 +66,7 @@ function TNTValueProcess(reg) {
     const isNumber = /[0-9]+/;
     const isBool = /(true|false)/;
     const isVar = /[_A-z0-9]/;
+    const isMathGex = /(.+ ?(\+|-|\*|\/)+ ?.+)+/;
     if (isNumber.test(reg)) {
         // Number literal processing
         return Number(reg);
@@ -77,6 +78,13 @@ function TNTValueProcess(reg) {
     } else if (isVar.test(reg)) {
         // Variable processing
         return TNTSymbolTable[reg];
+    } else if (isMathGex.test(reg)){
+        let TNTGEX;
+        for (let i of reg) {
+            if (i !== ' ') {
+                TNTGEX = TNTGEX + i;
+            }
+        }
     } else if (/.+\(.+\)/.test(code)) { // Interpreting function content
         const name = /[^\(.+\)]+/.exec(code);
         if (TNTSymbolTable[name[0]]['type'] === 'javascript_function') {
@@ -85,9 +93,9 @@ function TNTValueProcess(reg) {
     } 
 }
 
-function TNTBoom(codeList) {
+function TNTBoom(codeList,isinclass=false) {
     let index = 0;
-    // let TNTSymbolTable = {}
+    let TNTSymbolTableOWN = {}
     // console.log(codeList);
     for (const code of codeList) {
         // console.log(code);
@@ -100,7 +108,11 @@ function TNTBoom(codeList) {
             const v = /[^= ]+/.exec(/= ?.+/.exec(code))
             console.log(v);
             console.log(name);
-            TNTSymbolTable[name[0]] = v[0];
+            if (/let /.test()) {
+                TNTSymbolTableOWN[name[0]] = v[0];
+            } else {
+                TNTSymbolTable[name[0]] = v[0];
+            }
             // console.log(TNTSymbolTable);
             // Refresh the page.
             TNTValueTagProcessing();
@@ -112,8 +124,10 @@ function TNTBoom(codeList) {
                     TNTBoom(codeList.split(index,endindex));
                 }
             } else if (/def/.test(code)) {
-                let func = /[^ ]+/.exec(code)
-                console.log(func);
+                const endindex = TNTMatchStartSymbol(code,"endef",codeList,index)
+                TNTSymbolTable;
+                // let func = /[^ ]+/.exec(code)
+                // console.log(func);
             }
         }
         index = index + 1;
