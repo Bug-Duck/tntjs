@@ -80,11 +80,24 @@ function TNTValueProcess(reg) {
         return TNTSymbolTable[reg];
     } else if (isMathGex.test(reg)){
         let TNTGEX;
+        let TNTGEXList = []
+        let OneTNTV = "";
+        let buffer;
         for (let i of reg) {
             if (i !== ' ') {
                 TNTGEX = TNTGEX + i;
             }
-        }
+        } for (let i of TNTGEX) {
+            if (i === "+"||"-"||"*"||"/") {
+                TNTGEXList.push(OneTNTV);
+                TNTGEXList.push(i);
+                OneTNTV = ""
+            } else {
+                OneTNTV = OneTNTV + i;
+            }
+        } for (let i of TNTGEXList) {
+            // TODO: Math
+        }      
     } else if (/.+\(.+\)/.test(code)) { // Interpreting function content
         const name = /[^\(.+\)]+/.exec(code);
         if (TNTSymbolTable[name[0]]['type'] === 'javascript_function') {
