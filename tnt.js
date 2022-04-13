@@ -110,7 +110,7 @@ function TNTValueProcess(reg) {
             // const parameter = __parameter__.split(1,__parameter__.length-1);
             const parameter = /[^\(\)]/.exec(__parameter__)
             const parameters = TNTFunctionSplit(parameter);
-            console.log(parameters);
+            console.log(TNTValueProcess(parameters));
         }
     } 
 }
