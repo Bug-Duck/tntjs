@@ -27,10 +27,9 @@ const TNT = (() => {
 let TNTSymbolTable = {
     PI: 3.14159265,
     test: 2333,
-    print: {jsfunction: function (x) {
+    print: function (x) {
         console.log(x);
     },
-},
     explorerType: TNTGetBrowserType()
 };
 
@@ -89,19 +88,29 @@ function TNTValueProcess(reg) {
             }
         } for (let i of TNTGEX) {
             if (i === "+"||"-"||"*"||"/") {
-                TNTGEXList.push(OneTNTV);
-                TNTGEXList.push(i);
+                // TNTGEXList.push(OneTNTV);
+                // TNTGEXList.push(i);
+                buffer = buffer + String(TNTValueProcess(OneTNTV));
+                buffer = buffer + i;
                 OneTNTV = ""
             } else {
                 OneTNTV = OneTNTV + i;
             }
-        } for (let i of TNTGEXList) {
-            // TODO: Math
+            return eval(buffer);
+        // } for (let i of TNTGEXList) {
+        //     // TODO: Math
         }      
-    } else if (/.+\(.+\)/.test(code)) { // Interpreting function content
-        const name = /[^\(.+\)]+/.exec(code);
-        if (TNTSymbolTable[name[0]]['type'] === 'javascript_function') {
+    } else if (/.+\(.+\)/.test(reg)) { // Interpreting function content
+        const name = /[^\(.+\)]+/.exec(reg);
+        console.log("YesFunction!");
+        if (typeof ( TNTSymbolTable[name[0]]) == 'function') {
+            console.log("YesRegex!");
             // TODO: Javascript function implementation
+            const __parameter__ = /\(.+\)/.exec(reg);
+            // const parameter = __parameter__.split(1,__parameter__.length-1);
+            const parameter = /[^\(\)]/.exec(__parameter__)
+            const parameters = TNTFunctionSplit(parameter);
+            console.log(parameters);
         }
     } 
 }
@@ -142,6 +151,8 @@ function TNTBoom(codeList,isinclass=false) {
                 // let func = /[^ ]+/.exec(code)
                 // console.log(func);
             }
+        } else {
+            TNTValueProcess(code);
         }
         index = index + 1;
     }
@@ -190,9 +201,9 @@ function TNTFunctionSplit(code) {
     const values = {agv:[],functioncanvalue:{}};
     for (const value of buffer) {
         if (/.+ ?= ?.+/.test(value)) {
-            const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
+            const v = /[^= ]+/.exec(/= ?.+/.exec(code))
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
-            values.functioncanvalue[name[0]] = TNTValueProcess(v);
+            values.functioncanvalue[name[0]] = TNTValueProcess(v[0]);
         } else {
             values.agv.push(TNTValueProcess(value));
         }
@@ -303,4 +314,6 @@ window.onload = () => {
         TNTValueTagProcessing();
         console.log("Changed");
     }, 1000);
+    console.log(TNTFunctionSplit("2,4,5,6,x=3"));
+    console.log(TNTValueProcess("print(5,15)"));
 };
