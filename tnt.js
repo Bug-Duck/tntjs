@@ -69,6 +69,19 @@ function TNTValueProcess(reg) {
     if (isNumber.test(reg)) {
         // Number literal processing
         return Number(reg);
+    } else if (/.+\(.+\)/.test(reg)) { // Interpreting function content
+        const name = /[^\(.+\)]+/.exec(reg);
+        console.log("YesFunction!");
+        if (/*typeof (TNTSymbolTable[name[0]]) == 'function'*/true) {
+            console.log("YesRegex!");
+            // TODO: Javascript function implementation
+            const __parameter__ = /\(.+\)/.exec(reg);
+            console.log(__parameter__);
+            // const parameter = __parameter__.split(1,__parameter__.length-1);
+            // // const parameter = /[^\(\)]/.exec(__parameter__)
+            const parameters = TNTFunctionSplit(__parameter__);
+            console.log(parameters);
+        }
     } else if (isString.test(reg)) {
         // TODO: Implement the string literal processing
     } else if (isBool.test(reg)) {
@@ -77,7 +90,9 @@ function TNTValueProcess(reg) {
     } else if (isVar.test(reg)) {
         // Variable processing
         return TNTSymbolTable[reg];
-    } else if (isMathGex.test(reg)){
+
+
+    } else if (isMathGex.test(reg)) {
         let TNTGEX;
         let TNTGEXList = []
         let OneTNTV = "";
@@ -87,7 +102,7 @@ function TNTValueProcess(reg) {
                 TNTGEX = TNTGEX + i;
             }
         } for (let i of TNTGEX) {
-            if (i === "+"||"-"||"*"||"/") {
+            if (i === "+" || "-" || "*" || "/") {
                 // TNTGEXList.push(OneTNTV);
                 // TNTGEXList.push(i);
                 buffer = buffer + String(TNTValueProcess(OneTNTV));
@@ -97,25 +112,13 @@ function TNTValueProcess(reg) {
                 OneTNTV = OneTNTV + i;
             }
             return eval(buffer);
-        // } for (let i of TNTGEXList) {
-        //     // TODO: Math
-        }      
-    } else if (/.+\(.+\)/.test(reg)) { // Interpreting function content
-        const name = /[^\(.+\)]+/.exec(reg);
-        console.log("YesFunction!");
-        if (typeof ( TNTSymbolTable[name[0]]) == 'function') {
-            console.log("YesRegex!");
-            // TODO: Javascript function implementation
-            const __parameter__ = /\(.+\)/.exec(reg);
-            // const parameter = __parameter__.split(1,__parameter__.length-1);
-            const parameter = /[^\(\)]/.exec(__parameter__)
-            const parameters = TNTFunctionSplit(parameter);
-            console.log(TNTValueProcess(parameters));
+            // } for (let i of TNTGEXList) {
+            //     // TODO: Math
         }
-    } 
+    }
 }
 
-function TNTBoom(codeList,isinclass=false) {
+function TNTBoom(codeList, isinclass = false) {
     let index = 0;
     let TNTSymbolTableOWN = {}
     // console.log(codeList);
@@ -143,15 +146,16 @@ function TNTBoom(codeList,isinclass=false) {
                 const YesorNo = TNTValueProcess((/([^while ]).+/.exec(code))[0]);
                 if (YesorNo) {
                     const endindex = TNTMatchStartSymbol(code, "endwhile", codeList, index);
-                    TNTBoom(codeList.split(index,endindex));
+                    TNTBoom(codeList.split(index, endindex));
                 }
             } else if (/def/.test(code)) {
-                const endindex = TNTMatchStartSymbol(code,"endef",codeList,index)
+                const endindex = TNTMatchStartSymbol(code, "endef", codeList, index)
                 TNTSymbolTable;
                 // let func = /[^ ]+/.exec(code)
                 // console.log(func);
             }
         } else {
+            console.log("oh");
             TNTValueProcess(code);
         }
         index = index + 1;
@@ -198,7 +202,7 @@ function TNTFunctionSplit(code) {
         buffer.push(currentString.trim());
         currentString = "";
     }
-    const values = {agv:[],functioncanvalue:{}};
+    const values = { agv: [], functioncanvalue: {} };
     for (const value of buffer) {
         if (/.+ ?= ?.+/.test(value)) {
             const v = /[^= ]+/.exec(/= ?.+/.exec(code))
