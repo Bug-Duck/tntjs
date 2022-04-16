@@ -66,14 +66,11 @@ function TNTValueProcess(reg) {
     const isBool = /(true|false)/;
     const isVar = /[_A-z0-9]/;
     const isMathGex = /(.+ ?(\+|-|\*|\/)+ ?.+)+/;
-    if (isNumber.test(reg)) {
-        // Number literal processing
-        return Number(reg);
-    } else if (/.+\(.+\)/.test(reg)) { // Interpreting function content
+    if (/.+\(.+\)/.test(reg)) { // Interpreting function content
         const name = /[^\(.+\)]+/.exec(reg);
-        console.log("YesFunction!");
-        if (/*typeof (TNTSymbolTable[name[0]]) == 'function'*/true) {
-            console.log("YesRegex!");
+        // console.log("YesFunction!");
+        if (typeof TNTSymbolTable[name[0]] == 'function') {
+            // console.log("YesRegex!");
             // TODO: Javascript function implementation
             const __parameter__ = /\(.+\)/.exec(reg);
             console.log(__parameter__);
@@ -82,6 +79,9 @@ function TNTValueProcess(reg) {
             const parameters = TNTFunctionSplit(__parameter__);
             console.log(parameters);
         }
+    } else if (isNumber.test(reg)) {
+        // Number literal processing
+        return Number(reg);
     } else if (isString.test(reg)) {
         // TODO: Implement the string literal processing
     } else if (isBool.test(reg)) {
@@ -118,9 +118,9 @@ function TNTValueProcess(reg) {
     }
 }
 
-function TNTBoom(codeList, isinclass = false) {
+function TNTBoom(codeList, data = {}, isinclass = false) {
     let index = 0;
-    let TNTSymbolTableOWN = {}
+    let TNTSymbolTableOWN = data
     // console.log(codeList);
     for (const code of codeList) {
         // console.log(code);
@@ -131,8 +131,8 @@ function TNTBoom(codeList, isinclass = false) {
             // const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
             const v = /[^= ]+/.exec(/= ?.+/.exec(code))
-            console.log(v);
-            console.log(name);
+            // console.log(v);
+            // console.log(name);
             if (/let /.test()) {
                 TNTSymbolTableOWN[name[0]] = v[0];
             } else {
@@ -316,8 +316,8 @@ window.onload = () => {
     setTimeout(() => {
         TNTSymbolTable["test"] = 114514;
         TNTValueTagProcessing();
-        console.log("Changed");
+        // console.log("Changed");
     }, 1000);
-    console.log(TNTFunctionSplit("2,4,5,6,x=3"));
-    console.log(TNTValueProcess("print(5,15)"));
+    // console.log(TNTFunctionSplit("2,4,5,6,x=3"));
+    // console.log(TNTValueProcess("print(5,15)"));
 };
