@@ -1,5 +1,9 @@
 # TNT.js
+<<<<<<< HEAD
 ![输入图片说明](TNT.js.logo.png)
+=======
+![输入图片说明](%E6%97%A0%E6%A0%87%E9%A2%98.png)
+>>>>>>> f2b5a94cb37297bffcbf20da6133a908ed74e0f4
 ### 介绍
 TNT.js是一个基于Javascript的编程语言,目的是为了创造一个和Python一样简单的,又不失前端特性的编程语言。TNT.js避免了TypeScript不能直接运行在浏览器上的缺点。<br/>
 
@@ -30,7 +34,11 @@ TNT.js是一个基于Javascript的编程语言,目的是为了创造一个和Pyt
 2333
 You are using the: Chrome
 ```
+<<<<<<< HEAD
 在v标签内的变量名会被渲染为它的值。
+=======
+此时在v标签内的变量名会被渲染为他的值
+>>>>>>> f2b5a94cb37297bffcbf20da6133a908ed74e0f4
 ### 官方文档
 bug-duck.github.io/tntjs
 
