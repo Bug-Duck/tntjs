@@ -1,6 +1,6 @@
 /* 
  * BugDuck Organization
- * v0.2
+ * v0.1
  * File: tnt.js
  * Last Update Time: 04/08/2022
  * License: GPL-2.0
@@ -32,7 +32,14 @@ let TNTSymbolTable = {
     },
     explorerType: TNTGetBrowserType(),
     ebyid: function(id,iHTML){
-        document.getElementById(id).innerHTML = iHTML
+        document.getElementById(id).innerHTML = iHTML;
+    },
+    sleep: function(x){
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve()
+            }, x)
+        })
     }
 };
 
@@ -173,7 +180,7 @@ function TNTBoom(codeList, data = {}, isinclass = false) {
                 // console.log(func);
             }
         } else {
-            console.log("oh");
+            // console.log("oh");
             TNTValueProcess(code);
         }
         index = index + 1;
