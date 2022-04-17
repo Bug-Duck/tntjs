@@ -32,7 +32,7 @@ let TNTSymbolTable = {
     },
     explorerType: TNTGetBrowserType(),
     ebyid: function(id,iHTML){
-        document.getElementById(id).innerHTML = innerHTML
+        document.getElementById(id).innerHTML = iHTML
     }
 };
 
@@ -73,7 +73,7 @@ function TNTValueProcess(reg) {
         const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
         // console.log(name);
         // console.log(typeof TNTSymbolTable[name]);
-        if (typeof (TNTSymbolTable[name]) == 'function') {
+        if (typeof (TNTSymbolTable[name]) === 'function') {
             let buffer = "";
             // console.log(TNTSymbolTable[name]);
             // console.log("YesRegex!");
@@ -93,7 +93,7 @@ function TNTValueProcess(reg) {
             for (const i of parameters['agv']) {
                 buffer = buffer + i;
                 buffer = buffer + ',';
-            } for (i in parameters['functioncanvalue']) {
+            } for (const i in parameters['functioncanvalue']) {
                 buffer = buffer + i + '=' + ',';
             }
             // console.log(buffer);
@@ -110,19 +110,17 @@ function TNTValueProcess(reg) {
     } else if (isVar.test(reg)) {
         // Variable processing
         return TNTSymbolTable[reg];
-
-
     } else if (isMathGex.test(reg)) {
-        let TNTGEX;
+        let TNTGEX = '';
         let TNTGEXList = []
         let OneTNTV = "";
-        let buffer;
-        for (let i of reg) {
+        let buffer = "";
+        for (const i of reg) {
             if (i !== ' ') {
                 TNTGEX = TNTGEX + i;
             }
-        } for (let i of TNTGEX) {
-            if (i === "+" || "-" || "*" || "/") {
+        } for (const i of TNTGEX) {
+            if (i == "+" || "-" || "*" || "/") {
                 // TNTGEXList.push(OneTNTV);
                 // TNTGEXList.push(i);
                 buffer = buffer + String(TNTValueProcess(OneTNTV));
@@ -170,7 +168,7 @@ function TNTBoom(codeList, data = {}, isinclass = false) {
                 }
             } else if (/def/.test(code)) {
                 const endindex = TNTMatchStartSymbol(code, "endef", codeList, index)
-                TNTSymbolTable;
+                // TNTSymbolTable;
                 // let func = /[^ ]+/.exec(code)
                 // console.log(func);
             }
