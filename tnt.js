@@ -37,9 +37,9 @@ let TNTSymbolTable = {
     sleep: function(x){
         return new Promise(resolve => {
             setTimeout(() => {
-                resolve()
-            }, x)
-        })
+                resolve();
+            }, x);
+        });
     }
 };
 
@@ -92,7 +92,7 @@ function TNTValueProcess(reg) {
             for (const i in parameters['functioncanvalue']) {
                 buffer = buffer + i + '=' + ',';
             }
-            eval(`TNTSymbolTable.${name}(${buffer})`)
+            eval(`TNTSymbolTable.${name}(${buffer})`);
         }
     } else if (isNumber.test(reg)) {
         // Number literal processing
@@ -107,18 +107,19 @@ function TNTValueProcess(reg) {
         return TNTSymbolTable[reg];
     } else if (isMathGex.test(reg)) {
         let TNTGEX = '';
-        let TNTGEXList = []
+        const TNTGEXList = [];
         let OneTNTV = "";
         let buffer = "";
         for (const i of reg) {
             if (i !== ' ') {
                 TNTGEX = TNTGEX + i;
             }
-        } for (const i of TNTGEX) {
-            if (i === "+" || "-" || "*" || "/") {
+        }
+        for (const i of TNTGEX) {
+            if (i === "+" || i === "-" || i === "*" || i === "/") {
                 buffer = buffer + String(TNTValueProcess(OneTNTV));
                 buffer = buffer + i;
-                OneTNTV = ""
+                OneTNTV = "";
             } else {
                 OneTNTV = OneTNTV + i;
             }
@@ -130,11 +131,11 @@ function TNTValueProcess(reg) {
 
 function TNTBoom(codeList, data = {}, isinclass = false) {
     let index = 0;
-    let TNTSymbolTableOWN = data
+    const TNTSymbolTableOWN = data;
     for (const code of codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
-            const v = /[^= ]+/.exec(/= ?.+/.exec(code))
+            const v = /[^= ]+/.exec(/= ?.+/.exec(code));
             if (/let /.test()) {
                 TNTSymbolTableOWN[name[0]] = v[0];
             } else {
@@ -150,10 +151,9 @@ function TNTBoom(codeList, data = {}, isinclass = false) {
                     TNTBoom(codeList.split(index, endindex));
                 }
             } else if (/def/.test(code)) {
-                const endindex = TNTMatchStartSymbol(code, "endef", codeList, index)
+                const endindex = TNTMatchStartSymbol(code, "endef", codeList, index);
             }
         } else {
-            // console.log("oh");
             TNTValueProcess(code);
         }
         index = index + 1;
@@ -203,7 +203,7 @@ function TNTFunctionSplit(code) {
     const values = { agv: [], functioncanvalue: {} };
     for (const value of buffer) {
         if (/.+ ?= ?.+/.test(value)) {
-            const v = /[^= ]+/.exec(/= ?.+/.exec(code))
+            const v = /[^= ]+/.exec(/= ?.+/.exec(code));
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
             values.functioncanvalue[name[0]] = TNTValueProcess(v[0]);
         } else {
