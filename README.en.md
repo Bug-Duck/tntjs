@@ -1,5 +1,5 @@
 # TNT.js
-![输入图片说明](%E6%97%A0%E6%A0%87%E9%A2%98.png)
+![输入图片说明](TNT.js.logo.png)
 ### Indroduction
 TNT.js is a Javascript-based programming language. It's our goal to make it as simple as Python, and at the same time make it looks like a front-end programming language. The language avoid the cons of TypeScript that can't run directly on the browser. <br/>
 
