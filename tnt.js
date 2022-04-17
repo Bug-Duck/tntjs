@@ -30,7 +30,10 @@ let TNTSymbolTable = {
     print: function (x) {
         console.log(x);
     },
-    explorerType: TNTGetBrowserType()
+    explorerType: TNTGetBrowserType(),
+    ebyid: (id, iHTML) => {
+        document.getElementById(id).innerHTML = innerHTML;
+    }
 };
 
 // startSymbol and endSymbol are strings that determines the start symbol and the end symbol. For example,
@@ -67,17 +70,34 @@ function TNTValueProcess(reg) {
     const isVar = /[_A-z0-9]/;
     const isMathGex = /(.+ ?(\+|-|\*|\/)+ ?.+)+/;
     if (/.+\(.+\)/.test(reg)) { // Interpreting function content
-        const name = /[^\(.+\)]+/.exec(reg);
-        // console.log("YesFunction!");
-        if (typeof TNTSymbolTable[name[0]] == 'function') {
+        const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
+        // console.log(name);
+        // console.log(typeof TNTSymbolTable[name]);
+        if (typeof (TNTSymbolTable[name]) == 'function') {
+            let buffer = "";
+            // console.log(TNTSymbolTable[name]);
             // console.log("YesRegex!");
             // TODO: Javascript function implementation
-            const __parameter__ = /\(.+\)/.exec(reg);
-            console.log(__parameter__);
+            // console.log(reg);
+            let __parameter__ = /\(.+\)/.exec(reg);
+            // console.log(__parameter__);
             // const parameter = __parameter__.split(1,__parameter__.length-1);
             // // const parameter = /[^\(\)]/.exec(__parameter__)
+            // console.log(__parameter__[0]);
+            __parameter__ = __parameter__[0];
+            // __parameter__ = __parameter__.substr(1);
+            __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
+            // console.log(__parameter__);
             const parameters = TNTFunctionSplit(__parameter__);
-            console.log(parameters);
+            // console.log(parameters);
+            for (const i of parameters['agv']) {
+                buffer = buffer + i;
+                buffer = buffer + ',';
+            } for (i in parameters['functioncanvalue']) {
+                buffer = buffer + i + '=' + ',';
+            }
+            // console.log(buffer);
+            eval(`TNTSymbolTable.${name}(${buffer})`)
         }
     } else if (isNumber.test(reg)) {
         // Number literal processing
@@ -318,6 +338,6 @@ window.onload = () => {
         TNTValueTagProcessing();
         // console.log("Changed");
     }, 1000);
-    // console.log(TNTFunctionSplit("2,4,5,6,x=3"));
+    // console.log(TNTFunctionSplit("x,3"));
     // console.log(TNTValueProcess("print(5,15)"));
-};
+};     
