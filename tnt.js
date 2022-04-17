@@ -78,32 +78,20 @@ function TNTValueProcess(reg) {
     const isMathGex = /(.+ ?(\+|-|\*|\/)+ ?.+)+/;
     if (/.+\(.+\)/.test(reg)) { // Interpreting function content
         const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
-        // console.log(name);
-        // console.log(typeof TNTSymbolTable[name]);
         if (typeof (TNTSymbolTable[name]) === 'function') {
             let buffer = "";
-            // console.log(TNTSymbolTable[name]);
-            // console.log("YesRegex!");
             // TODO: Javascript function implementation
-            // console.log(reg);
             let __parameter__ = /\(.+\)/.exec(reg);
-            // console.log(__parameter__);
-            // const parameter = __parameter__.split(1,__parameter__.length-1);
-            // // const parameter = /[^\(\)]/.exec(__parameter__)
-            // console.log(__parameter__[0]);
             __parameter__ = __parameter__[0];
-            // __parameter__ = __parameter__.substr(1);
             __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
-            // console.log(__parameter__);
             const parameters = TNTFunctionSplit(__parameter__);
-            // console.log(parameters);
             for (const i of parameters['agv']) {
                 buffer = buffer + i;
                 buffer = buffer + ',';
-            } for (const i in parameters['functioncanvalue']) {
+            }
+            for (const i in parameters['functioncanvalue']) {
                 buffer = buffer + i + '=' + ',';
             }
-            // console.log(buffer);
             eval(`TNTSymbolTable.${name}(${buffer})`)
         }
     } else if (isNumber.test(reg)) {
@@ -127,9 +115,7 @@ function TNTValueProcess(reg) {
                 TNTGEX = TNTGEX + i;
             }
         } for (const i of TNTGEX) {
-            if (i == "+" || "-" || "*" || "/") {
-                // TNTGEXList.push(OneTNTV);
-                // TNTGEXList.push(i);
+            if (i === "+" || "-" || "*" || "/") {
                 buffer = buffer + String(TNTValueProcess(OneTNTV));
                 buffer = buffer + i;
                 OneTNTV = ""
@@ -137,8 +123,7 @@ function TNTValueProcess(reg) {
                 OneTNTV = OneTNTV + i;
             }
             return eval(buffer);
-            // } for (let i of TNTGEXList) {
-            //     // TODO: Math
+            // TODO: Math
         }
     }
 }
@@ -146,24 +131,15 @@ function TNTValueProcess(reg) {
 function TNTBoom(codeList, data = {}, isinclass = false) {
     let index = 0;
     let TNTSymbolTableOWN = data
-    // console.log(codeList);
     for (const code of codeList) {
-        // console.log(code);
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
-            // const nameAndValue = /[^ =]+/.exec(code);
-            // console.log(nameAndValue);
-            // const v = /[^ =]/.exec(code);
-            // const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
             const v = /[^= ]+/.exec(/= ?.+/.exec(code))
-            // console.log(v);
-            // console.log(name);
             if (/let /.test()) {
                 TNTSymbolTableOWN[name[0]] = v[0];
             } else {
                 TNTSymbolTable[name[0]] = v[0];
             }
-            // console.log(TNTSymbolTable);
             // Refresh the page.
             TNTValueTagProcessing();
         } else if (/(for|while|def) .+/.test(code)) {
@@ -175,9 +151,6 @@ function TNTBoom(codeList, data = {}, isinclass = false) {
                 }
             } else if (/def/.test(code)) {
                 const endindex = TNTMatchStartSymbol(code, "endef", codeList, index)
-                // TNTSymbolTable;
-                // let func = /[^ ]+/.exec(code)
-                // console.log(func);
             }
         } else {
             // console.log("oh");
@@ -341,8 +314,5 @@ window.onload = () => {
     setTimeout(() => {
         TNTSymbolTable["test"] = 114514;
         TNTValueTagProcessing();
-        // console.log("Changed");
     }, 1000);
-    // console.log(TNTFunctionSplit("x,3"));
-    // console.log(TNTValueProcess("print(5,15)"));
 };     
