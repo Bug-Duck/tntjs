@@ -30,7 +30,7 @@ TNT.js是一个基于Javascript的编程语言,目的是为了创造一个和Pyt
 2333
 You are using the: Chrome
 ```
-此时在v标签内的变量名会被渲染为它的值。
+在v标签内的变量名会被渲染为它的值。
 ### 官方文档
 bug-duck.github.io/tntjs
 
