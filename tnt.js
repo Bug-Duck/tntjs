@@ -97,7 +97,7 @@ function TNTBoom(codeList) {
             // const v = /[^ =]/.exec(code);
             // const v = /^(([A-z0-9])+ ?= ?)/.exec(code);
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
-            const v = /[^= ]+/.exec(/= ?.+/.exec(code))
+            const v = /[^= ]+/.exec(/= ?.+/.exec(code));
             console.log(v);
             console.log(name);
             TNTSymbolTable[name[0]] = v[0];
@@ -112,7 +112,7 @@ function TNTBoom(codeList) {
                     TNTBoom(codeList.split(index,endindex));
                 }
             } else if (/def/.test(code)) {
-                let func = /[^ ]+/.exec(code)
+                const func = /[^ ]+/.exec(code)
                 console.log(func);
             }
         }
