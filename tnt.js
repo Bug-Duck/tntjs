@@ -31,8 +31,8 @@ let TNTSymbolTable = {
         console.log(x);
     },
     explorerType: TNTGetBrowserType(),
-    ebyid: (id, iHTML) => {
-        document.getElementById(id).innerHTML = innerHTML;
+    ebyid: function(id,iHTML){
+        document.getElementById(id).innerHTML = innerHTML
     }
 };
 
