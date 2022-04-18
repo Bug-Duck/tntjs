@@ -5,6 +5,8 @@
 ![watch](https://img.shields.io/github/watchers/Bug-Duck/tntjs?color=blue&logo=github&style=flat-square)
 ![Star](https://img.shields.io/github/stars/Bug-Duck/tntjs?color=yellow&logo=github&style=flat-square)
 ![Fork](https://img.shields.io/github/forks/Bug-Duck/tntjs?color=green&logo=github&style=flat-square)
+[![star](https://gitee.com/BugDucker/tntjs/badge/star.svg?theme=dark)](https://gitee.com/BugDucker/tntjs/stargazers)
+[![star](https://gitee.com/BugDucker/tntjs/badge/star.svg?theme=dark)](https://gitee.com/BugDucker/tntjs/stargazers)
 ![BiliBili](https://img.shields.io/static/v1?label=bilibili&message=BugDuck开源团队&color=ff69b4&logo=bilibili)
 ### 介绍
 TNT.js是一个基于Javascript的编程语言,目的是为了创造一个和Python一样简单的,又不失前端特性的编程语言。TNT.js避免了TypeScript不能直接运行在浏览器上的缺点。<br/>
