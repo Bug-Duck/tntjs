@@ -1,5 +1,6 @@
 # TNT.js
 ![输入图片说明](TNT.js.logo.png)
+![GitHub](https://img.shields.io/github/license/Bug-Duck/tntjs)
 ### 介绍
 TNT.js是一个基于Javascript的编程语言,目的是为了创造一个和Python一样简单的,又不失前端特性的编程语言。TNT.js避免了TypeScript不能直接运行在浏览器上的缺点。<br/>
 
