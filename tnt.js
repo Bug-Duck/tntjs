@@ -2,7 +2,7 @@
  * BugDuck Organization
  * v0.1
  * File: tnt.js
- * Last Update Time: 04/08/2022
+ * Last Update Time: 04/18/2022
  * License: GPL-2.0
  * All right reserved.
  */
@@ -31,10 +31,10 @@ let TNTSymbolTable = {
         console.log(x);
     },
     explorerType: TNTGetBrowserType(),
-    ebyid: function(id,iHTML){
+    ebyid: function (id, iHTML) {
         document.getElementById(id).innerHTML = iHTML;
     },
-    sleep: function(x){
+    sleep: function (x) {
         return new Promise(resolve => {
             setTimeout(() => {
                 resolve();
@@ -80,11 +80,10 @@ function TNTValueProcess(reg) {
         const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
         if (typeof (TNTSymbolTable[name]) === 'function') {
             let buffer = "";
-            // TODO: Javascript function implementation
             let __parameter__ = /\(.+\)/.exec(reg);
             __parameter__ = __parameter__[0];
             __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
-            const parameters = TNTFunctionSplit(__parameter__);
+            const parameters = TNTFunctionSplit(__parameter__)
             for (const i of parameters['agv']) {
                 buffer = buffer + i;
                 buffer = buffer + ',';
@@ -93,6 +92,25 @@ function TNTValueProcess(reg) {
                 buffer = buffer + i + '=' + ',';
             }
             eval(`TNTSymbolTable.${name}(${buffer})`);
+        } else if (TNTSymbolTable[name].type === 'tntFunction') {
+            // TODO:TNT.js's Function's Run!
+            let __parameter__ = /\(.+\)/.exec(reg);
+            __parameter__ = __parameter__[0];
+            __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
+            const parameters = TNTFunctionSplit(__parameter__); //parameters是函数的参数
+            let par = {};
+            //获取默认参数与他的名字的对应的对象
+            TNTSymbolTable[name].parameter.forEach((ele, i) => {
+                par[ele] = parameters.agv[i];
+            });
+            for (const key in TNTSymbolTable[name].canparameter) {
+                par[key] = TNTSymbolTable[name].canparameter[key];
+            }
+            //合并可选参数 用户选择的参数的值覆盖可选参数的默认值
+            for (const key in TNTSymbolTable[name].canparameter) {
+                par[key] = parameters.functioncanvalue[key];
+            }
+            TNTBoom(TNTSymbolTable[name].code, data = par,)
         }
     } else if (isNumber.test(reg)) {
         // Number literal processing
@@ -152,6 +170,7 @@ function TNTBoom(codeList, data = {}, isinclass = false) {
                 }
             } else if (/def/.test(code)) {
                 const endindex = TNTMatchStartSymbol(code, "endef", codeList, index);
+                [1, 2, 3, 4, 5].split()
             }
         } else {
             TNTValueProcess(code);
@@ -160,7 +179,7 @@ function TNTBoom(codeList, data = {}, isinclass = false) {
     }
 }
 
-function TNTFunctionSplit(code) {
+function TNTFunctionSplit(code, original = false) {
     let ignoreNext = false;
     let stringIgnoreNext = false;
     const buffer = [];
@@ -207,12 +226,29 @@ function TNTFunctionSplit(code) {
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
             values.functioncanvalue[name[0]] = TNTValueProcess(v[0]);
         } else {
-            values.agv.push(TNTValueProcess(value));
+            if (original) {
+                values.agv.push(TNTValueProcess(value));
+            } else {
+                values.agv.push(value)
+            }
         }
     }
     return values;
 }
 
+// This function is very important to def a TNT.js's function!
+function def(func_data, In_data) {
+    const name = /[^\(.+\)]+/.exec(func_data)[0].replace(/\s*/g, "");
+    let __parameter__ = /\(.+\)/.exec(func_data);
+    __parameter__ = __parameter__[0];
+    __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
+    TNTSymbolTable[name] = {
+        type: "tntFunction",
+        parameter: TNTFunctionSplit(__parameter__, original = true),
+        canparameter: TNTFunctionSplit(__parameter__).functioncanvalue,
+        code: In_data
+    }
+}
 
 // This function splits code with ";"
 function TNTCodeSplit(code) {
@@ -315,4 +351,4 @@ window.onload = () => {
         TNTSymbolTable["test"] = 114514;
         TNTValueTagProcessing();
     }, 1000);
-};     
+}
