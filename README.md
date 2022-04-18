@@ -6,7 +6,7 @@
 ![Star](https://img.shields.io/github/stars/Bug-Duck/tntjs?color=yellow&logo=github&style=flat-square)
 ![Fork](https://img.shields.io/github/forks/Bug-Duck/tntjs?color=green&logo=github&style=flat-square)
 [![star](https://gitee.com/BugDucker/tntjs/badge/star.svg?theme=dark)](https://gitee.com/BugDucker/tntjs/stargazers)
-[![star](https://gitee.com/BugDucker/tntjs/badge/star.svg?theme=dark)](https://gitee.com/BugDucker/tntjs/stargazers)
+[![fork](https://gitee.com/BugDucker/tntjs/badge/fork.svg?theme=dark)](https://gitee.com/BugDucker/tntjs/members)
 [![website](https://img.shields.io/badge/website-bugduck.cn-yellowgreen)](https://www.bugduck.cn)
 ![BiliBili](https://img.shields.io/static/v1?label=bilibili&message=BugDuck开源团队&color=ff69b4&logo=bilibili)
 ### 介绍
