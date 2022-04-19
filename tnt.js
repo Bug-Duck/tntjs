@@ -1,11 +1,12 @@
 /* 
  * BugDuck Organization
- * v0.1
+ * v0.0.3
  * File: tnt.js
  * Last Update Time: 04/18/2022
  * License: GPL-2.0
  * All right reserved.
  */
+import TNTSymbolTable from 'tnthouse.js'
 
 const TNT = (() => {
     return {
@@ -23,25 +24,6 @@ const TNT = (() => {
         }
     };
 })();
-
-let TNTSymbolTable = {
-    PI: 3.14159265,
-    test: 2333,
-    print: function (x) {
-        console.log(x);
-    },
-    explorerType: TNTGetBrowserType(),
-    ebyid: function (id, iHTML) {
-        document.getElementById(id).innerHTML = iHTML;
-    },
-    sleep: function (x) {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve();
-            }, x);
-        });
-    }
-};
 
 // startSymbol and endSymbol are strings that determines the start symbol and the end symbol. For example,
 // if you want to match parentheses "()", then the start symbol will be "(" and the end symbol will be ")".
@@ -76,6 +58,7 @@ function TNTValueProcess(reg) {
     const isBool = /(true|false)/;
     const isVar = /[_A-z0-9]/;
     const isMathGex = /(.+ ?(\+|-|\*|\/)+ ?.+)+/;
+    const isXML = /<.+>/;
     if (/.+\(.+\)/.test(reg)) { // Interpreting function content
         const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
         if (typeof (TNTSymbolTable[name]) === 'function') {
@@ -144,12 +127,14 @@ function TNTValueProcess(reg) {
             return eval(buffer);
             // TODO: Math
         }
+    } else if (isXML.test()) {
+
     }
 }
 
-function TNTBoom(codeList, data = {}, isinclass = false) {
+function TNTBoom(codeList, data = {}/*传入数据*/, isinclass = false) {
     let index = 0;
-    const TNTSymbolTableOWN = data;
+    const TNTSymbolTableOWN = data; //这个是内部变量的数据空间
     for (const code of codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
@@ -161,8 +146,11 @@ function TNTBoom(codeList, data = {}, isinclass = false) {
             }
             // Refresh the page.
             TNTValueTagProcessing();
-        } else if (/(for|while|def) .+/.test(code)) {
-            if (/while/.test(code)) {
+        } else if (/(for|while|def|render) .+/.test(code)) {
+            if (/render/.test()) {
+                let html = code.replace(/render /,'');
+                render(html,TNTSymbolTableOWN.__slefdom__)
+            } else if (/while/.test(code)) {
                 const YesorNo = TNTValueProcess((/([^while ]).+/.exec(code))[0]);
                 if (YesorNo) {
                     const endindex = TNTMatchStartSymbol(code, "endwhile", codeList, index);
@@ -170,13 +158,16 @@ function TNTBoom(codeList, data = {}, isinclass = false) {
                 }
             } else if (/def/.test(code)) {
                 const endindex = TNTMatchStartSymbol(code, "endef", codeList, index);
-                [1, 2, 3, 4, 5].split()
+                // [1, 2, 3, 4, 5].split()
+            } else if (/for/.test()) {
+                //TODO: for over and over again until last value
             }
         } else {
             TNTValueProcess(code);
         }
         index = index + 1;
     }
+    return TNTSymbolTableOWN;
 }
 
 function TNTFunctionSplit(code, original = false) {
@@ -250,6 +241,12 @@ function def(func_data, In_data) {
     }
 }
 
+function render(HTML, DOM) {
+    DOM.innerHTML = HTML;
+    TNTValueTagProcessing();
+    TNTTagProcessing();
+}
+
 // This function splits code with ";"
 function TNTCodeSplit(code) {
     let ignoreNext = false;
@@ -321,7 +318,8 @@ function TNTTagProcessing() {
     const tntCodes = document.getElementsByTagName("tnt");
     for (const tntCode of tntCodes) {
         tntCode.style.display = "none";
-        TNTBoom(TNTCodeSplit(tntCode.innerHTML.toString()));
+        //以内部变量的方式传入当前标签的DOM!
+        TNTBoom(TNTCodeSplit(tntCode.innerHTML.toString()), data = { __slefdom__: tntCode, });
     }
 }
 
