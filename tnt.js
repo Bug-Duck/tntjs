@@ -50,6 +50,12 @@ function JsTypeToTNTType(TypeName) {
             break;
     }
 }
+function newData(type, name, value, datahouse) {
+    datahouse[name] = {
+        type: type,
+        value: value,
+    };
+}
 window.onload = () => {
     TNTValueTagProcessing();
     TNTTagProcessing();
@@ -83,7 +89,7 @@ function TNTValueProcess(reg) {
     const isXML = /<.+>/;
     if (/.+\(.+\)/.test(reg)) {
         const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
-        if (typeof (TNTSymbolTable[name]) === 'function') {
+        if (TNTSymbolTable[name].type === 'function') {
             let buffer = "";
             let __parameters__ = /\(.+\)/.exec(reg);
             let __parameter__ = __parameters__[0];
@@ -96,14 +102,14 @@ function TNTValueProcess(reg) {
             for (const i in parameters['functioncanvalue']) {
                 buffer = buffer + i + '=' + ',';
             }
-            const results = eval(`TNTSymbolTable.${name}(${buffer})`);
+            const results = eval(`TNTSymbolTable.${name}.value(${buffer})`);
             const result = {
                 type: JsTypeToTNTType(typeof (results)),
                 value: results,
             };
             return result;
         }
-        else if (TNTSymbolTable[name].type === 'tntFunction') {
+        else if (TNTSymbolTable[name].type === 'tnt') {
             let __parameters__ = /\(.+\)/.exec(reg);
             let __parameter__ = __parameters__[0];
             __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
@@ -175,11 +181,12 @@ function TNTBoom(codeList, data = {}, isinclass = false) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) {
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(' '));
             const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(' '));
+            const process = TNTValueProcess(v[0]);
             if (/let /.test(code)) {
-                TNTSymbolTableOWN[name[0]] = v[0];
+                newData(process.type, name[0], process.value, TNTSymbolTableOWN);
             }
             else {
-                TNTSymbolTable[name[0]] = v[0];
+                newData(process.type, name[0], process.value, TNTSymbolTable);
             }
             TNTValueTagProcessing();
         }
@@ -192,7 +199,7 @@ function TNTBoom(codeList, data = {}, isinclass = false) {
                 const YesorNo = TNTValueProcess((/([^while ]).+/.exec(code))[0]);
                 if (YesorNo) {
                     const endindex = TNTMatchStartSymbol(code, "endwhile", codeList, index);
-                    TNTBoom(codeList.split(index, endindex));
+                    TNTBoom(codeList.splice(index, endindex));
                 }
             }
             else if (/def/.test(code)) {
@@ -270,7 +277,7 @@ function def(func_data, In_data) {
     let __parameter__ = __parameters__[0];
     __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
     TNTSymbolTable[name] = {
-        type: "tntFunction",
+        type: "tnt",
         parameter: TNTFunctionSplit(__parameter__, true),
         canparameter: TNTFunctionSplit(__parameter__).functioncanvalue,
         code: In_data
