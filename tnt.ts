@@ -19,7 +19,7 @@ let TNTSymbolTable = {
     sleep: function (x) {
         return new Promise(resolve => {
             setTimeout(() => {
-                resolve();
+                resolve(null);
             }, x);
         });
     }
@@ -80,8 +80,8 @@ function TNTValueProcess(reg) {
         const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
         if (typeof (TNTSymbolTable[name]) === 'function') {
             let buffer = "";
-            let __parameter__ = /\(.+\)/.exec(reg);
-            __parameter__ = __parameter__[0];
+            let __parameters__ = /\(.+\)/.exec(reg);
+            let __parameter__ = __parameters__[0];
             __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
             const parameters = TNTFunctionSplit(__parameter__)
             for (const i of parameters['agv']) {
@@ -94,23 +94,24 @@ function TNTValueProcess(reg) {
             eval(`TNTSymbolTable.${name}(${buffer})`);
         } else if (TNTSymbolTable[name].type === 'tntFunction') {
             // TODO:TNT.js's Function's Run!
-            let __parameter__ = /\(.+\)/.exec(reg);
-            __parameter__ = __parameter__[0];
+            let __parameters__ = /\(.+\)/.exec(reg);
+            let __parameter__ = __parameters__[0];
             __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
-            const parameters = TNTFunctionSplit(__parameter__); //parameters是函数的参数
+            // Parameters is the arguments of the function.
+            const parameters = TNTFunctionSplit(__parameter__); 
             let par = {};
-            //获取默认参数与他的名字的对应的对象
+            // Get the default parameters and the default values
             TNTSymbolTable[name].parameter.forEach((ele, i) => {
                 par[ele] = parameters.agv[i];
             });
             for (const key in TNTSymbolTable[name].canparameter) {
                 par[key] = TNTSymbolTable[name].canparameter[key];
             }
-            //合并可选参数 用户选择的参数的值覆盖可选参数的默认值
+            // Merge optional parameters
             for (const key in TNTSymbolTable[name].canparameter) {
                 par[key] = parameters.functioncanvalue[key];
             }
-            TNTBoom(TNTSymbolTable[name].code, data = par,)
+            TNTBoom(TNTSymbolTable[name].code, par)
         }
     } else if (isNumber.test(reg)) {
         // Number literal processing
@@ -144,19 +145,19 @@ function TNTValueProcess(reg) {
             return eval(buffer);
             // TODO: Math
         }
-    } else if (isXML.test()) {
+    } else if (isXML.test(reg)) {
 
     }
 }
 
-function TNTBoom(codeList, data = {}/*传入数据*/, isinclass = false) {
+function TNTBoom(codeList, data: any = {}, isinclass = false) {
     let index = 0;
-    const TNTSymbolTableOWN = data; //这个是内部变量的数据空间
+    const TNTSymbolTableOWN = data; // Inner data space
     for (const code of codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
-            const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
-            const v = /[^= ]+/.exec(/= ?.+/.exec(code));
-            if (/let /.test()) {
+            const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(' '));
+            const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(' '));
+            if (/let /.test(code)) {
                 TNTSymbolTableOWN[name[0]] = v[0];
             } else {
                 TNTSymbolTable[name[0]] = v[0];
@@ -164,7 +165,7 @@ function TNTBoom(codeList, data = {}/*传入数据*/, isinclass = false) {
             // Refresh the page.
             TNTValueTagProcessing();
         } else if (/(for|while|def|render) .+/.test(code)) {
-            if (/render/.test()) {
+            if (/render/.test(code)) {
                 let html = code.replace(/render /,'');
                 render(html,TNTSymbolTableOWN.__slefdom__)
             } else if (/while/.test(code)) {
@@ -176,7 +177,7 @@ function TNTBoom(codeList, data = {}/*传入数据*/, isinclass = false) {
             } else if (/def/.test(code)) {
                 const endindex = TNTMatchStartSymbol(code, "endef", codeList, index);
                 // [1, 2, 3, 4, 5].split()
-            } else if (/for/.test()) {
+            } else if (/for/.test(code)) {
                 //TODO: for over and over again until last value
             }
         } else {
@@ -230,8 +231,8 @@ function TNTFunctionSplit(code, original = false) {
     const values = { agv: [], functioncanvalue: {} };
     for (const value of buffer) {
         if (/.+ ?= ?.+/.test(value)) {
-            const v = /[^= ]+/.exec(/= ?.+/.exec(code));
-            const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code));
+            const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(' '));
+            const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(' '));
             values.functioncanvalue[name[0]] = TNTValueProcess(v[0]);
         } else {
             if (original) {
@@ -247,12 +248,12 @@ function TNTFunctionSplit(code, original = false) {
 // This function is very important to def a TNT.js's function!
 function def(func_data, In_data) {
     const name = /[^\(.+\)]+/.exec(func_data)[0].replace(/\s*/g, "");
-    let __parameter__ = /\(.+\)/.exec(func_data);
-    __parameter__ = __parameter__[0];
+    let __parameters__ = /\(.+\)/.exec(func_data);
+    let __parameter__ = __parameters__[0];
     __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
     TNTSymbolTable[name] = {
         type: "tntFunction",
-        parameter: TNTFunctionSplit(__parameter__, original = true),
+        parameter: TNTFunctionSplit(__parameter__, true),
         canparameter: TNTFunctionSplit(__parameter__).functioncanvalue,
         code: In_data
     }
@@ -334,9 +335,9 @@ function TNTValueTagValueRenderer(tagValue) {
 function TNTTagProcessing() {
     const tntCodes = document.getElementsByTagName("tnt");
     for (const tntCode of tntCodes) {
-        tntCode.style.display = "none";
+        (tntCode as HTMLElement).style.display = "none";
         //以内部变量的方式传入当前标签的DOM!
-        TNTBoom(TNTCodeSplit(tntCode.innerHTML.toString()), data = { __slefdom__: tntCode, });
+        TNTBoom(TNTCodeSplit(tntCode.innerHTML.toString()), { __slefdom__: tntCode, });
     }
 }
 
