@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "None",
+        "removeComments": true,
+        "outFile": "tnt.js",
+        "baseUrl": "./",
+        "sourceMap": true,
+        "declaration": true,
+        "target": "ES6"
+    },
+    "include": [
+        "./**/*.ts",
+    ],
+    "exclude": [
+        "./tnt.d.ts"
+    ]
+}
