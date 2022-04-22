@@ -1,7 +1,7 @@
 /* 
  * BugDuck Organization
  * v0.0.3
- * File: tnt.js
+ * File: tnt.ts
  * Last Update Time: 04/18/2022
  * License: GPL-2.0
  * All right reserved.
