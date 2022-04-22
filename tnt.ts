@@ -56,14 +56,19 @@ function TNTValueProcess(reg) {
             for (const i in parameters['functioncanvalue']) {
                 buffer = buffer + i + '=' + ',';
             }
-            eval(`TNTSymbolTable.${name}(${buffer})`);
+            const results = eval(`TNTSymbolTable.${name}(${buffer})`);
+            const result = {
+                type: JsTypeToTNTType(typeof (results)),
+                value: results,
+            };
+            return result;
         } else if (TNTSymbolTable[name].type === 'tntFunction') {
             // TODO:TNT.js's Function's Run!
             let __parameters__ = /\(.+\)/.exec(reg);
             let __parameter__ = __parameters__[0];
             __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
             // Parameters is the arguments of the function.
-            const parameters = TNTFunctionSplit(__parameter__); 
+            const parameters = TNTFunctionSplit(__parameter__);
             let par = {};
             // Get the default parameters and the default values
             TNTSymbolTable[name].parameter.forEach((ele, i) => {
@@ -80,15 +85,26 @@ function TNTValueProcess(reg) {
         }
     } else if (isNumber.test(reg)) {
         // Number literal processing
-        return Number(reg);
+        return {
+            type: 'number',
+            value: Number(reg)
+        };
     } else if (isString.test(reg)) {
         // TODO: Implement the string literal processing
     } else if (isBool.test(reg)) {
         // Boolean literal processing
-        return Boolean(reg);
+        return {
+            type: 'bool',
+            value: Boolean(reg),
+        };
     } else if (isVar.test(reg)) {
         // Variable processing
-        return TNTSymbolTable[reg];
+        const results = TNTSymbolTable[reg].value;
+        const result = {
+            type: JsTypeToTNTType(typeof (results)),
+            value: results,
+        };
+        return result;
     } else if (isMathGex.test(reg)) {
         let TNTGEX = '';
         const TNTGEXList = [];
@@ -131,8 +147,8 @@ function TNTBoom(codeList, data: any = {}, isinclass = false) {
             TNTValueTagProcessing();
         } else if (/(for|while|def|render) .+/.test(code)) {
             if (/render/.test(code)) {
-                let html = code.replace(/render /,'');
-                render(html,TNTSymbolTableOWN.__slefdom__)
+                let html = code.replace(/render /, '');
+                render(html, TNTSymbolTableOWN.__slefdom__)
             } else if (/while/.test(code)) {
                 const YesorNo = TNTValueProcess((/([^while ]).+/.exec(code))[0]);
                 if (YesorNo) {
