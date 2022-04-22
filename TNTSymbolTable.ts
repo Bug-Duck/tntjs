@@ -1,7 +1,9 @@
-
 let TNTSymbolTable = {
     PI: 3.14159265,
-    test: 2333,
+    test: {
+        type: 'number',
+        value: 2333
+    },
     print: function (x) {
         console.log(x);
     },
