@@ -16,7 +16,10 @@ var TNT;
 })(TNT || (TNT = {}));
 let TNTSymbolTable = {
     PI: 3.14159265,
-    test: 2333,
+    test: {
+        type: 'number',
+        value: 2333
+    },
     print: function (x) {
         console.log(x);
     },
@@ -32,6 +35,21 @@ let TNTSymbolTable = {
         });
     }
 };
+function JsTypeToTNTType(TypeName) {
+    switch (TypeName) {
+        case "String":
+            return 'string';
+            break;
+        case "Number":
+            return 'number';
+            break;
+        case "Boolean":
+            return 'bool';
+            break;
+        default:
+            break;
+    }
+}
 window.onload = () => {
     TNTValueTagProcessing();
     TNTTagProcessing();
@@ -78,7 +96,12 @@ function TNTValueProcess(reg) {
             for (const i in parameters['functioncanvalue']) {
                 buffer = buffer + i + '=' + ',';
             }
-            eval(`TNTSymbolTable.${name}(${buffer})`);
+            const results = eval(`TNTSymbolTable.${name}(${buffer})`);
+            const result = {
+                type: JsTypeToTNTType(typeof (results)),
+                value: results,
+            };
+            return result;
         }
         else if (TNTSymbolTable[name].type === 'tntFunction') {
             let __parameters__ = /\(.+\)/.exec(reg);
@@ -99,15 +122,26 @@ function TNTValueProcess(reg) {
         }
     }
     else if (isNumber.test(reg)) {
-        return Number(reg);
+        return {
+            type: 'number',
+            value: Number(reg)
+        };
     }
     else if (isString.test(reg)) {
     }
     else if (isBool.test(reg)) {
-        return Boolean(reg);
+        return {
+            type: 'bool',
+            value: Boolean(reg),
+        };
     }
     else if (isVar.test(reg)) {
-        return TNTSymbolTable[reg];
+        const results = TNTSymbolTable[reg].value;
+        const result = {
+            type: JsTypeToTNTType(typeof (results)),
+            value: results,
+        };
+        return result;
     }
     else if (isMathGex.test(reg)) {
         let TNTGEX = '';

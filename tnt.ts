@@ -33,7 +33,7 @@ function TNTMatchStartSymbol(startSymbol, endSymbol, data, startIndex) {
 }
 
 // This function evaluates the value of the expression.
-function TNTValueProcess(reg) {
+function TNTValueProcess(reg: string) {
     // Regular Expression
     const isString = /(\"|\').+(\"|\')/;
     const isNumber = /[0-9]+/;
@@ -43,7 +43,8 @@ function TNTValueProcess(reg) {
     const isXML = /<.+>/;
     if (/.+\(.+\)/.test(reg)) { // Interpreting function content
         const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
-        if (typeof (TNTSymbolTable[name]) === 'function') {
+        // TODO: Script类型type值
+        if (TNTSymbolTable[name].type === 'function') {
             let buffer = "";
             let __parameters__ = /\(.+\)/.exec(reg);
             let __parameter__ = __parameters__[0];
@@ -56,13 +57,16 @@ function TNTValueProcess(reg) {
             for (const i in parameters['functioncanvalue']) {
                 buffer = buffer + i + '=' + ',';
             }
-            const results = eval(`TNTSymbolTable.${name}(${buffer})`);
-            const result = {
+            const results = eval(`TNTSymbolTable.${name}.value(${buffer})`);
+            const result: {
+                type: String,
+                value: any,
+            } = {
                 type: JsTypeToTNTType(typeof (results)),
                 value: results,
             };
             return result;
-        } else if (TNTSymbolTable[name].type === 'tntFunction') {
+        } else if (TNTSymbolTable[name].type === 'tnt') {
             // TODO:TNT.js's Function's Run!
             let __parameters__ = /\(.+\)/.exec(reg);
             let __parameter__ = __parameters__[0];
@@ -100,7 +104,10 @@ function TNTValueProcess(reg) {
     } else if (isVar.test(reg)) {
         // Variable processing
         const results = TNTSymbolTable[reg].value;
-        const result = {
+        const result: {
+            type: String,
+            value: any,
+        } = {
             type: JsTypeToTNTType(typeof (results)),
             value: results,
         };
@@ -131,17 +138,28 @@ function TNTValueProcess(reg) {
     }
 }
 
-function TNTBoom(codeList, data: any = {}, isinclass = false) {
+function TNTBoom(codeList: string[], data: any = {}, isinclass: boolean = false) {
     let index = 0;
     const TNTSymbolTableOWN = data; // Inner data space
     for (const code of codeList) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(' '));
             const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(' '));
+            const process = TNTValueProcess(v[0]);
             if (/let /.test(code)) {
-                TNTSymbolTableOWN[name[0]] = v[0];
+                newData(
+                    process.type,
+                    name[0],
+                    process.value,
+                    TNTSymbolTableOWN,
+                );
             } else {
-                TNTSymbolTable[name[0]] = v[0];
+                newData(
+                    process.type,
+                    name[0],
+                    process.value,
+                    TNTSymbolTable,
+                );
             }
             // Refresh the page.
             TNTValueTagProcessing();
@@ -153,7 +171,7 @@ function TNTBoom(codeList, data: any = {}, isinclass = false) {
                 const YesorNo = TNTValueProcess((/([^while ]).+/.exec(code))[0]);
                 if (YesorNo) {
                     const endindex = TNTMatchStartSymbol(code, "endwhile", codeList, index);
-                    TNTBoom(codeList.split(index, endindex));
+                    TNTBoom(codeList.splice(index, endindex));
                 }
             } else if (/def/.test(code)) {
                 const endindex = TNTMatchStartSymbol(code, "endef", codeList, index);
@@ -169,7 +187,7 @@ function TNTBoom(codeList, data: any = {}, isinclass = false) {
     return TNTSymbolTableOWN;
 }
 
-function TNTFunctionSplit(code, original = false) {
+function TNTFunctionSplit(code: string, original: boolean = false) {
     let ignoreNext = false;
     let stringIgnoreNext = false;
     const buffer = [];
@@ -227,27 +245,27 @@ function TNTFunctionSplit(code, original = false) {
 }
 
 // This function is very important to def a TNT.js's function!
-function def(func_data, In_data) {
+function def(func_data: string, In_data: string[]) {
     const name = /[^\(.+\)]+/.exec(func_data)[0].replace(/\s*/g, "");
     let __parameters__ = /\(.+\)/.exec(func_data);
     let __parameter__ = __parameters__[0];
     __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
     TNTSymbolTable[name] = {
-        type: "tntFunction",
+        type: "tnt",
         parameter: TNTFunctionSplit(__parameter__, true),
         canparameter: TNTFunctionSplit(__parameter__).functioncanvalue,
         code: In_data
     }
 }
 
-function render(HTML, DOM) {
+function render(HTML: string, DOM) {
     DOM.innerHTML = HTML;
     TNTValueTagProcessing();
     TNTTagProcessing();
 }
 
 // This function splits code with ";"
-function TNTCodeSplit(code) {
+function TNTCodeSplit(code: string) {
     let ignoreNext = false;
     let stringIgnoreNext = false;
     const buffer = [];

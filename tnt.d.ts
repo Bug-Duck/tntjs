@@ -3,12 +3,16 @@ declare namespace TNT {
 }
 declare let TNTSymbolTable: {
     PI: number;
-    test: number;
+    test: {
+        type: string;
+        value: number;
+    };
     print: (x: any) => void;
     explorerType: string;
     ebyid: (id: any, iHTML: any) => void;
     sleep: (x: any) => Promise<unknown>;
 };
+declare function JsTypeToTNTType(TypeName: any): "string" | "number" | "bool";
 declare function TNTMatchStartSymbol(startSymbol: any, endSymbol: any, data: any, startIndex: any): any;
 declare function TNTValueProcess(reg: any): any;
 declare function TNTBoom(codeList: any, data?: any, isinclass?: boolean): any;
