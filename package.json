@@ -8,10 +8,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://e.coding.net/bugducker/tntjs/tntjs.git"
+    "url": "https://github.com/Bug-Duck/tntjs.git"
   },
-  "author": "27Onion, Bugduck",
-  "license": "GPL-2.0",
+  "author": "BugDuck, 27Onion, Acbox",
+  "license": "MIT",
   "dependencies": {
     "typescript": "^4.6.3"
   },
