@@ -35,3 +35,17 @@ function JsTypeToTNTType(TypeName) {
             break;
     }
 }
+
+function newData(
+    type: (
+        'string' | 'number' | 'tnt' | 'boolean' | 'function'
+),
+    name: string,
+    value: any,
+    datahouse: {},
+) {
+    datahouse[name] = {
+        type: type,
+        value: value,
+    }
+}
