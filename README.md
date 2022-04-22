@@ -1,5 +1,5 @@
 # TNT.js
-![输入图片说明](TNT.js.logo.length.png)
+![输入图片说明](tnt.js.logo.length.png)
 ![GitHub](https://img.shields.io/github/license/Bug-Duck/tntjs)
 ![version](https://img.shields.io/badge/version-0.0.3-green)
 ![watch](https://img.shields.io/github/watchers/Bug-Duck/tntjs?color=blue&logo=github&style=flat-square)
