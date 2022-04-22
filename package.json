@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "TNT.js is a Javascript-based programming language. It's our goal to make it as simple as Python, and at the same time make it looks like a front-end programming language. The language avoid the cons of TypeScript that can't run directly on the browser.",
   "scripts": {
-    "build": "javascript-obfuscator tnt.js --output tnt.min.js --string-array-encoding 'rc4'"
+    "build": "tsc tnt.ts --target es6 && javascript-obfuscator tnt.js --output tnt.min.js --string-array-encoding 'rc4' && rm tnt.js",
+    "develop": "tsc tnt.ts --target es6 --watch"
   },
   "repository": {
     "type": "git",
@@ -12,7 +13,7 @@
   "author": "27Onion, Bugduck",
   "license": "GPL-2.0",
   "dependencies": {
-    "tsc": "^2.0.4"
+    "typescript": "^4.6.3"
   },
   "devDependencies": {
     "javascript-obfuscator": "^4.0.0"
