@@ -19,3 +19,19 @@ let TNTSymbolTable = {
         });
     }
 };
+
+function JsTypeToTNTType(TypeName) {
+    switch (TypeName) {
+        case "String":
+            return 'string';
+            break;
+        case "Number":
+            return 'number';
+            break;
+        case "Boolean":
+            return 'bool';
+            break;
+        default:
+            break;
+    }
+}
