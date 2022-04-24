@@ -1,0 +1,17 @@
+"filename", "language", "JSON with Comments", "TypeScript", "JavaScript", "Markdown", "JSON", "HTML", "comment", "blank", "total"
+"c:\Users\Administrator\Desktop\tntjs\README.en.md", "Markdown", 0, 0, 0, 37, 0, 0, 0, 3, 40
+"c:\Users\Administrator\Desktop\tntjs\README.jp.md", "Markdown", 0, 0, 0, 37, 0, 0, 0, 6, 43
+"c:\Users\Administrator\Desktop\tntjs\README.md", "Markdown", 0, 0, 0, 53, 0, 0, 0, 5, 58
+"c:\Users\Administrator\Desktop\tntjs\TNTGlobal.ts", "TypeScript", 0, 13, 0, 0, 0, 0, 1, 0, 14
+"c:\Users\Administrator\Desktop\tntjs\TNTSymbolTable.ts", "TypeScript", 0, 50, 0, 0, 0, 0, 0, 3, 53
+"c:\Users\Administrator\Desktop\tntjs\index.html", "HTML", 0, 0, 0, 0, 0, 19, 0, 0, 19
+"c:\Users\Administrator\Desktop\tntjs\package-lock.json", "JSON", 0, 0, 0, 0, 2086, 0, 0, 1, 2087
+"c:\Users\Administrator\Desktop\tntjs\package.json", "JSON", 0, 0, 0, 0, 22, 0, 0, 1, 23
+"c:\Users\Administrator\Desktop\tntjs\setup.ts", "TypeScript", 0, 12, 0, 0, 0, 0, 0, 0, 12
+"c:\Users\Administrator\Desktop\tntjs\test\own_value.js", "JavaScript", 0, 0, 8, 0, 0, 0, 0, 0, 8
+"c:\Users\Administrator\Desktop\tntjs\test\var.js", "JavaScript", 0, 0, 177, 0, 0, 0, 18, 7, 202
+"c:\Users\Administrator\Desktop\tntjs\tnt.d.ts", "TypeScript", 0, 21, 0, 0, 0, 0, 0, 1, 22
+"c:\Users\Administrator\Desktop\tntjs\tnt.js", "JavaScript", 0, 0, 393, 0, 0, 0, 1, 0, 394
+"c:\Users\Administrator\Desktop\tntjs\tnt.ts", "TypeScript", 0, 311, 0, 0, 0, 0, 47, 15, 373
+"c:\Users\Administrator\Desktop\tntjs\tsconfig.json", "JSON with Comments", 17, 0, 0, 0, 0, 0, 0, 0, 17
+"Total", "-", 17, 407, 578, 127, 2108, 19, 67, 42, 3365

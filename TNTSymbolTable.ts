@@ -13,7 +13,13 @@ namespace TNT {
             value: function (x) {
                 console.log(x);
             },
-        } as TNTData
+        } as TNTData,
+        tojs: {
+            type: 'function',
+            value: function (x) {
+                eval(x);
+            }
+        } as TNTData,
     };
 
     export function JsTypeToTNTType(TypeName) {
