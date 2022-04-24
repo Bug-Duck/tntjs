@@ -1,8 +1,8 @@
 window.onload = () => {
-    TNTValueTagProcessing();
-    TNTTagProcessing();
+    TNT.TNTValueTagProcessing();
+    TNT.TNTTagProcessing();
     setTimeout(() => {
-        TNTSymbolTable["test"] = 114514;
-        TNTValueTagProcessing();
+        TNT.TNTSymbolTable["test"].value = 114514;
+        TNT.TNTValueTagProcessing();
     }, 1000);
 }
