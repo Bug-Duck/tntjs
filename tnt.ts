@@ -172,8 +172,7 @@ namespace TNT {
                         TNTBoom(codeList.splice(index, endindex));
                     }
                 } else if (/def/.test(code)) {
-                    const endindex = TNTMatchStartSymbol(code, "endef", codeList, index);
-                    // [1, 2, 3, 4, 5].split()
+                    // TODO: def a function
                 } else if (/for/.test(code)) {
                     //TODO: for over and over again until last value
                 }
