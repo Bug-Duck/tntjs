@@ -3,21 +3,21 @@ namespace TNT {
         PI: {
             type: 'number',
             value: 3.14159265,
-        },
+        } as TNTData,
         test: {
             type: 'number',
             value: 2333
-        },
+        } as TNTData,
         print: {
             type: 'function',
             value: function (x) {
                 console.log(x);
             },
-        },
-        // explorerType: {
-        //     type: 'string',
-        //     value: TNTGetBrowserType(),
-        // },
+        } as TNTData,
+        explorerType: {
+            type: 'string',
+            value: TNTGetBrowserType(),
+        } as TNTData,
     };
 
     export function JsTypeToTNTType(TypeName) {
@@ -48,5 +48,9 @@ namespace TNT {
             type: type,
             value: value,
         }
+    }
+    export interface TNTData {
+        type: string;
+        value: any;
     }
 }

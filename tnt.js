@@ -31,6 +31,10 @@ var TNT;
                 console.log(x);
             },
         },
+        explorerType: {
+            type: 'string',
+            value: TNT.TNTGetBrowserType(),
+        },
     };
     function JsTypeToTNTType(TypeName) {
         switch (TypeName) {
@@ -192,7 +196,7 @@ var TNT;
             else if (/(for|while|def|render) .+/.test(code)) {
                 if (/render/.test(code)) {
                     let html = code.replace(/render /, '');
-                    render(html, TNTSymbolTableOWN.__slefdom__);
+                    TNTRenderDOM(html, TNTSymbolTableOWN.__slefdom__);
                 }
                 else if (/while/.test(code)) {
                     const YesorNo = TNTValueProcess((/([^while ]).+/.exec(code))[0]);
@@ -270,7 +274,7 @@ var TNT;
         }
         return values;
     }
-    function def(func_data, In_data) {
+    function TNTDefineFunction(func_data, In_data) {
         const name = /[^\(.+\)]+/.exec(func_data)[0].replace(/\s*/g, "");
         let __parameters__ = /\(.+\)/.exec(func_data);
         let __parameter__ = __parameters__[0];
@@ -282,7 +286,7 @@ var TNT;
             code: In_data
         };
     }
-    function render(HTML, DOM) {
+    function TNTRenderDOM(HTML, DOM) {
         DOM.innerHTML = HTML;
         TNTValueTagProcessing();
         TNTTagProcessing();
@@ -345,6 +349,9 @@ var TNT;
     }
     TNT.TNTValueTagProcessing = TNTValueTagProcessing;
     function TNTValueTagValueRenderer(tagValue) {
+        if (TNT.TNTSymbolTable[tagValue] === undefined) {
+            throw new Error(`Undefined TNT variable: ${tagValue.trim()}`);
+        }
         return TNT.TNTSymbolTable[tagValue.trim()].value;
     }
     function TNTTagProcessing() {

@@ -3,21 +3,17 @@ declare namespace TNT {
 }
 declare namespace TNT {
     let TNTSymbolTable: {
-        PI: {
-            type: string;
-            value: number;
-        };
-        test: {
-            type: string;
-            value: number;
-        };
-        print: {
-            type: string;
-            value: (x: any) => void;
-        };
+        PI: TNTData;
+        test: TNTData;
+        print: TNTData;
+        explorerType: TNTData;
     };
     function JsTypeToTNTType(TypeName: any): "string" | "number" | "bool";
     function newData(type: ('string' | 'number' | 'tnt' | 'boolean' | 'function'), name: string, value: any, datahouse: {}): void;
+    interface TNTData {
+        type: string;
+        value: any;
+    }
 }
 declare namespace TNT {
     function TNTValueTagProcessing(): void;
