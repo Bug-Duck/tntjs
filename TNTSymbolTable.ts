@@ -13,11 +13,7 @@ namespace TNT {
             value: function (x) {
                 console.log(x);
             },
-        } as TNTData,
-        explorerType: {
-            type: 'string',
-            value: TNTGetBrowserType(),
-        } as TNTData,
+        } as TNTData
     };
 
     export function JsTypeToTNTType(TypeName) {

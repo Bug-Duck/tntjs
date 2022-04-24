@@ -30,11 +30,7 @@ var TNT;
             value: function (x) {
                 console.log(x);
             },
-        },
-        explorerType: {
-            type: 'string',
-            value: TNT.TNTGetBrowserType(),
-        },
+        }
     };
     function JsTypeToTNTType(TypeName) {
         switch (TypeName) {
@@ -90,6 +86,7 @@ var TNT;
         const isVar = /[_A-z0-9]/;
         const isMathGex = /(.+ ?(\+|-|\*|\/)+ ?.+)+/;
         const isXML = /<.+>/;
+        const iscodes = /\{.+\}/;
         if (/.+\(.+\)/.test(reg)) {
             const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
             if (TNT.TNTSymbolTable[name].type === 'function') {
@@ -349,7 +346,7 @@ var TNT;
     }
     TNT.TNTValueTagProcessing = TNTValueTagProcessing;
     function TNTValueTagValueRenderer(tagValue) {
-        if (TNT.TNTSymbolTable[tagValue] === undefined) {
+        if (TNT.TNTSymbolTable[tagValue.trim()] === undefined) {
             throw new Error(`Undefined TNT variable: ${tagValue.trim()}`);
         }
         return TNT.TNTSymbolTable[tagValue.trim()].value;
