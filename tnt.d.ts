@@ -2,18 +2,35 @@ declare namespace TNT {
     function setVtagContent(vTag: HTMLUnknownElement, newValue: string): void;
 }
 declare let TNTSymbolTable: {
-    PI: number;
+    PI: {
+        type: string;
+        value: number;
+    };
     test: {
         type: string;
         value: number;
     };
-    print: (x: any) => void;
-    explorerType: string;
-    ebyid: (id: any, iHTML: any) => void;
-    sleep: (x: any) => Promise<unknown>;
+    print: {
+        type: string;
+        value: (x: any) => void;
+    };
+    explorerType: {
+        type: string;
+        value: string;
+    };
 };
 declare function JsTypeToTNTType(TypeName: any): "string" | "number" | "bool";
 declare function newData(type: ('string' | 'number' | 'tnt' | 'boolean' | 'function'), name: string, value: any, datahouse: {}): void;
+declare type value = {
+    type: string;
+    value: any;
+    parameter?: {
+        agv: any[];
+        functioncanvalue: any;
+    };
+    canparameter?: any;
+    code?: (string[] | Function);
+};
 declare function TNTMatchStartSymbol(startSymbol: any, endSymbol: any, data: any, startIndex: any): any;
 declare function TNTValueProcess(reg: string): any;
 declare function TNTBoom(codeList: string[], data?: any, isinclass?: boolean): any;
