@@ -333,8 +333,8 @@ namespace TNT {
     }
 
     // Rendering the <v> tag content to the value.
-    function TNTValueTagValueRenderer(tagValue) {
-        return TNTSymbolTable[tagValue.trim()];
+    function TNTValueTagValueRenderer(tagValue: string): any {
+        return TNTSymbolTable[tagValue.trim()].value;
     }
 
     // Processes the <tnt> tag.
