@@ -7,6 +7,17 @@
  * All right reserved.
  */
 
+type value = {
+    type: string;
+    value: any;
+    parameter?: {
+        agv: any[],
+        functioncanvalue: any,
+    };
+    canparameter?: any;
+    code?: (string[] | Function);
+};
+
 // startSymbol and endSymbol are strings that determines the start symbol and the end symbol. For example,
 // if you want to match parentheses "()", then the start symbol will be "(" and the end symbol will be ")".
 // data is the data array like ["(", "a", "(", "b", ..., ")", ")"]. And startIndex is the index you want to
@@ -58,10 +69,7 @@ function TNTValueProcess(reg: string) {
                 buffer = buffer + i + '=' + ',';
             }
             const results = eval(`TNTSymbolTable.${name}.value(${buffer})`);
-            const result: {
-                type: String,
-                value: any,
-            } = {
+            const result: value = {
                 type: JsTypeToTNTType(typeof (results)),
                 value: results,
             };
@@ -104,10 +112,7 @@ function TNTValueProcess(reg: string) {
     } else if (isVar.test(reg)) {
         // Variable processing
         const results = TNTSymbolTable[reg].value;
-        const result: {
-            type: String,
-            value: any,
-        } = {
+        const result: value = {
             type: JsTypeToTNTType(typeof (results)),
             value: results,
         };
