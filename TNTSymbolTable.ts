@@ -1,24 +1,23 @@
 namespace TNT {
 let TNTSymbolTable = {
-    PI: 3.14159265,
+    PI: {
+        type: 'number',
+        value: 3.14159265,
+    },
     test: {
         type: 'number',
         value: 2333
     },
-    print: function (x) {
-        console.log(x);
+    print: {
+        type: 'function',
+        value: function (x) {
+            console.log(x);
+        },
     },
-    explorerType: TNTGetBrowserType(),
-    ebyid: function (id, iHTML) {
-        document.getElementById(id).innerHTML = iHTML;
+    explorerType: {
+        type:'string',
+        value: TNTGetBrowserType(),
     },
-    sleep: function (x) {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve(null);
-            }, x);
-        });
-    }
 };
 
 function JsTypeToTNTType(TypeName) {
@@ -40,7 +39,7 @@ function JsTypeToTNTType(TypeName) {
 function newData(
     type: (
         'string' | 'number' | 'tnt' | 'boolean' | 'function'
-),
+    ),
     name: string,
     value: any,
     datahouse: {},
