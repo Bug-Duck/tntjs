@@ -334,6 +334,9 @@ namespace TNT {
 
     // Rendering the <v> tag content to the value.
     function TNTValueTagValueRenderer(tagValue: string): any {
+        if (TNTSymbolTable[tagValue]) {
+            throw new Error(`Undefined TNT variable: ${tagValue.trim()}`);
+        }
         return TNTSymbolTable[tagValue.trim()].value;
     }
 
