@@ -14,10 +14,10 @@ namespace TNT {
                 console.log(x);
             },
         },
-        explorerType: {
-            type: 'string',
-            value: TNTGetBrowserType(),
-        },
+        // explorerType: {
+        //     type: 'string',
+        //     value: TNTGetBrowserType(),
+        // },
     };
 
     export function JsTypeToTNTType(TypeName) {

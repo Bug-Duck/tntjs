@@ -338,7 +338,7 @@ namespace TNT {
     }
 
     // Processes the <tnt> tag.
-    export function TNTTagProcessing() {
+    export function TNTTagProcessing(): void {
         const tntCodes = document.getElementsByTagName("tnt");
         for (const tntCode of tntCodes) {
             (tntCode as HTMLElement).style.display = "none";
