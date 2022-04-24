@@ -1,3 +1,4 @@
+namespace TNT {
 let TNTSymbolTable = {
     PI: 3.14159265,
     test: {
@@ -48,4 +49,5 @@ function newData(
         type: type,
         value: value,
     }
+}
 }

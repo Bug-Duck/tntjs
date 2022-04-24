@@ -7,6 +7,8 @@
  * All right reserved.
  */
 
+namespace TNT {
+
 // startSymbol and endSymbol are strings that determines the start symbol and the end symbol. For example,
 // if you want to match parentheses "()", then the start symbol will be "(" and the end symbol will be ")".
 // data is the data array like ["(", "a", "(", "b", ..., ")", ")"]. And startIndex is the index you want to
@@ -357,4 +359,5 @@ function TNTGetBrowserType() {
         browser = 'IE 11';
     }
     return browser;
+}
 }
