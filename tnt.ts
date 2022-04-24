@@ -173,7 +173,7 @@ namespace TNT {
             } else if (/(for|while|def|render) .+/.test(code)) {
                 if (/render/.test(code)) {
                     let html = code.replace(/render /, '');
-                    render(html, TNTSymbolTableOWN.__slefdom__)
+                    TNTRenderDOM(html, TNTSymbolTableOWN.__slefdom__)
                 } else if (/while/.test(code)) {
                     const YesorNo = TNTValueProcess((/([^while ]).+/.exec(code))[0]);
                     if (YesorNo) {
@@ -252,7 +252,7 @@ namespace TNT {
     }
 
     // This function is very important to def a TNT.js's function!
-    function def(func_data: string, In_data: string[]) {
+    function TNTDefineFunction(func_data: string, In_data: string[]) {
         const name = /[^\(.+\)]+/.exec(func_data)[0].replace(/\s*/g, "");
         let __parameters__ = /\(.+\)/.exec(func_data);
         let __parameter__ = __parameters__[0];
@@ -265,7 +265,7 @@ namespace TNT {
         }
     }
 
-    function render(HTML: string, DOM) {
+    function TNTRenderDOM(HTML: string, DOM: HTMLElement) {
         DOM.innerHTML = HTML;
         TNTValueTagProcessing();
         TNTTagProcessing();
