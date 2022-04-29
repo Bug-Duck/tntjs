@@ -3,10 +3,27 @@ namespace TNT {
     export function TNTFunctionSplit(code: string, original: boolean = false) {
         let ignoreNext = false;
         let stringIgnoreNext = false;
+        let bracketMatchingMode = false;
+        let bracketMatchingStack = [];
         const buffer = [];
         let currentString = "";
         // Iterate every charaters in the code
         for (const i of code) {
+            // Bracket Matching Mode
+            if (bracketMatchingMode) {
+                currentString += i;
+                if (i === '}') {
+                    bracketMatchingStack.pop();
+                    if (bracketMatchingStack.length === 0) {
+                        buffer.push(currentString + "}");
+                        bracketMatchingMode = false;
+                        continue;
+                    }
+                } else if (i === '{') {
+                    bracketMatchingStack.push(null);
+                }
+                continue;
+            }
             // Next will be ignored (In this case, means in a string.)
             if (ignoreNext) {
                 // Add the current char to the string.
@@ -31,6 +48,11 @@ namespace TNT {
                 } else if (i === '"') {
                     currentString += i;
                     ignoreNext = true;
+                } else if (i === '{') {
+                    // Right bracket
+                    bracketMatchingMode = true;
+                    bracketMatchingStack = [null];
+                    currentString += i;
                 } else {
                     currentString += i;
                 }
