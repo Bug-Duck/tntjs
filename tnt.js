@@ -37,6 +37,35 @@ var TNT;
                 eval(x);
             }
         },
+        //一些数学函数 (=^^)
+        sin: {
+            type: 'function',
+            value: function (x) {
+                Math.sin(x);
+            }
+        },
+        cos: {
+            type: 'function',
+            value: function (x) {
+                Math.cos(x);
+            }
+        },
+        tan: {
+            type: 'function',
+            value: function (x) {
+                Math.tan(x);
+            }
+        },
+        abs:{
+            type: 'function',
+            value: function (x) {
+                Math.abs(x);
+            }
+        },
+        TAU: {
+            type: 'number',
+            value: 3.14159265*2,
+        },
     };
     function JsTypeToTNTType(TypeName) {
         switch (TypeName) {
