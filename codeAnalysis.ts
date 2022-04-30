@@ -137,6 +137,13 @@ namespace TNT {
         return buffer;
     }
 
-    
+    export function codeKuai(code) {
+        const v: string = code.replace(/\{.+\}/,'');
+        const codes: string = /\{.+\}/.exec(code)[0];
+        return [v,TNTCodeSplit(codes.substring(1,codes.length - 1))];
+    }
 
+    export function keySearch(key: string,code: string) {
+        return code.replace(new RegExp(`${key} `),'')
+    }
 }

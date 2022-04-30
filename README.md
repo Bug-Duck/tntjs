@@ -43,6 +43,19 @@ You are using the: Chrome
 ### 官方文档
 bug-duck.github.io/tntjs
 
+### 文件介绍
+|文件|描述|
+| -  | - |
+|tnt.ts|主文件|
+|setup.ts|TNT.js入口文件|
+|TNTError.ts|TNT.js的错误类|
+|TNTGlobal.ts|暂无描述|
+|TNTSymbolTable.ts|TNT.js数据空间以及相关操作|
+|codeAnaly.ts|TNT.js代码解析|
+|index.html|测试文件|
+|LICENSE|MIT开源许可证|
+
+
 ### 打赏
 开发者们都是初中生，希望能给我们一点奖励，谢谢！
 ![开发者们都是初中生 希望能给我们一点奖励](https://img-blog.csdnimg.cn/369cf4080e44416b9e78e58872615d6b.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA566x5a2Q5ZCbc2hlZXA=,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center)

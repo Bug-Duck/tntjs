@@ -164,19 +164,26 @@ namespace TNT {
                 TNTValueTagProcessing();
             } else if (/(for|while|def|render) .+/.test(code)) {
                 if (/render/.test(code)) {
-                    let html = code.replace(/render /, '');
+                    const html = keySearch('render',code)
                     TNTRenderDOM(html, TNTSymbolTableOWN.__selfdom__)
                 } else if (/while/.test(code)) {
-                    const YesorNo = TNTValueProcess((/([^while ]).+/.exec(code))[0]);
-                    if (YesorNo) {
-                        const endindex = TNTMatchStartSymbol(code, "endwhile", codeList, index);
-                        TNTBoom(codeList.splice(index, endindex));
+                    const i = codeKuai(keySearch('while',code));
+                    const condition = i[0];
+                    const codes = i[1];
+                    // 如果TNTBoom函数返回true 即代表识别到跳出语句 则跳出循环
+                    while (TNTValueProcess(condition)) {
+                        if (TNTBoom(codes)) {
+                            break;
+                        }
                     }
                 } else if (/def/.test(code)) {
                     // TODO: def a function
                 } else if (/for/.test(code)) {
                     //TODO: for over and over again until last value
                 }
+            } else if (code === 'break') {
+                // 如果检测到跳出循环语句 则返回true
+                return true
             } else {
                 TNTValueProcess(code);
             }
