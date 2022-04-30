@@ -49,7 +49,7 @@ bug-duck.github.io/tntjs
 |tnt.ts|主文件|
 |setup.ts|TNT.js入口文件|
 |TNTError.ts|TNT.js的错误类|
-|TNTGlobal.ts|暂无描述|
+|TNTGlobal.ts|TNT.js与传统js交互的接口|
 |TNTSymbolTable.ts|TNT.js数据空间以及相关操作|
 |codeAnaly.ts|TNT.js代码解析|
 |index.html|测试文件|
