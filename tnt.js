@@ -273,12 +273,6 @@ function TNTValueTagProcessing() {
     }
 }
 
-// TNT Error Class
-class TNTError {
-    this.ErrorNotFoundVar = "error: var '%s' is not found";
-    // this.
-}
-
 // Rendering the <v> tag content to the value.
 function TNTValueTagValueRenderer(tagValue) {
     return TNTSymbolTable[tagValue.trim()];
