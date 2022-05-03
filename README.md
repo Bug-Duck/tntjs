@@ -1,7 +1,16 @@
 # TNT.js
-![输入图片说明](%E6%97%A0%E6%A0%87%E9%A2%98.png)
+![输入图片说明](tnt.js.logo.length.png)
+![GitHub](https://img.shields.io/github/license/Bug-Duck/tntjs)
+![version](https://img.shields.io/badge/version-0.0.3-green)
+![watch](https://img.shields.io/github/watchers/Bug-Duck/tntjs?color=blue&logo=github&style=flat-square)
+![Star](https://img.shields.io/github/stars/Bug-Duck/tntjs?color=yellow&logo=github&style=flat-square)
+![Fork](https://img.shields.io/github/forks/Bug-Duck/tntjs?color=green&logo=github&style=flat-square)
+[![star](https://gitee.com/BugDucker/tntjs/badge/star.svg?theme=dark)](https://gitee.com/BugDucker/tntjs/stargazers)
+[![fork](https://gitee.com/BugDucker/tntjs/badge/fork.svg?theme=dark)](https://gitee.com/BugDucker/tntjs/members)
+[![website](https://img.shields.io/badge/website-bugduck.cn-yellowgreen)](https://www.bugduck.cn)
+[![BiliBili](https://img.shields.io/static/v1?label=bilibili&message=BugDuck开源团队&color=ff69b4&logo=bilibili)](https://space.bilibili.com/1959824394?spm_id_from=333.337.0.0)
 ### 介绍
-tnt.js是一个基于javascript的编程语言,目的是为了创造一个和Python一样简单的,又不失前端特性的编程语言,同时避免了TypeScript不能直接运行在浏览器上的缺点,且与javascript的语法非常的不一样哦!<br/>
+TNT.js是一个基于Javascript的编程语言,目的是为了创造一个和Python一样简单的,又不失前端特性的编程语言。TNT.js避免了TypeScript不能直接运行在浏览器上的缺点。它的最大特点是动态,页面上的值会随着TNT.js内部的值变化而变化!<br/>
 
 ### 样例
 ```html
@@ -34,8 +43,21 @@ You are using the: Chrome
 ### 官方文档
 bug-duck.github.io/tntjs
 
+### 文件介绍
+|文件|描述|
+| -  | - |
+|tnt.ts|主文件|
+|setup.ts|TNT.js入口文件|
+|TNTError.ts|TNT.js的错误类|
+|TNTGlobal.ts|TNT.js与传统js交互的接口|
+|TNTSymbolTable.ts|TNT.js数据空间以及相关操作|
+|codeAnaly.ts|TNT.js代码解析|
+|index.html|测试文件|
+|LICENSE|MIT开源许可证|
+
+
 ### 打赏
-开发者们都是初中生 希望能给我们一点奖励
+开发者们都是初中生，希望能给我们一点奖励，谢谢！
 ![开发者们都是初中生 希望能给我们一点奖励](https://img-blog.csdnimg.cn/369cf4080e44416b9e78e58872615d6b.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA566x5a2Q5ZCbc2hlZXA=,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center)
 
 ### 开发日记
@@ -43,5 +65,7 @@ bug-duck.github.io/tntjs
 > > 2022.4.1 开始在学校构思<br/>
 > > 2022.4.5 项目启动<br/>
 > > 2022.4.9 \<v\>\</v\>标签功能实现<br/>
-> > 2022.4.10 变量赋值功能实现
+> > 2022.4.10 变量赋值功能实现<br/>
+> > 2022.4.17 函数调用功能实现<br/>
+> > 2022.4.24 TypeScript重构项目
 
