@@ -12,7 +12,7 @@ namespace TNT {
             this.customRenderer = customRenderer;
         }
         private defaultRenderer(s: string): string {
-            return "aababab"
+            return `${Globals.symbolTable.getValue(s).value}`
         }
         render() {
             const vTags = document.querySelectorAll('v');
