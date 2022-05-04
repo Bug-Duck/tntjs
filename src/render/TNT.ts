@@ -9,8 +9,15 @@ namespace TNT {
     export class TNT {
         private vTagRenderer: VTagRenderer
         constructor() {
+            Globals.symbolTable.onSetValue(() => {
+                // Render on update (Auto setState)
+                this.render();
+            })
+
             this.vTagRenderer = new VTagRenderer();
-            this.vTagRenderer.render()
+        }
+        render() {
+            this.vTagRenderer.render();
         }
     }
 }
