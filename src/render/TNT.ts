@@ -10,6 +10,7 @@ namespace TNT {
         private vTagRenderer: VTagRenderer
         constructor() {
             this.vTagRenderer = new VTagRenderer();
+            this.vTagRenderer.render()
         }
     }
 }

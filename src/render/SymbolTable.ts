@@ -5,7 +5,6 @@
  * description: The main symbol table.
  */
 
-import { TypeFlags } from "node_modules/typescript/lib/typescript";
 
 namespace TNT {
     export enum Type {
@@ -47,6 +46,13 @@ namespace TNT {
         }
     }
     export class SymbolTable {
+        private prv_content: any = {};
         constructor() {}
+        getValue(key: string): Variable {
+            return this.prv_content[key];
+        }
+        setValue(key: string, v: Variable): void {
+            this.prv_content[key] = v;
+        }
     }
 }
