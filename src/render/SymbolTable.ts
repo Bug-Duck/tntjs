@@ -27,13 +27,13 @@ namespace TNT {
             this.prv_type = type;
         }
         private prv_validate(value: any, type: Type) {
-            if (type === Type.StringType && typeof(value) !== "string") {
+            if (type === Type.StringType && typeof (value) !== "string") {
                 throw new TypeError("value should ba a string.")
             }
-            if (type === Type.NumberType && typeof(value) !== "number") {
+            if (type === Type.NumberType && typeof (value) !== "number") {
                 throw new TypeError("value should ba a number.")
             }
-            if (type === Type.JSFunctionType && typeof(value) !== "function") {
+            if (type === Type.JSFunctionType && typeof (value) !== "function") {
                 throw new TypeError("value should ba a javascript function.")
             }
         }
@@ -53,16 +53,19 @@ namespace TNT {
     export class SymbolTable {
         private prv_onsetvalue_event_handler: Array<() => void> = [];
         private prv_content: any = {};
-        constructor() {}
+        constructor() { }
+        // Get the value via the variable name.
         getValue(key: string): Variable {
             return this.prv_content[key];
         }
+        // Set the value by the variable name.
         setValue(key: string, v: Variable): void {
             this.prv_content[key] = v;
             for (const i of this.prv_onsetvalue_event_handler) {
                 i();
             }
         }
+        // Register a new event handler that will be called when the value changes (to automatically update the state).
         onSetValue(handler: () => void) {
             this.prv_onsetvalue_event_handler.push(handler);
         }
