@@ -5,6 +5,8 @@
  * description: The global environment of the tntjs.
  */
 
+/// <reference path="SymbolTable.ts"/>
+
 namespace TNT {
     export namespace Globals {
         export let symbolTable: SymbolTable = new SymbolTable();

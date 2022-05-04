@@ -46,7 +46,7 @@ namespace TNT {
         }
     }
     export class SymbolTable {
-        private prv_onsetvalue_event_handler: Array<() => void>;
+        private prv_onsetvalue_event_handler: Array<() => void> = [];
         private prv_content: any = {};
         constructor() {}
         getValue(key: string): Variable {

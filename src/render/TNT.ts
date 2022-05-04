@@ -15,6 +15,7 @@ namespace TNT {
             })
 
             this.vTagRenderer = new VTagRenderer();
+            this.render();
         }
         render() {
             this.vTagRenderer.render();
