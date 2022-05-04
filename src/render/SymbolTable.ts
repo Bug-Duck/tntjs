@@ -46,6 +46,7 @@ namespace TNT {
         }
     }
     export class SymbolTable {
+        private prv_onsetvalue_event_handler: Array<() => void>;
         private prv_content: any = {};
         constructor() {}
         getValue(key: string): Variable {
@@ -53,6 +54,12 @@ namespace TNT {
         }
         setValue(key: string, v: Variable): void {
             this.prv_content[key] = v;
+            for (const i of this.prv_onsetvalue_event_handler) {
+                i();
+            }
+        }
+        onSetValue(handler: () => void) {
+            this.prv_onsetvalue_event_handler.push(handler);
         }
     }
 }
