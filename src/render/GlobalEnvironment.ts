@@ -10,5 +10,6 @@
 namespace TNT {
     export namespace Globals {
         export let symbolTable: SymbolTable = new SymbolTable();
+        export let instances: Array<TNT> = [];
     }
 }
