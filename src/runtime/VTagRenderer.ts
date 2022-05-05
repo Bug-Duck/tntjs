@@ -13,7 +13,7 @@ namespace TNT {
         }
         private defaultRenderer(s: string): string {
             try {
-                return `${Globals.symbolTable.getValue(s).value}`
+                return `${Globals.evaluate(s)}`
             } catch (e) {
                 return `Error while rendering element: ${e}`
             }
