@@ -21,10 +21,21 @@ namespace TNT {
             // Initialize renderer
             this.prv_vTagRenderer = new VTagRenderer();
             this.render();
+
+            // Initialize plugins
+            for (const plugin of Globals.getAllPlugins()) {
+                plugin.onInit();
+            }
         }
         render() {
             // Render the content. Calls on updating and initializing
             this.prv_vTagRenderer.render();
+            // Render for the plugin
+            for (const plugin of Globals.getAllPlugins()) {
+                for (const renderer of plugin.rendererList) {
+                    renderer.render();
+                }
+            }
         }
         get vTagRenderer(): VTagRenderer {
             return this.prv_vTagRenderer;
