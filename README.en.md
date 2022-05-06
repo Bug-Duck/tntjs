@@ -3,6 +3,13 @@
 ### Indroduction
 TNT.js is a Javascript-based programming language. It's our goal to make it as simple as Python, and at the same time make it looks like a front-end programming language. The language avoid the cons of TypeScript that can't run directly on the browser. <br/>
 
+### Build
+```bash
+npm install
+tsc
+```
+
+
 ### Example
 ```html
 <!DOCTYPE html>
