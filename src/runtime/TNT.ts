@@ -24,16 +24,48 @@ namespace TNT {
 
             // Initialize plugins
             for (const plugin of Globals.getAllPlugins()) {
-                plugin.onInit();
+                console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
+                try {
+                    plugin.onInit();
+                } catch (e) {
+                    console.log(`Error whil loading plugin ${plugin.id}: ${e}`);
+                    continue;
+                }
+                console.log(`Successfully loaded plugin ${plugin.id}`);
             }
         }
         render() {
+            // Protect the tags
+            for (const plugin of Globals.getAllPlugins()) {
+                for (const tag of plugin.tags) {
+                    let tagDOM = document.querySelectorAll(tag);
+                    for (const el of tagDOM) {
+                        // each element
+                        el.setAttribute("data-tnt-plugin-value-backup", el.innerHTML);
+                        el.innerHTML = "";
+                    }
+                }
+            }
+
             // Render the content. Calls on updating and initializing
             this.prv_vTagRenderer.render();
+
             // Render for the plugin
             for (const plugin of Globals.getAllPlugins()) {
                 for (const renderer of plugin.rendererList) {
                     renderer.render();
+                }
+            }
+
+            // Take off the protection
+            for (const plugin of Globals.getAllPlugins()) {
+                for (const tag of plugin.tags) {
+                    let tagDOM = document.querySelectorAll(tag);
+                    for (const el of tagDOM) {
+                        // each element
+                        el.innerHTML = el.getAttribute("data-tnt-plugin-value-backup");
+                        el.removeAttribute("data-tnt-plugin-value-backup")
+                    }
                 }
             }
         }

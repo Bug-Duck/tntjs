@@ -1,19 +1,27 @@
 declare namespace TNT {
-    enum Type {
-        StringType = "tnt:type.string",
-        NumberType = "tnt:type.number",
-        ObjectType = "tnt:type.object",
-        TNTFunctionType = "tnt:type.function",
-        JSFunctionType = "js:type.function"
+    class TypeInfo {
+        private prv_namespaceName;
+        private prv_typeName;
+        constructor(namespaceName: string, typeName: string);
+        toString(): string;
+        get name(): string;
+        get owner(): string;
     }
+}
+declare namespace TNT {
+    const StringType: TypeInfo;
+    const NumberType: TypeInfo;
+    const ObjectType: TypeInfo;
+    const TNTFunctionType: TypeInfo;
+    const JSFunctionType: TypeInfo;
     class Variable {
         private prv_value;
         private prv_type;
-        constructor(value: any, type: Type);
+        constructor(value: any, type: TypeInfo);
         private prv_validate;
         get value(): any;
         set value(value: any);
-        get type(): Type;
+        get type(): TypeInfo;
     }
     class SymbolTable {
         private prv_onsetvalue_event_handler;
@@ -27,13 +35,32 @@ declare namespace TNT {
 declare namespace TNT {
     namespace Globals {
         let symbolTable: SymbolTable;
+        let instances: Array<TNT>;
+        function setValueEvaluator(fn: (expr: string) => any): void;
+        function evaluate(expr: string): any;
+        function addPlugin(plugin: Plugin): void;
+        function plug(plugin: Plugin): void;
+        function getAllPlugins(): Array<Plugin>;
+    }
+}
+declare namespace TNT {
+    interface Renderable {
+        render(): void;
+    }
+    interface Plugin {
+        get id(): string;
+        get rendererList(): Array<Renderable>;
+        get tags(): Array<string>;
+        get version(): string;
+        onInit(): void;
     }
 }
 declare namespace TNT {
     class TNT {
-        private vTagRenderer;
+        private prv_vTagRenderer;
         constructor();
         render(): void;
+        get vTagRenderer(): VTagRenderer;
     }
 }
 declare namespace TNT {
@@ -43,4 +70,20 @@ declare namespace TNT {
         private defaultRenderer;
         render(): void;
     }
+}
+declare namespace TNTScript {
+    class PluginMain implements TNT.Plugin {
+        get id(): string;
+        get rendererList(): TNT.Renderable[];
+        get tags(): string[];
+        get version(): string;
+        onInit(): void;
+    }
+}
+declare class PluginMain implements TNT.Plugin {
+    get id(): string;
+    get rendererList(): TNT.Renderable[];
+    get tags(): string[];
+    get version(): string;
+    onInit(): void;
 }
