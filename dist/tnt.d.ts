@@ -41,6 +41,7 @@ declare namespace TNT {
         function addPlugin(plugin: Plugin): void;
         function plug(plugin: Plugin): void;
         function getAllPlugins(): Array<Plugin>;
+        function removePlugin(pluginId: string): void;
     }
 }
 declare namespace TNT {
@@ -52,6 +53,7 @@ declare namespace TNT {
         get rendererList(): Array<Renderable>;
         get tags(): Array<string>;
         get version(): string;
+        dependencies?: string[];
         onInit(): void;
     }
 }
@@ -79,11 +81,4 @@ declare namespace TNTScript {
         get version(): string;
         onInit(): void;
     }
-}
-declare class PluginMain implements TNT.Plugin {
-    get id(): string;
-    get rendererList(): TNT.Renderable[];
-    get tags(): string[];
-    get version(): string;
-    onInit(): void;
 }

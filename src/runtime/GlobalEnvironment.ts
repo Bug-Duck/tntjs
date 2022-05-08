@@ -35,5 +35,17 @@ namespace TNT {
         export function getAllPlugins(): Array<Plugin> {
             return prv_pluginList;
         }
+
+        export function removePlugin(pluginId: string): void {
+            let counter = 0;
+            for(const plugin of prv_pluginList) {
+                if (plugin.id === pluginId) {
+                    break;
+                }
+                counter++;
+            }
+            prv_pluginList = prv_pluginList.slice(0, counter).concat(prv_pluginList.slice(counter + 1));
+        }
+
     }
 }

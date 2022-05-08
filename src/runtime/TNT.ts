@@ -20,19 +20,51 @@ namespace TNT {
 
             // Initialize renderer
             this.prv_vTagRenderer = new VTagRenderer();
-            this.render();
 
             // Initialize plugins
             for (const plugin of Globals.getAllPlugins()) {
-                console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
+
+                console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`)
+
                 try {
+                    // Check dependencies
+                    if (plugin.dependencies !== undefined) {
+                        // Check each dependency
+                        for (const dependency of plugin.dependencies) {
+                            const have: string[] = [];
+                            // Iterating all plugins
+                            for (const p of Globals.getAllPlugins()) {
+                                // Found the dependency, add to the record  
+                                if (p.id === dependency) {
+                                    have.push(p.id);
+                                }
+                            }
+                            // Compare the record length
+                            if (have.length !== plugin.dependencies.length) {
+                                console.log(`Missing dependencies of ${plugin.id}. Required: `);
+                                for (const dependency of plugin.dependencies) {
+                                    console.log(`${dependency}`);
+                                }
+                                console.log(`While found: `);
+                                for (const h of have) {
+                                    console.log(h);
+                                }
+                                console.log("Plugin loading failed.");
+                                throw new Error("dependencies missing");
+                            }
+                        }
+                    }
                     plugin.onInit();
                 } catch (e) {
                     console.log(`Error whil loading plugin ${plugin.id}: ${e}`);
+                    Globals.removePlugin(plugin.id);
                     continue;
                 }
                 console.log(`Successfully loaded plugin ${plugin.id}`);
             }
+
+            // Do the first rendering.
+            this.render();
         }
         render() {
             // Protect the tags
@@ -41,8 +73,12 @@ namespace TNT {
                     let tagDOM = document.querySelectorAll(tag);
                     for (const el of tagDOM) {
                         // each element
-                        el.setAttribute("data-tnt-plugin-value-backup", el.innerHTML);
-                        el.innerHTML = "";
+                        try {
+                            el.setAttribute("data-tnt-plugin-value-backup", el.innerHTML);
+                            el.innerHTML = "";
+                        } catch (e) {
+                            // Do nothing here.
+                        }
                     }
                 }
             }
