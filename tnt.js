@@ -34,7 +34,7 @@ var TNT;
         tojs: {
             type: 'function',
             value: function (x) {
-                eval(x);
+                return eval(x);
             }
         },
     };
@@ -42,13 +42,10 @@ var TNT;
         switch (TypeName) {
             case "String":
                 return 'string';
-                break;
             case "Number":
                 return 'number';
-                break;
             case "Boolean":
                 return 'bool';
-                break;
             default:
                 break;
         }
@@ -94,14 +91,15 @@ var TNT;
     }
     function TNTValueProcess(reg) {
         const isString = /(\"|\').+(\"|\')/;
-        const isNumber = /[0-9]+/;
+        const isNumber = /(\d)|(-?[1-9]\d*\.\d+|-?0\.\d*[1-9]\d*|0\.0+)/;
         const isBool = /(true|false)/;
-        const isVar = /[_A-z0-9]/;
-        const isMathGex = /(.+ ?(\+|-|\*|\/)+ ?.+)+/;
+        const isVar = /[_a-zA-Z]+[_a-zA-Z0-9]*/;
+        const isMathGex = /[-+*\/]/;
         const isXML = /<.+>/;
         const iscodes = /\{.+\}/;
         if (/.+\(.+\)/.test(reg)) {
             const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
+            console.log('=======');
             if (TNT.TNTSymbolTable[name].type === 'function') {
                 let buffer = "";
                 let __parameters__ = /\(.+\)/.exec(reg);
@@ -141,10 +139,20 @@ var TNT;
             }
         }
         else if (iscodes.test(reg)) {
+            if(reg[reg.length - 1] === ";"){
+                reg.substring(1, reg.length - 1)
+            }
             return {
                 type: 'code',
-                value: TNTCodeSplit(reg.substring(1, reg.length - 1)),
+                value: eval(`(${reg})()`),
             };
+        }
+        else if (isMathGex.test(reg)) {
+            const result = {
+                type: 'MathGex',
+                value: eval(reg),
+            };
+            return result
         }
         else if (isNumber.test(reg)) {
             return {
@@ -153,6 +161,10 @@ var TNT;
             };
         }
         else if (isString.test(reg)) {
+            return {
+                type: 'string',
+                value: String(reg)
+            };
         }
         else if (isBool.test(reg)) {
             return {
@@ -168,8 +180,6 @@ var TNT;
             };
             return result;
         }
-        else if (isMathGex.test(reg)) {
-        }
         else if (isXML.test(reg)) {
             const result = {
                 type: 'XML',
@@ -181,11 +191,13 @@ var TNT;
     function TNTBoom(codeList, data = {}, isinclass = false) {
         let index = 0;
         const TNTSymbolTableOWN = data;
-        for (const code of codeList) {
+        for (let code of codeList) {
+            code = code.replace(/[\n\s]/,"")
             if (/([A-z0-9])+ ?= ?.+/.test(code)) {
                 const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(' '));
-                const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(' '));
-                const process = TNTValueProcess(v[0]);
+                const v = /=(.+)/.exec(code);
+                console.log(v);
+                const process = TNTValueProcess(v[1]);
                 if (/let /.test(code)) {
                     TNT.newData(process.type, name[0], process.value, TNTSymbolTableOWN);
                 }
@@ -351,7 +363,7 @@ var TNT;
     TNT.TNTValueTagProcessing = TNTValueTagProcessing;
     function TNTValueTagValueRenderer(tagValue) {
         if (TNT.TNTSymbolTable[tagValue.trim()] === undefined) {
-            throw new Error(`Undefined TNT variable: ${tagValue.trim()}`);
+            return `Undefined TNT variable: ${tagValue.trim()}`
         }
         return TNT.TNTSymbolTable[tagValue.trim()].value;
     }
