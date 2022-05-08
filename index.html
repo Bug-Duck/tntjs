@@ -5,14 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Page</title>
-    <script src="dist/tnt.min.js"></script>
+    <script src="dist/tnt.js"></script>
     <script>
         window.onload = () => {
-            TNT.Globals.symbolTable.setValue("test", new TNT.Variable("Hello, World!",TNT.Type.StringType));
+            TNT.Globals.symbolTable.setValue("test", new TNT.Variable("Hello, World!",TNT.StringType));
             new TNT.TNT();
             setTimeout(
                 () => {
-                    TNT.Globals.symbolTable.setValue("test", new TNT.Variable("こんにちは、世界です！",TNT.Type.StringType));
+                    TNT.Globals.symbolTable.setValue("test", new TNT.Variable("こんにちは、世界です！",TNT.StringType));
                 }, 3000
             )
         }

@@ -5,35 +5,34 @@
  * description: The main symbol table.
  */
 
+/// <reference path="TypeInfo.ts"/>
 
 namespace TNT {
-    // The type of variable.
-    export enum Type {
-        StringType = "tnt:type.string",
-        NumberType = "tnt:type.number",
-        ObjectType = "tnt:type.object",
-        TNTFunctionType = "tnt:type.function",
-        JSFunctionType = "js:type.function",
-    }
+    // The types
+    export const StringType = new TypeInfo("tnt", "string");
+    export const NumberType = new TypeInfo("tnt", "number");
+    export const ObjectType = new TypeInfo("tnt", "object");
+    export const TNTFunctionType = new TypeInfo("tnt", "function");
+    export const JSFunctionType = new TypeInfo("js", "function");
 
     // A variable.
     export class Variable {
         private prv_value: any;
-        private prv_type: Type;
+        private prv_type: TypeInfo;
         // The default constructor.
-        constructor(value: any, type: Type) {
+        constructor(value: any, type: TypeInfo) {
             this.prv_validate(value, type);
             this.prv_value = value;
             this.prv_type = type;
         }
-        private prv_validate(value: any, type: Type) {
-            if (type === Type.StringType && typeof (value) !== "string") {
+        private prv_validate(value: any, type: TypeInfo) {
+            if (type === StringType && typeof (value) !== "string") {
                 throw new TypeError("value should ba a string.")
             }
-            if (type === Type.NumberType && typeof (value) !== "number") {
+            if (type === NumberType && typeof (value) !== "number") {
                 throw new TypeError("value should ba a number.")
             }
-            if (type === Type.JSFunctionType && typeof (value) !== "function") {
+            if (type === JSFunctionType && typeof (value) !== "function") {
                 throw new TypeError("value should ba a javascript function.")
             }
         }
