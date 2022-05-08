@@ -101,6 +101,17 @@ var TNT;
             return prv_pluginList;
         }
         Globals.getAllPlugins = getAllPlugins;
+        function removePlugin(pluginId) {
+            let counter = 0;
+            for (const plugin of prv_pluginList) {
+                if (plugin.id === pluginId) {
+                    break;
+                }
+                counter++;
+            }
+            prv_pluginList = prv_pluginList.slice(0, counter).concat(prv_pluginList.slice(counter + 1));
+        }
+        Globals.removePlugin = removePlugin;
     })(Globals = TNT.Globals || (TNT.Globals = {}));
 })(TNT || (TNT = {}));
 var TNT;
@@ -112,26 +123,53 @@ var TNT;
                 this.render();
             });
             this.prv_vTagRenderer = new TNT_1.VTagRenderer();
-            this.render();
             for (const plugin of TNT_1.Globals.getAllPlugins()) {
                 console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
                 try {
+                    if (plugin.dependencies !== undefined) {
+                        for (const dependency of plugin.dependencies) {
+                            const have = [];
+                            for (const p of TNT_1.Globals.getAllPlugins()) {
+                                if (p.id === dependency) {
+                                    have.push(p.id);
+                                }
+                            }
+                            if (have.length !== plugin.dependencies.length) {
+                                console.log(`Missing dependencies of ${plugin.id}. Required: `);
+                                for (const dependency of plugin.dependencies) {
+                                    console.log(`${dependency}`);
+                                }
+                                console.log(`While found: `);
+                                for (const h of have) {
+                                    console.log(h);
+                                }
+                                console.log("Plugin loading failed.");
+                                throw new Error("dependencies missing");
+                            }
+                        }
+                    }
                     plugin.onInit();
                 }
                 catch (e) {
                     console.log(`Error whil loading plugin ${plugin.id}: ${e}`);
+                    TNT_1.Globals.removePlugin(plugin.id);
                     continue;
                 }
                 console.log(`Successfully loaded plugin ${plugin.id}`);
             }
+            this.render();
         }
         render() {
             for (const plugin of TNT_1.Globals.getAllPlugins()) {
                 for (const tag of plugin.tags) {
                     let tagDOM = document.querySelectorAll(tag);
                     for (const el of tagDOM) {
-                        el.setAttribute("data-tnt-plugin-value-backup", el.innerHTML);
-                        el.innerHTML = "";
+                        try {
+                            el.setAttribute("data-tnt-plugin-value-backup", el.innerHTML);
+                            el.innerHTML = "";
+                        }
+                        catch (e) {
+                        }
                     }
                 }
             }
@@ -221,22 +259,4 @@ var TNTScript;
     TNTScript.PluginMain = PluginMain;
 })(TNTScript || (TNTScript = {}));
 TNT.Globals.plug(new TNTScript.PluginMain());
-class PluginMain {
-    get id() {
-        return "debug";
-    }
-    get rendererList() {
-        return [];
-    }
-    get tags() {
-        return [];
-    }
-    get version() {
-        return "1.0.0";
-    }
-    onInit() {
-        console.log("Init!");
-    }
-}
-TNT.Globals.plug(new PluginMain());
 //# sourceMappingURL=tnt.js.map

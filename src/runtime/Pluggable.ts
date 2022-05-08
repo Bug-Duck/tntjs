@@ -14,6 +14,7 @@ namespace TNT {
         get rendererList(): Array<Renderable>;
         get tags(): Array<string>;
         get version(): string;
+        dependencies?: string[];
         onInit(): void;
     }
 }

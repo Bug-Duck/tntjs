@@ -20,6 +20,7 @@ namespace TNTScript {
             return "v1.0.0-integrated";
         }
         onInit(): void {
+            // Do some initialize here.
             console.log("Here")
         }
     }
