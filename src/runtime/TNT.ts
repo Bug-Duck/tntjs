@@ -22,6 +22,8 @@ namespace TNT {
             this.prv_vTagRenderer = new VTagRenderer();
 
             // Initialize plugins
+            let pluginsShouldMove: string[] = [];
+
             for (const plugin of Globals.getAllPlugins()) {
 
                 console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`)
@@ -57,10 +59,16 @@ namespace TNT {
                     plugin.onInit();
                 } catch (e) {
                     console.log(`Error whil loading plugin ${plugin.id}: ${e}`);
-                    Globals.removePlugin(plugin.id);
+                    // Globals.removePlugin(plugin.id);
+                    pluginsShouldMove.push(plugin.id);
                     continue;
                 }
                 console.log(`Successfully loaded plugin ${plugin.id}`);
+            }
+
+            // Remove the invalid plugins
+            for (const pluginId of pluginsShouldMove) {
+                Globals.removePlugin(pluginId);
             }
 
             // Do the first rendering.
