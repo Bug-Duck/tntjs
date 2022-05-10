@@ -345,7 +345,19 @@ var TNTScript;
 TNT.Globals.plug(new TNTScript.PluginMain());
 var TNTScript;
 (function (TNTScript) {
+    class ScriptExecutor {
+        exec(scriptContent) {
+            console.log(scriptContent);
+        }
+    }
+    TNTScript.ScriptExecutor = ScriptExecutor;
+})(TNTScript || (TNTScript = {}));
+var TNTScript;
+(function (TNTScript) {
     class TagRenderer {
+        constructor() {
+            this.prv_executor = new TNTScript.ScriptExecutor();
+        }
         render() {
             let tags = document.querySelectorAll('tnt');
             for (const tag of tags) {
@@ -353,7 +365,7 @@ var TNTScript;
                 if (tag.style.getPropertyValue('display') !== "none") {
                     tag.style.setProperty('display', 'none');
                 }
-                console.log(tagInnerHTML);
+                this.prv_executor.exec(tagInnerHTML);
             }
         }
     }
