@@ -7,7 +7,26 @@
 
 namespace TNT {
     export class TNT {
-        private prv_vTagRenderer: VTagRenderer
+        private prv_vTagRenderer: VTagRenderer;
+        private prv_options: string[];
+        private prv_isDebug: boolean = false;
+
+
+        // This function will check the option tags.
+        private prv_checkOptionTags() {
+            // Debug mode.
+            let debugModeOptionTags = document.querySelectorAll("tnt-debug");
+            if (debugModeOptionTags.length === 0) {
+                // Didn't enable the debug mode.
+                if (window.location.href.startsWith("file:")) {
+                    // Maybe in the developing environment.
+                    console.warn("Warning: It seems that you are developing the webpage but you don't enable the debug mode.\nIt's better for you to enable the debug mode by the html tag <tnt-debug></tnt-debug> to enable more debugging features.");
+                    console.warn("If your application is designed to run on file:/// protocal, please ignore this warning.");
+                }
+                Globals.removePlugin('tntdebug');
+            }
+        }
+
         constructor() {
             // Entry point of a TNT page.
             // Register itself to the global object pool so that plugins can operate on it.
@@ -17,6 +36,9 @@ namespace TNT {
                 // Render on update (Auto setState)
                 this.render();
             })
+
+            // Check option tags
+            this.prv_checkOptionTags();
 
             // Initialize renderer
             this.prv_vTagRenderer = new VTagRenderer();

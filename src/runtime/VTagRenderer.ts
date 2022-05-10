@@ -24,7 +24,8 @@ namespace TNT {
                 // For each elements
                 const rendered = i.getAttribute("data-rendered");
                 if (rendered === null) {
-                    // not rendered
+                    // Not rendered
+                    // In this case, the tag always should be rendered.
                     i.setAttribute("data-rendered", "YES");
                     i.setAttribute("data-original", i.innerHTML);
                     if (this.customRenderer) {
@@ -33,12 +34,22 @@ namespace TNT {
                         i.innerHTML = this.defaultRenderer(i.innerHTML);
                     }
                 } else {
-                    // already rendered
+                    // Already rendered
+                    // In this case, we should check if the tag really should be rendered or not.
+                    // This is called the DIFF CHECK
                     const content = i.getAttribute("data-original");
+                    let newRenderedContent = "";
                     if (this.customRenderer) {
-                        i.innerHTML = this.customRenderer(content);
+                        newRenderedContent = this.customRenderer(content);
                     } else {
-                        i.innerHTML = this.defaultRenderer(content);
+                        newRenderedContent = this.defaultRenderer(content);
+                    }
+                    // Compare if the element should be rerendered.
+                    if (i.innerHTML !== newRenderedContent) {
+                        // It's time to rerender it.
+                        i.innerHTML = newRenderedContent;
+                    } else {
+                        // Else, just do nothing here.
                     }
                 }
             }
