@@ -99,3 +99,8 @@ declare namespace TNTScript {
         onInit(): void;
     }
 }
+declare namespace TNTScript {
+    class TagRenderer implements TNT.Renderable {
+        render(): void;
+    }
+}

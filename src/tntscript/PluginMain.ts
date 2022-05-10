@@ -11,7 +11,7 @@ namespace TNTScript {
             return "tntscript";
         }
         get rendererList(): TNT.Renderable[] {
-            return [];
+            return [new TagRenderer()];
         }
         get tags(): string[] {
             return ["tnt"];

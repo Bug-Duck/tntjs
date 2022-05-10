@@ -210,6 +210,11 @@ var TNT;
                 }
                 TNT_1.Globals.removePlugin('tntdebug');
             }
+            let noTNTScriptTags = document.querySelectorAll("tnt-no-script");
+            if (noTNTScriptTags.length !== 0) {
+                console.warn("Warning: Disabling TNT script may cause some unexpected results. If you're sure you want to disabl the TNT Script feature, please ignore this warning.");
+                TNT_1.Globals.removePlugin('tntscript');
+            }
         }
         render() {
             for (const plugin of TNT_1.Globals.getAllPlugins()) {
@@ -302,7 +307,7 @@ var TNTScript;
             return "tntscript";
         }
         get rendererList() {
-            return [];
+            return [new TNTScript.TagRenderer()];
         }
         get tags() {
             return ["tnt"];
@@ -317,4 +322,20 @@ var TNTScript;
     TNTScript.PluginMain = PluginMain;
 })(TNTScript || (TNTScript = {}));
 TNT.Globals.plug(new TNTScript.PluginMain());
+var TNTScript;
+(function (TNTScript) {
+    class TagRenderer {
+        render() {
+            let tags = document.querySelectorAll('tnt');
+            for (const tag of tags) {
+                const tagInnerHTML = tag.getAttribute("data-tnt-plugin-value-backup");
+                if (tag.style.getPropertyValue('display') !== "none") {
+                    tag.style.setProperty('display', 'none');
+                }
+                console.log(tagInnerHTML);
+            }
+        }
+    }
+    TNTScript.TagRenderer = TagRenderer;
+})(TNTScript || (TNTScript = {}));
 //# sourceMappingURL=tnt.js.map

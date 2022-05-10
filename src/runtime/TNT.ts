@@ -25,6 +25,12 @@ namespace TNT {
                 }
                 Globals.removePlugin('tntdebug');
             }
+            // Disable the tnt script feature.
+            let noTNTScriptTags = document.querySelectorAll("tnt-no-script");
+            if (noTNTScriptTags.length !== 0) {
+                console.warn("Warning: Disabling TNT script may cause some unexpected results. If you're sure you want to disabl the TNT Script feature, please ignore this warning.");
+                Globals.removePlugin('tntscript');
+            }
         }
 
         constructor() {
