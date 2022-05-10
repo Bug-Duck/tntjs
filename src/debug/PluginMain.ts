@@ -1,3 +1,10 @@
+/**
+ * file: PluginMain.ts
+ * creator: 27Onion
+ * create time: May 10th, 2022, 20:25
+ * description: The main class of the debugger plugin.
+ */
+
 /// <reference path="../runtime/GlobalEnvironment.ts" />
 
 namespace TNTDebug {
