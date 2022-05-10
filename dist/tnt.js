@@ -1,3 +1,12 @@
+var TNTDebug;
+(function (TNTDebug) {
+    class DebugRenderTracer {
+        render() {
+            console.log("[Debugger] Renderer called to perform a render.");
+        }
+    }
+    TNTDebug.DebugRenderTracer = DebugRenderTracer;
+})(TNTDebug || (TNTDebug = {}));
 var TNT;
 (function (TNT) {
     class TypeInfo {
@@ -103,26 +112,56 @@ var TNT;
         Globals.getAllPlugins = getAllPlugins;
         function removePlugin(pluginId) {
             let counter = 0;
+            let found = false;
             for (const plugin of prv_pluginList) {
                 if (plugin.id === pluginId) {
+                    found = true;
                     break;
                 }
                 counter++;
+            }
+            if (!found) {
+                return;
             }
             prv_pluginList = prv_pluginList.slice(0, counter).concat(prv_pluginList.slice(counter + 1));
         }
         Globals.removePlugin = removePlugin;
     })(Globals = TNT.Globals || (TNT.Globals = {}));
 })(TNT || (TNT = {}));
+var TNTDebug;
+(function (TNTDebug) {
+    class PluginMain {
+        get id() {
+            return "tntdebug";
+        }
+        get rendererList() {
+            return [new TNTDebug.DebugRenderTracer()];
+        }
+        get tags() {
+            return [];
+        }
+        get version() {
+            return "1.0.0-integrated";
+        }
+        onInit() {
+            console.log("[Debugger] Debug mode enabled. ");
+        }
+    }
+    TNTDebug.PluginMain = PluginMain;
+})(TNTDebug || (TNTDebug = {}));
+TNT.Globals.plug(new TNTDebug.PluginMain());
 var TNT;
 (function (TNT_1) {
     class TNT {
         constructor() {
+            this.prv_isDebug = false;
             TNT_1.Globals.instances.push(this);
             TNT_1.Globals.symbolTable.onSetValue(() => {
                 this.render();
             });
+            this.prv_checkOptionTags();
             this.prv_vTagRenderer = new TNT_1.VTagRenderer();
+            let pluginsShouldMove = [];
             for (const plugin of TNT_1.Globals.getAllPlugins()) {
                 console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
                 try {
@@ -152,12 +191,25 @@ var TNT;
                 }
                 catch (e) {
                     console.log(`Error whil loading plugin ${plugin.id}: ${e}`);
-                    TNT_1.Globals.removePlugin(plugin.id);
+                    pluginsShouldMove.push(plugin.id);
                     continue;
                 }
                 console.log(`Successfully loaded plugin ${plugin.id}`);
             }
+            for (const pluginId of pluginsShouldMove) {
+                TNT_1.Globals.removePlugin(pluginId);
+            }
             this.render();
+        }
+        prv_checkOptionTags() {
+            let debugModeOptionTags = document.querySelectorAll("tnt-debug");
+            if (debugModeOptionTags.length === 0) {
+                if (window.location.href.startsWith("file:")) {
+                    console.warn("Warning: It seems that you are developing the webpage but you don't enable the debug mode.\nIt's better for you to enable the debug mode by the html tag <tnt-debug></tnt-debug> to enable more debugging features.");
+                    console.warn("If your application is designed to run on file:/// protocal, please ignore this warning.");
+                }
+                TNT_1.Globals.removePlugin('tntdebug');
+            }
         }
         render() {
             for (const plugin of TNT_1.Globals.getAllPlugins()) {
@@ -225,11 +277,17 @@ var TNT;
                 }
                 else {
                     const content = i.getAttribute("data-original");
+                    let newRenderedContent = "";
                     if (this.customRenderer) {
-                        i.innerHTML = this.customRenderer(content);
+                        newRenderedContent = this.customRenderer(content);
                     }
                     else {
-                        i.innerHTML = this.defaultRenderer(content);
+                        newRenderedContent = this.defaultRenderer(content);
+                    }
+                    if (i.innerHTML !== newRenderedContent) {
+                        i.innerHTML = newRenderedContent;
+                    }
+                    else {
                     }
                 }
             }

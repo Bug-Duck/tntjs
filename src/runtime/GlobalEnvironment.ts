@@ -38,11 +38,16 @@ namespace TNT {
 
         export function removePlugin(pluginId: string): void {
             let counter = 0;
+            let found = false;
             for(const plugin of prv_pluginList) {
                 if (plugin.id === pluginId) {
+                    found = true;
                     break;
                 }
                 counter++;
+            }
+            if (!found) {
+                return;
             }
             prv_pluginList = prv_pluginList.slice(0, counter).concat(prv_pluginList.slice(counter + 1));
         }

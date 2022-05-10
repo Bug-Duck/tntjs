@@ -1,3 +1,8 @@
+declare namespace TNTDebug {
+    class DebugRenderTracer implements TNT.Renderable {
+        render(): void;
+    }
+}
 declare namespace TNT {
     class TypeInfo {
         private prv_namespaceName;
@@ -44,6 +49,15 @@ declare namespace TNT {
         function removePlugin(pluginId: string): void;
     }
 }
+declare namespace TNTDebug {
+    class PluginMain implements TNT.Plugin {
+        get id(): string;
+        get rendererList(): TNT.Renderable[];
+        get tags(): string[];
+        get version(): string;
+        onInit(): void;
+    }
+}
 declare namespace TNT {
     interface Renderable {
         render(): void;
@@ -60,6 +74,9 @@ declare namespace TNT {
 declare namespace TNT {
     class TNT {
         private prv_vTagRenderer;
+        private prv_options;
+        private prv_isDebug;
+        private prv_checkOptionTags;
         constructor();
         render(): void;
         get vTagRenderer(): VTagRenderer;
