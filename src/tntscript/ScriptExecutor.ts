@@ -3,6 +3,7 @@
  * creator: 27Onion
  * create time: May 10th, 2022, 21:18
  * description: The TNT script executor.
+ * main developer: sheepbox8646
  */
 
 namespace TNTScript {
