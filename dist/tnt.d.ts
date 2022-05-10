@@ -100,7 +100,13 @@ declare namespace TNTScript {
     }
 }
 declare namespace TNTScript {
+    class ScriptExecutor {
+        exec(scriptContent: string): void;
+    }
+}
+declare namespace TNTScript {
     class TagRenderer implements TNT.Renderable {
+        private prv_executor;
         render(): void;
     }
 }
