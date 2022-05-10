@@ -9,6 +9,7 @@
 namespace TNTScript {
     export class ScriptExecutor {
         exec(scriptContent: string) {
+	    TNTFunctionSplit(scriptContent);
             // TODO: Fill in this function to execute the script. The content is given.
             console.log(scriptContent);
         }
