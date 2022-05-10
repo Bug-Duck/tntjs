@@ -9,7 +9,7 @@ namespace TNT {
     export class TNT {
         private prv_vTagRenderer: VTagRenderer;
         private prv_options: string[];
-        private prv_isDebug: boolean = false;
+        private prv_isDebug: boolean = true;
 
 
         // This function will check the option tags.
@@ -24,12 +24,36 @@ namespace TNT {
                     console.warn("If your application is designed to run on file:/// protocal, please ignore this warning.");
                 }
                 Globals.removePlugin('tntdebug');
+                this.prv_isDebug = false;
             }
             // Disable the tnt script feature.
             let noTNTScriptTags = document.querySelectorAll("tnt-no-script");
             if (noTNTScriptTags.length !== 0) {
                 console.warn("Warning: Disabling TNT script may cause some unexpected results. If you're sure you want to disabl the TNT Script feature, please ignore this warning.");
                 Globals.removePlugin('tntscript');
+            }
+            // Disable other plugins that required to be disabled.
+            let disablePluginTags = document.querySelectorAll('tnt-disable-plugin');
+            for (const tag of disablePluginTags) {
+                const pluginId = tag.getAttribute('plugin');
+                if (pluginId !== null) {
+                    Globals.removePlugin(pluginId);
+                }
+            }
+            // Pure mode.
+            let pureModeTags = document.querySelectorAll('tnt-pure-mode');
+            let noPluginModeTags = document.querySelectorAll('tnt-no-plugin');
+            if (pureModeTags.length !== 0 || noPluginModeTags.length !== 0) {
+                console.warn('Warning: You disabled all the plugins, including the TNT Script plugin and TNT Debugger plugin! Are you sure that\'s what you want? If not, please turn off the Pure Mode option. ');
+                console.log('Hint: Use <tnt-disable-plugin plugin="plugin_id_to_delete"></tnt-disable-plugin> to disable a single plugin. \nUse <tnt-no-script></tnt-disable-plugin> to disable the TNT Script integrated plugin (equal to <tnt-disable-plugin plugin="tntscript"></tnt-disable-plugin>). Remove the <tnt-debug></tnt-debug> tag to disable the debugger plugin.');
+                // Disable all the plugins.
+                let pluginNames: string[] = [];
+                for (const plugin of Globals.getAllPlugins()) {
+                    pluginNames.push(plugin.id);
+                }
+                for (const pluginId of pluginNames) {
+                    Globals.removePlugin(pluginId);
+                }
             }
         }
 
