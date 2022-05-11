@@ -1,4 +1,8 @@
-node_modules
-node_modules
-node_modules
-node_modules
+node_modules/**
+.gitignore
+dist/**
+.vscode/**
+.VSCodeCounter/**
+Backup/**
+test/**
+index.html
