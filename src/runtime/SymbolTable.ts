@@ -14,6 +14,7 @@ namespace TNT {
     export const ObjectType = new TypeInfo("tnt", "object");
     export const TNTFunctionType = new TypeInfo("tnt", "function");
     export const JSFunctionType = new TypeInfo("js", "function");
+    export const HTMLStringType = new TypeInfo("tnt", "html_string");
 
     // A variable.
     export class Variable {
@@ -27,6 +28,9 @@ namespace TNT {
         }
         private prv_validate(value: any, type: TypeInfo) {
             if (type === StringType && typeof (value) !== "string") {
+                throw new TypeError("value should ba a string.")
+            }
+            if (type === HTMLStringType && typeof (value) !== "string") {
                 throw new TypeError("value should ba a string.")
             }
             if (type === NumberType && typeof (value) !== "number") {

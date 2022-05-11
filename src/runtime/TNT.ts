@@ -14,6 +14,7 @@ namespace TNT {
 
         // This function will check the option tags.
         private prv_checkOptionTags() {
+
             // Debug mode.
             let debugModeOptionTags = document.querySelectorAll("tnt-debug");
             if (debugModeOptionTags.length === 0) {
@@ -26,12 +27,14 @@ namespace TNT {
                 Globals.removePlugin('tntdebug');
                 this.prv_isDebug = false;
             }
+
             // Disable the tnt script feature.
             let noTNTScriptTags = document.querySelectorAll("tnt-no-script");
             if (noTNTScriptTags.length !== 0) {
                 console.warn("Warning: Disabling TNT script may cause some unexpected results. If you're sure you want to disabl the TNT Script feature, please ignore this warning.");
                 Globals.removePlugin('tntscript');
             }
+
             // Disable other plugins that required to be disabled.
             let disablePluginTags = document.querySelectorAll('tnt-disable-plugin');
             for (const tag of disablePluginTags) {
@@ -40,6 +43,7 @@ namespace TNT {
                     Globals.removePlugin(pluginId);
                 }
             }
+
             // Pure mode.
             let pureModeTags = document.querySelectorAll('tnt-pure-mode');
             let noPluginModeTags = document.querySelectorAll('tnt-no-plugin');
@@ -55,6 +59,18 @@ namespace TNT {
                     Globals.removePlugin(pluginId);
                 }
             }
+
+            // ----------------------------------------------------------------
+            // EASTER EGGS OPTIONS
+            let flipModeTags = document.querySelectorAll('tnt-flip');
+            if (flipModeTags.length !== 0) {
+                // Flip mode on
+                window.addEventListener('load', () => {
+                    document.querySelector('html').style.setProperty('transform', 'scaleX(-1)');
+                });
+            }
+            // ----------------------------------------------------------------
+
         }
 
         constructor() {
