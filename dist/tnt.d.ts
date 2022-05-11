@@ -19,6 +19,7 @@ declare namespace TNT {
     const ObjectType: TypeInfo;
     const TNTFunctionType: TypeInfo;
     const JSFunctionType: TypeInfo;
+    const HTMLStringType: TypeInfo;
     class Variable {
         private prv_value;
         private prv_type;

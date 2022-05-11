@@ -33,6 +33,7 @@ var TNT;
     TNT.ObjectType = new TNT.TypeInfo("tnt", "object");
     TNT.TNTFunctionType = new TNT.TypeInfo("tnt", "function");
     TNT.JSFunctionType = new TNT.TypeInfo("js", "function");
+    TNT.HTMLStringType = new TNT.TypeInfo("tnt", "html_string");
     class Variable {
         constructor(value, type) {
             this.prv_validate(value, type);
@@ -41,6 +42,9 @@ var TNT;
         }
         prv_validate(value, type) {
             if (type === TNT.StringType && typeof (value) !== "string") {
+                throw new TypeError("value should ba a string.");
+            }
+            if (type === TNT.HTMLStringType && typeof (value) !== "string") {
                 throw new TypeError("value should ba a string.");
             }
             if (type === TNT.NumberType && typeof (value) !== "number") {
@@ -84,11 +88,35 @@ var TNT;
 })(TNT || (TNT = {}));
 var TNT;
 (function (TNT) {
+    function prv_stringContains(char, s) {
+        for (const i of s) {
+            if (i === char) {
+                return true;
+            }
+        }
+        return false;
+    }
     let Globals;
     (function (Globals) {
         Globals.symbolTable = new TNT.SymbolTable();
         Globals.instances = [];
-        let valueEvaluator = (expr) => Globals.symbolTable.getValue(expr.trim()).value;
+        let valueEvaluator = (expr) => {
+            const value = Globals.symbolTable.getValue(expr.trim());
+            if (value.type === TNT.StringType) {
+                let answer = value.value;
+                while (prv_stringContains('&', answer)) {
+                    answer = answer.replace('&', "&amp;");
+                }
+                while (prv_stringContains('<', answer)) {
+                    answer = answer.replace('<', "&lt;");
+                }
+                while (prv_stringContains('>', answer)) {
+                    answer = answer.replace('>', "&gt;");
+                }
+                return answer;
+            }
+            return value.value;
+        };
         function setValueEvaluator(fn) {
             valueEvaluator = fn;
         }
@@ -235,6 +263,12 @@ var TNT;
                 for (const pluginId of pluginNames) {
                     TNT_1.Globals.removePlugin(pluginId);
                 }
+            }
+            let flipModeTags = document.querySelectorAll('tnt-flip');
+            if (flipModeTags.length !== 0) {
+                window.addEventListener('load', () => {
+                    document.querySelector('html').style.setProperty('transform', 'scaleX(-1)');
+                });
             }
         }
         render() {
