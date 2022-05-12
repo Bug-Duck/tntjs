@@ -7,6 +7,8 @@
 
 namespace TNTScript {
     export class PluginMain implements TNT.Plugin {
+        private prv_executor = new ScriptExecutor();
+
         get id(): string {
             return "tntscript";
         }
@@ -22,6 +24,11 @@ namespace TNTScript {
         onInit(): void {
             // Do some initialize here.
             console.log("Here")
+
+            // Find all the tnt tags
+            for (const tntTag of document.querySelectorAll('tnt')) {
+                this.prv_executor.exec(tntTag.innerHTML);
+            }
         }
     }
 }

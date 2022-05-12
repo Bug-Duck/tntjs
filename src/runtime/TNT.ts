@@ -10,6 +10,7 @@ namespace TNT {
         private prv_vTagRenderer: VTagRenderer;
         private prv_options: string[];
         private prv_isDebug: boolean = true;
+        private prv_refreshLock: boolean = true;
 
 
         // This function will check the option tags.
@@ -80,7 +81,9 @@ namespace TNT {
 
             Globals.symbolTable.onSetValue(() => {
                 // Render on update (Auto setState)
-                this.render();
+                if (!this.prv_refreshLock) {
+                    this.render();
+                }
             })
 
             // Check option tags
@@ -141,8 +144,14 @@ namespace TNT {
 
             // Do the first rendering.
             this.render();
+
+            // Unlock the refreshing
+            this.prv_refreshLock = false;
         }
         render() {
+            // Lock the refreshing functino to avoid infinity recursion.
+            this.prv_refreshLock = true;
+
             // Protect the tags
             for (const plugin of Globals.getAllPlugins()) {
                 for (const tag of plugin.tags) {
@@ -180,6 +189,9 @@ namespace TNT {
                     }
                 }
             }
+
+            // Unlock the refresh function
+            this.prv_refreshLock = false;
         }
         get vTagRenderer(): VTagRenderer {
             return this.prv_vTagRenderer;
