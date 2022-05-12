@@ -7,7 +7,6 @@
 
 namespace TNTScript {
     export class TagRenderer implements TNT.Renderable {
-        private prv_executor: ScriptExecutor = new ScriptExecutor();
 
         render() {
             // Render phase.
@@ -25,9 +24,6 @@ namespace TNTScript {
                 if ((tag as HTMLElement).style.getPropertyValue('display') !== "none") {
                     (tag as HTMLElement).style.setProperty('display', 'none');
                 }
-
-                // Execute the script inside the tag.
-                this.prv_executor.exec(tagInnerHTML);
             }
         }
     }

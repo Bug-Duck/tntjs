@@ -77,6 +77,7 @@ declare namespace TNT {
         private prv_vTagRenderer;
         private prv_options;
         private prv_isDebug;
+        private prv_refreshLock;
         private prv_checkOptionTags;
         constructor();
         render(): void;
@@ -93,6 +94,7 @@ declare namespace TNT {
 }
 declare namespace TNTScript {
     class PluginMain implements TNT.Plugin {
+        private prv_executor;
         get id(): string;
         get rendererList(): TNT.Renderable[];
         get tags(): string[];
@@ -107,7 +109,6 @@ declare namespace TNTScript {
 }
 declare namespace TNTScript {
     class TagRenderer implements TNT.Renderable {
-        private prv_executor;
         render(): void;
     }
 }

@@ -183,9 +183,12 @@ var TNT;
     class TNT {
         constructor() {
             this.prv_isDebug = true;
+            this.prv_refreshLock = true;
             TNT_1.Globals.instances.push(this);
             TNT_1.Globals.symbolTable.onSetValue(() => {
-                this.render();
+                if (!this.prv_refreshLock) {
+                    this.render();
+                }
             });
             this.prv_checkOptionTags();
             this.prv_vTagRenderer = new TNT_1.VTagRenderer();
@@ -228,6 +231,7 @@ var TNT;
                 TNT_1.Globals.removePlugin(pluginId);
             }
             this.render();
+            this.prv_refreshLock = false;
         }
         prv_checkOptionTags() {
             let debugModeOptionTags = document.querySelectorAll("tnt-debug");
@@ -272,6 +276,7 @@ var TNT;
             }
         }
         render() {
+            this.prv_refreshLock = true;
             for (const plugin of TNT_1.Globals.getAllPlugins()) {
                 for (const tag of plugin.tags) {
                     let tagDOM = document.querySelectorAll(tag);
@@ -300,6 +305,7 @@ var TNT;
                     }
                 }
             }
+            this.prv_refreshLock = false;
         }
         get vTagRenderer() {
             return this.prv_vTagRenderer;
@@ -358,6 +364,9 @@ var TNT;
 var TNTScript;
 (function (TNTScript) {
     class PluginMain {
+        constructor() {
+            this.prv_executor = new TNTScript.ScriptExecutor();
+        }
         get id() {
             return "tntscript";
         }
@@ -372,6 +381,9 @@ var TNTScript;
         }
         onInit() {
             console.log("Here");
+            for (const tntTag of document.querySelectorAll('tnt')) {
+                this.prv_executor.exec(tntTag.innerHTML);
+            }
         }
     }
     TNTScript.PluginMain = PluginMain;
@@ -389,9 +401,6 @@ var TNTScript;
 var TNTScript;
 (function (TNTScript) {
     class TagRenderer {
-        constructor() {
-            this.prv_executor = new TNTScript.ScriptExecutor();
-        }
         render() {
             let tags = document.querySelectorAll('tnt');
             for (const tag of tags) {
@@ -399,7 +408,6 @@ var TNTScript;
                 if (tag.style.getPropertyValue('display') !== "none") {
                     tag.style.setProperty('display', 'none');
                 }
-                this.prv_executor.exec(tagInnerHTML);
             }
         }
     }
