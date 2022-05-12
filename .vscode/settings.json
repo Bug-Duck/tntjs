@@ -5,6 +5,10 @@
             "language": "markdown",
             "scheme": "file",
             "pattern": "doc/Overview.md"
+        },
+        {
+            "language": "markdown",
+            "scheme": "file"
         }
     ]
 }
