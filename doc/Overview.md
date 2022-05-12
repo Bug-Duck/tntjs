@@ -12,3 +12,4 @@ We use a lot of custom HTML tags. The TNT.js has two parts, including the TNT Ru
 
 [Plugin Development Guide](plugin/Overview.md)
 [User Guide](user-guide/Overview.md)
+[TNT.js Javascript API Documentation](api/Overview.md)
