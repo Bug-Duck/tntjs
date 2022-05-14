@@ -104,11 +104,22 @@ declare namespace TNTScript {
 }
 declare namespace TNTScript {
     class ScriptExecutor {
-        exec(scriptContent: string): void;
+        exec(scriptContent: string, data?: Object): true | Object;
+        ValueProcess(reg: string): any;
     }
 }
 declare namespace TNTScript {
     class TagRenderer implements TNT.Renderable {
         render(): void;
     }
+}
+declare namespace TNTScript {
+    function TNTCodeSplit(code: string): any[];
+    function codeKuai(code: any): (string | any[])[];
+    function keySearch(key: string, code: string): string;
+    function TNTFunctionSplit(code: string, original?: boolean): {
+        agv: any[];
+        functioncanvalue: {};
+    };
+    function JsTypeToTNTType(TypeName: any): "string" | "number" | "bool";
 }
