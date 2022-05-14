@@ -9,10 +9,20 @@
 [![fork](https://gitee.com/BugDucker/tntjs/badge/fork.svg?theme=dark)](https://gitee.com/BugDucker/tntjs/members)
 [![website](https://img.shields.io/badge/website-bugduck.cn-yellowgreen)](https://www.bugduck.cn)
 [![BiliBili](https://img.shields.io/static/v1?label=bilibili&message=BugDuck开源团队&color=ff69b4&logo=bilibili)](https://space.bilibili.com/1959824394?spm_id_from=333.337.0.0)
-### 介绍
-TNT.js是一个基于Javascript的编程语言,目的是为了创造一个和Python一样简单的,又不失前端特性的编程语言。TNT.js避免了TypeScript不能直接运行在浏览器上的缺点。它的最大特点是动态,页面上的值会随着TNT.js内部的值变化而变化!<br/>
 
-### 样例
+### 公告
+本项目正在重构中,我们创造性的将tntjs分为了两部分,一部分为tnt本体,负责更底层的热更新交互,一部分是TNTscript,用于实际开发
+
+### 介绍
+tntjs分为两部分:
+
+TNT是一个动态热更新的语言框架,轻量级
+
+TNTScript是一个基于Javascript的编程语言,目的是为了创造一个和Python一样简单的,又不失前端特性的编程语言。TNTScript避免了TypeScript不能直接运行在浏览器上的缺点。它的最大特点是动态,页面上的值会随着TNT内部的值变化而变化!<br/>
+
+
+
+### demo
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -44,16 +54,47 @@ You are using the: Chrome
 bug-duck.github.io/tntjs
 
 ### 文件介绍
-|文件|描述|
-| -  | - |
-|tnt.ts|主文件|
-|setup.ts|TNT.js入口文件|
-|TNTError.ts|TNT.js的错误类|
-|TNTGlobal.ts|TNT.js与传统js交互的接口|
-|TNTSymbolTable.ts|TNT.js数据空间以及相关操作|
-|codeAnaly.ts|TNT.js代码解析|
-|index.html|测试文件|
-|LICENSE|MIT开源许可证|
+> tntjs
+> > LICENSE 开源许可证
+> > 
+> > src 主文件
+> > > runtime tntjs的底层实现
+> > > > TNT.ts
+> > > > 
+> > > > TypeInfo.ts
+> > > > 
+> > > > SymbolTable.ts
+> > > > 
+> > > > GlobalEnvironment.ts
+> > > > 
+> > > > Pliggable.ts
+> > > > 
+> > > > VTagRenderer.ts
+> > > >
+> > > tntscript TNTscript轻量编程语言开发目录
+> > > >  ScriptExecutor.ts 主文件
+> > > > 
+> > > > PluginMain.ts
+> > > > 
+> > > > TagRenderer.ts
+> > > > 
+> > > > lexicalAnalysis.ts 词法分析
+> > > > 
+> > > debug
+> > > > DebugRenderTracer.ts
+> > > > 
+> > > >  PluginMain.ts
+> > > >
+> > dist 编译产物
+> > > tnt.d.ts
+> > > 
+> > > tnt.js 代码
+> > > 
+> > > tnt.js.map
+> > > 
+> > > tnt.min.js 发布版混淆文件
+> > > 
+> > > tnt.fuck.js ♂♂♂哲学文件♂♂♂
 
 
 ### 打赏
