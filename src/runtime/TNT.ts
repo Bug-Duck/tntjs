@@ -130,7 +130,6 @@ namespace TNT {
                     plugin.onInit();
                 } catch (e) {
                     console.log(`Error whil loading plugin ${plugin.id}: ${e}`);
-                    // Globals.removePlugin(plugin.id);
                     pluginsShouldMove.push(plugin.id);
                     continue;
                 }
