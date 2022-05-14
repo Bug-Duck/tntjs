@@ -127,8 +127,10 @@ namespace TNT {
                             }
                         }
                     }
+                    // Initialize the plugin
                     plugin.onInit();
                 } catch (e) {
+                    // Any error occured, then the plugin will NOT be loaded.
                     console.log(`Error whil loading plugin ${plugin.id}: ${e}`);
                     pluginsShouldMove.push(plugin.id);
                     continue;
