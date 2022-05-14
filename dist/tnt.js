@@ -392,11 +392,136 @@ TNT.Globals.plug(new TNTScript.PluginMain());
 var TNTScript;
 (function (TNTScript) {
     class ScriptExecutor {
-        exec(scriptContent) {
-            console.log(scriptContent);
+        exec(scriptContent, data = {}) {
+            const codeList = TNTScript.TNTCodeSplit(scriptContent);
+            let index = 0;
+            const TNTSymbolTableOWN = data;
+            for (const code of codeList) {
+                if (/([A-z0-9])+ ?= ?.+/.test(code)) {
+                    const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(' '));
+                    const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(' '));
+                    const process = this.ValueProcess(v[0]);
+                }
+                else if (/(for|while|def|render) .+/.test(code)) {
+                    if (/render/.test(code)) {
+                        const html = TNTScript.keySearch('render', code);
+                    }
+                    else if (/while/.test(code)) {
+                        const i = TNTScript.codeKuai(TNTScript.keySearch('while', code));
+                        const condition = i[0];
+                        const codes = i[1];
+                        while (this.ValueProcess(condition)) {
+                            if (this.exec(codes)) {
+                                break;
+                            }
+                        }
+                    }
+                    else if (/def/.test(code)) {
+                    }
+                    else if (/for/.test(code)) {
+                    }
+                }
+                else if (code === 'break') {
+                    return true;
+                }
+                else {
+                    this.ValueProcess(code);
+                }
+                index = index + 1;
+            }
+            return TNTSymbolTableOWN;
+        }
+        ValueProcess(reg) {
+            const isString = /(\"|\').+(\"|\')/;
+            const isNumber = /[0-9]+/;
+            const isBool = /(true|false)/;
+            const isVar = /[_A-z0-9]/;
+            const isMathGex = /(.+ ?(\+|-|\*|\/)+ ?.+)+/;
+            const isXML = /<.+>/;
+            const iscodes = /\{.+\}/;
+            if (/.+\(.+\)/.test(reg)) {
+                const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
+                if (TNTSymbolTable[name].type === 'function') {
+                    let buffer = "";
+                    let __parameters__ = /\(.+\)/.exec(reg);
+                    let __parameter__ = __parameters__[0];
+                    __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
+                    const parameters = TNTScript.TNTFunctionSplit(__parameter__);
+                    for (const i of parameters['agv']) {
+                        buffer = buffer + i;
+                        buffer = buffer + ',';
+                    }
+                    for (const i in parameters['functioncanvalue']) {
+                        buffer = buffer + i + '=' + ',';
+                    }
+                    const results = eval(`TNT.TNTSymbolTable.${name}.value(${buffer})`);
+                    const result = {
+                        type: TNTScript.JsTypeToTNTType(typeof (results)),
+                        value: results,
+                    };
+                    return result;
+                }
+                else if (TNTSymbolTable[name].type === 'tnt') {
+                    let __parameters__ = /\(.+\)/.exec(reg);
+                    let __parameter__ = __parameters__[0];
+                    __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
+                    const parameters = TNTScript.TNTFunctionSplit(__parameter__);
+                    let par = {};
+                    TNTSymbolTable[name].parameter.forEach((ele, i) => {
+                        par[ele] = parameters.agv[i];
+                    });
+                    for (const key in TNTSymbolTable[name].canparameter) {
+                        par[key] = TNTSymbolTable[name].canparameter[key];
+                    }
+                    for (const key in TNTSymbolTable[name].canparameter) {
+                        par[key] = parameters.functioncanvalue[key];
+                    }
+                    this.exec(TNTSymbolTable[name].code, par);
+                }
+            }
+            else if (iscodes.test(reg)) {
+                return {
+                    type: 'code',
+                    value: TNTScript.TNTCodeSplit(reg.substring(1, reg.length - 1)),
+                };
+            }
+            else if (isNumber.test(reg)) {
+                return {
+                    type: 'number',
+                    value: Number(reg)
+                };
+            }
+            else if (isString.test(reg)) {
+            }
+            else if (isBool.test(reg)) {
+                return {
+                    type: 'bool',
+                    value: Boolean(reg),
+                };
+            }
+            else if (isVar.test(reg)) {
+                const results = TNTSymbolTable[reg].value;
+                const result = {
+                    type: TNTScript.JsTypeToTNTType(typeof (results)),
+                    value: results,
+                };
+                return result;
+            }
+            else if (isMathGex.test(reg)) {
+            }
+            else if (isXML.test(reg)) {
+                const result = {
+                    type: 'XML',
+                    value: reg,
+                };
+                return result;
+            }
         }
     }
     TNTScript.ScriptExecutor = ScriptExecutor;
+    function TNTRenderDOM(HTML, DOM) {
+        DOM.innerHTML = HTML;
+    }
 })(TNTScript || (TNTScript = {}));
 var TNTScript;
 (function (TNTScript) {
@@ -412,5 +537,154 @@ var TNTScript;
         }
     }
     TNTScript.TagRenderer = TagRenderer;
+})(TNTScript || (TNTScript = {}));
+var TNTScript;
+(function (TNTScript) {
+    function TNTCodeSplit(code) {
+        let ignoreNext = false;
+        let stringIgnoreNext = false;
+        const buffer = [];
+        let currentString = "";
+        for (const i of code) {
+            if (ignoreNext) {
+                currentString += i;
+                if (i === '\\') {
+                    stringIgnoreNext = true;
+                    continue;
+                }
+                if (i === '"' && !stringIgnoreNext) {
+                    ignoreNext = false;
+                }
+                if (stringIgnoreNext) {
+                    stringIgnoreNext = false;
+                }
+                continue;
+            }
+            else {
+                if (i === ';') {
+                    buffer.push(currentString);
+                    currentString = "";
+                }
+                else if (i === '"') {
+                    currentString += i;
+                    ignoreNext = true;
+                }
+                else {
+                    currentString += i;
+                }
+            }
+        }
+        if (currentString !== "") {
+            buffer.push(currentString);
+            currentString = "";
+        }
+        return buffer;
+    }
+    TNTScript.TNTCodeSplit = TNTCodeSplit;
+    function codeKuai(code) {
+        const v = code.replace(/\{.+\}/, '');
+        const codes = /\{.+\}/.exec(code)[0];
+        return [v, TNTCodeSplit(codes.substring(1, codes.length - 1))];
+    }
+    TNTScript.codeKuai = codeKuai;
+    function keySearch(key, code) {
+        return code.replace(new RegExp(`${key} `), '');
+    }
+    TNTScript.keySearch = keySearch;
+    function TNTFunctionSplit(code, original = false) {
+        let ignoreNext = false;
+        let stringIgnoreNext = false;
+        let bracketMatchingMode = false;
+        let bracketMatchingStack = [];
+        const buffer = [];
+        let currentString = "";
+        for (const i of code) {
+            if (bracketMatchingMode) {
+                currentString += i;
+                if (i === '}') {
+                    bracketMatchingStack.pop();
+                    if (bracketMatchingStack.length === 0) {
+                        buffer.push(currentString + "}");
+                        bracketMatchingMode = false;
+                        continue;
+                    }
+                }
+                else if (i === '{') {
+                    bracketMatchingStack.push(null);
+                }
+                continue;
+            }
+            if (ignoreNext) {
+                currentString += i;
+                if (i === '\\') {
+                    stringIgnoreNext = true;
+                    continue;
+                }
+                if (i === '"' && !stringIgnoreNext) {
+                    ignoreNext = false;
+                }
+                if (stringIgnoreNext) {
+                    stringIgnoreNext = false;
+                }
+                continue;
+            }
+            else {
+                if (i === ',') {
+                    buffer.push(currentString.trim());
+                    currentString = "";
+                }
+                else if (i === '"') {
+                    currentString += i;
+                    ignoreNext = true;
+                }
+                else if (i === '{') {
+                    bracketMatchingMode = true;
+                    bracketMatchingStack = [null];
+                    currentString += i;
+                }
+                else {
+                    currentString += i;
+                }
+            }
+        }
+        if (currentString !== "") {
+            buffer.push(currentString.trim());
+            currentString = "";
+        }
+        const values = { agv: [], functioncanvalue: {} };
+        for (const value of buffer) {
+            if (/.+ ?= ?.+/.test(value)) {
+                const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(' '));
+                const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(' '));
+                values.functioncanvalue[name[0]] = new TNTScript.ScriptExecutor().ValueProcess(v[0]);
+            }
+            else {
+                if (original) {
+                    values.agv.push(new TNTScript.ScriptExecutor().ValueProcess(value));
+                }
+                else {
+                    values.agv.push(value);
+                }
+            }
+        }
+        return values;
+    }
+    TNTScript.TNTFunctionSplit = TNTFunctionSplit;
+    function JsTypeToTNTType(TypeName) {
+        switch (TypeName) {
+            case "String":
+                return 'string';
+                break;
+            case "Number":
+                return 'number';
+                break;
+            case "Boolean":
+                return 'bool';
+                break;
+            default:
+                break;
+        }
+    }
+    TNTScript.JsTypeToTNTType = JsTypeToTNTType;
 })(TNTScript || (TNTScript = {}));
 //# sourceMappingURL=tnt.js.map
