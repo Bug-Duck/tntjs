@@ -161,10 +161,13 @@ namespace TNTScript {
             }
         }
 
-        TNTRenderDOM(HTML: string, DOM: HTMLElement) {
+        renderDOM(HTML: string, DOM: HTMLElement) {
             DOM.innerHTML = HTML;
             // TNTValueTagProcessing();
             // TNTTagProcessing();
+        }
+        evaluate(expression: string): any {
+            // TODO: evaluate the value
         }
     }
 
