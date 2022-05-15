@@ -110,10 +110,16 @@ declare namespace TNTScript {
     }
 }
 declare namespace TNTScript {
-    class ScriptExecutor {
-        exec(scriptContent: string, data?: Object): void;
+    type value = {
+        type: string;
+        value: any;
+    };
+    export class ScriptExecutor {
+        exec(scriptContent: string, data?: Object): true | Object;
+        ValueProcess(reg: string): value;
         TNTRenderDOM(HTML: string, DOM: HTMLElement): void;
     }
+    export {};
 }
 declare namespace TNTScript {
     class TagRenderer implements TNT.Renderable {
