@@ -8,24 +8,43 @@
     <script src="dist/tnt.js"></script>
     <script>
         window.onload = () => {
-            TNT.Globals.symbolTable.setValue("test", new TNT.Variable("Hello, World!",TNT.StringType));
+            TNT.Globals.symbolTable.setValue("test",
+                new TNT.Variable("Hello, World!",
+                    TNT.StringType));
             new TNT.TNT();
             setTimeout(
                 () => {
-                    TNT.Globals.symbolTable.setValue("test", new TNT.Variable("<span style=\"color:red;\">こんにちは、世界です！</span>",TNT.StringType));
+                    TNT.Globals.symbolTable.setValue(
+                        "test", 
+                        new TNT.Variable(
+                            "<span style=\"color:red;\">こんにちは、世界です！</span>",
+                        TNT.StringType));
                 }, 3000
             )
         }
     </script>
+    <v>test</v>
 </head>
 <body>
-    <tnt-debug></tnt-debug>
-    <tnt>
-        x=233333333333333
-    </tnt>
+    <script>
+        TNT.Globals.symbolTable.setValue(
+            'websiteName',
+            'Google',
+            TNT.StringType
+        );
+        TNT.Globals.symbolTable.setValue(
+            'lin',
+            'google.com',
+            TNT.StringType
+        )
+    </script>
     <div>
-        <v>x</v> <br/>
-        <v>test</v> <br/>
+        <a tnt-td="href => lin">
+            websiteName:
+            <v>websiteName</v>
+        </a>
     </div>
+</body>
+<body>
 </body>
 </html>
