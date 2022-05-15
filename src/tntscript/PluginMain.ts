@@ -29,6 +29,10 @@ namespace TNTScript {
             for (const tntTag of document.querySelectorAll('tnt')) {
                 this.prv_executor.exec(tntTag.innerHTML);
             }
+
+            TNT.Globals.setValueEvaluator((e: string) => {
+                return this.prv_executor.evaluate(e);
+            });
         }
     }
 }

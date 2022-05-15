@@ -1,4 +1,8 @@
-### This table is a comparison of TNTScript's datas' type and JavaScript's datas' type.
+# TNT.js Datatype Documentation
+## Overview
+...
+## Conversion Table
+This table is a comparison of TNTScript's datas' type and JavaScript's datas' type.
 
 |JavaScript|TNTScript|
 |-|-|
