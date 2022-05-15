@@ -93,6 +93,13 @@ declare namespace TNT {
     }
 }
 declare namespace TNTScript {
+    function codeSplit(code: string): void;
+    function codeBlock(code: any): void;
+    function keySearch(key: string, code: string): void;
+    function functionSplit(code: string, original?: boolean): void;
+    function jsTypeToTNTType(TypeName: any): void;
+}
+declare namespace TNTScript {
     class PluginMain implements TNT.Plugin {
         private prv_executor;
         get id(): string;
@@ -104,22 +111,12 @@ declare namespace TNTScript {
 }
 declare namespace TNTScript {
     class ScriptExecutor {
-        exec(scriptContent: string, data?: Object): true | Object;
-        ValueProcess(reg: string): any;
+        exec(scriptContent: string, data?: Object): void;
+        TNTRenderDOM(HTML: string, DOM: HTMLElement): void;
     }
 }
 declare namespace TNTScript {
     class TagRenderer implements TNT.Renderable {
         render(): void;
     }
-}
-declare namespace TNTScript {
-    function TNTCodeSplit(code: string): any[];
-    function codeKuai(code: any): (string | any[])[];
-    function keySearch(key: string, code: string): string;
-    function TNTFunctionSplit(code: string, original?: boolean): {
-        agv: any[];
-        functioncanvalue: {};
-    };
-    function JsTypeToTNTType(TypeName: any): "string" | "number" | "bool";
 }
