@@ -7,6 +7,11 @@
  */
 
 namespace TNTScript {
+    type value = {
+        type: string;
+        value: any
+    }
+
     export class ScriptExecutor {
         exec(scriptContent: string, data: Object = {}) {
             const codeList = TNTScript.TNTCodeSplit(scriptContent);
@@ -19,22 +24,18 @@ namespace TNTScript {
                     const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(' '));
                     const process = this.ValueProcess(v[0]);
                     // TODO: 变量赋值的值重构后存储
-                    // if (/let /.test(code)) {
-                    //     newData(
-                    //         process.type,
-                    //         name[0],
-                    //         process.value,
-                    //         TNTSymbolTableOWN,
-                    //     );
-                    // } else {
-                    //     newData(
-                    //         process.type,
-                    //         name[0],
-                    //         process.value,
-                    //         TNTSymbolTable,
-                    //     );
-                    // }
-                    // // Refresh the page.
+                    if (/let /.test(code)) {
+                        // TODO:局部变量赋值
+                        // newData(
+                        //     process.type,
+                        //     name[0],
+                        //     process.value,
+                        //     TNTSymbolTableOWN,
+                        // );
+                    } else {
+                        TNT.Globals.symbolTable.setValue(process.type,process.value)
+                    }
+                    // Refresh the page.
                     // TNTValueTagProcessing();
                 } else if (/(for|while|def|render) .+/.test(code)) {
                     if (/render/.test(code)) {
@@ -95,13 +96,13 @@ namespace TNTScript {
                     for (const i in parameters['functioncanvalue']) {
                         buffer = buffer + i + '=' + ',';
                     }
-                    const results = eval(`TNT.TNTSymbolTable.${name}.value(${buffer})`);
+                    const results = Function(`TNT.TNTSymbolTable.${name}.value(${buffer})`)();
                     const result: value = {
                         type: JsTypeToTNTType(typeof (results)),
                         value: results,
                     };
                     return result;
-                } else if (TNTSymbolTable[name].type === 'tnt') {
+                } else if (TNT.Globals.symbolTable.getValue(name) === 'tnt') {
                     // TODO:TNTScript函数调用
                     let __parameters__ = /\(.+\)/.exec(reg);
                     let __parameter__ = __parameters__[0];
