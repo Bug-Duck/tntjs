@@ -16,7 +16,7 @@ namespace TNTScript {
         exec(scriptContent: string, data: Object = {}) {
             const codeList = TNTScript.codeSplit(scriptContent);
             let index = 0;
-            const TNTSymbolTableOWN = data; // Inner data space
+            const symbolTableOWN = new TNT.SymbolTable(); // Inner data space
             // let Errors: TNTError = new TNTError(TNTSymbolTableOWN.__selfdom__)
             for (const code of codeList) {
                 if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
@@ -37,7 +37,7 @@ namespace TNTScript {
                     }
                     // Refresh the page.
                     // TNTValueTagProcessing();
-                } else if (/(for|while|def|render) .+/.test(code)) {
+                } else if (/(for|while|def|render|when) .+/.test(code)) {
                     if (/render/.test(code)) {
                         const html = keySearch('render', code)
                         // TODO: 渲染render关键字
@@ -66,7 +66,7 @@ namespace TNTScript {
                 index = index + 1;
                 // Errors.line += 1;
             }
-            return TNTSymbolTableOWN;
+            return symbolTableOWN;
             // TODO: Fill in this function to execute the script. The content is given.
             // console.log(scriptContent);
         }
