@@ -14,3 +14,5 @@ This table is a comparison of TNTScript's datas' type and JavaScript's datas' ty
 |Docment|dom|
 |Function|jsfunc|
 |Array(TNTScript's code list)|func|
+|/|code|
+|jsx|htmlstring|
