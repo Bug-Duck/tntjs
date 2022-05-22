@@ -385,37 +385,6 @@ var TNT;
 })(TNT || (TNT = {}));
 var TNTScript;
 (function (TNTScript) {
-    class PluginMain {
-        constructor() {
-            this.prv_executor = new TNTScript.ScriptExecutor();
-        }
-        get id() {
-            return "tntscript";
-        }
-        get rendererList() {
-            return [new TNTScript.TagRenderer()];
-        }
-        get tags() {
-            return ["tnt"];
-        }
-        get version() {
-            return "v1.0.0-integrated";
-        }
-        onInit() {
-            console.log("Here");
-            for (const tntTag of document.querySelectorAll('tnt')) {
-                this.prv_executor.exec(tntTag.innerHTML);
-            }
-            TNT.Globals.setValueEvaluator((e) => {
-                return this.prv_executor.evaluate(e);
-            });
-        }
-    }
-    TNTScript.PluginMain = PluginMain;
-})(TNTScript || (TNTScript = {}));
-TNT.Globals.plug(new TNTScript.PluginMain());
-var TNTScript;
-(function (TNTScript) {
     class ScriptExecutor {
         exec(scriptContent, data = new TNT.SymbolTable()) {
             this.SymbolTableOWN = data;
@@ -505,6 +474,37 @@ var TNTScript;
     }
     TNTScript.ScriptExecutor = ScriptExecutor;
 })(TNTScript || (TNTScript = {}));
+var TNTScript;
+(function (TNTScript) {
+    class PluginMain {
+        constructor() {
+            this.prv_executor = new TNTScript.ScriptExecutor();
+        }
+        get id() {
+            return "tntscript";
+        }
+        get rendererList() {
+            return [new TNTScript.TagRenderer()];
+        }
+        get tags() {
+            return ["tnt"];
+        }
+        get version() {
+            return "v1.0.0-integrated";
+        }
+        onInit() {
+            console.log("Here");
+            for (const tntTag of document.querySelectorAll('tnt')) {
+                this.prv_executor.exec(tntTag.innerHTML);
+            }
+            TNT.Globals.setValueEvaluator((e) => {
+                return this.prv_executor.evaluate(e);
+            });
+        }
+    }
+    TNTScript.PluginMain = PluginMain;
+})(TNTScript || (TNTScript = {}));
+TNT.Globals.plug(new TNTScript.PluginMain());
 var ScriptRun;
 (function (ScriptRun) {
     function RunScriptCode(codes) {
