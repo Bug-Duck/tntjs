@@ -111,8 +111,7 @@ declare namespace TNTScript {
         value: any;
     };
     export class ScriptExecutor {
-        TNTSymbolTableOWN: {};
-        SymbolTableOWN: Object;
+        SymbolTableOWN: TNT.SymbolTable;
         exec(scriptContent: string, data?: TNT.SymbolTable): void;
         ValueProcess(reg: string): value;
         renderDOM(HTML: string, DOM: HTMLElement): void;
@@ -121,12 +120,24 @@ declare namespace TNTScript {
     export {};
 }
 declare namespace ScriptRun {
-    function RunScriptCode(codes: any): void;
+    function RunScriptCode(codes: any, dataobj: any): any;
     function init(codes: string): any[];
     function lineRun(code: string): string;
     const VariableCode: (code: string, dataobj: any) => void;
     const RenderCode: (code: string, dataobj: any) => void;
     const WhileCode: (code: string) => void;
+    const ImportCode: (code: string, dataobj: any) => void;
+}
+declare namespace TNTScript {
+    class ScriptSymbolTable extends TNT.SymbolTable {
+        print: (text: any) => void;
+        sleep: (time: number) => void;
+        range: (endIndex: number, startIndex?: number) => any;
+        constructor();
+    }
+    namespace Globals {
+        let scriptsymboltable: ScriptSymbolTable;
+    }
 }
 declare namespace TNTScript {
     class TagRenderer implements TNT.Renderable {
