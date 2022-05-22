@@ -72,5 +72,34 @@ namespace TNT {
         onSetValue(handler: () => void) {
             this.prv_onsetvalue_event_handler.push(handler);
         }
+
+        // Get all variables' names.
+        get variableNames(): string[] {
+            return Object.keys(this.prv_content);
+        }
+
+        // Check if contains the variable.
+        containsVariable(variableName: string): boolean {
+            for (const i of this.variableNames) {
+                if (i === variableName) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Merge table.
+        merge(anotherTable: SymbolTable, ifExists: (oldValue: Variable, newValue: Variable) => Variable): void {
+            let herNames = anotherTable.variableNames;
+            for (const i of herNames) {
+                if (this.containsVariable(i)) {
+                    // Exists
+                    this.setValue(i, ifExists(this.getValue(i), anotherTable.getValue(i)));
+                } else {
+                    // New variable
+                    this.setValue(i, anotherTable.getValue(i));
+                }
+            }
+        }
     }
 }
