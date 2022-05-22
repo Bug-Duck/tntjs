@@ -96,16 +96,6 @@ declare namespace TNT {
     }
 }
 declare namespace TNTScript {
-    class PluginMain implements TNT.Plugin {
-        private prv_executor;
-        get id(): string;
-        get rendererList(): TNT.Renderable[];
-        get tags(): string[];
-        get version(): string;
-        onInit(): void;
-    }
-}
-declare namespace TNTScript {
     type value = {
         type: string;
         value: any;
@@ -119,6 +109,16 @@ declare namespace TNTScript {
         evaluate(expression: string): any;
     }
     export {};
+}
+declare namespace TNTScript {
+    class PluginMain implements TNT.Plugin {
+        private prv_executor;
+        get id(): string;
+        get rendererList(): TNT.Renderable[];
+        get tags(): string[];
+        get version(): string;
+        onInit(): void;
+    }
 }
 declare namespace ScriptRun {
     function RunScriptCode(codes: any): void;
