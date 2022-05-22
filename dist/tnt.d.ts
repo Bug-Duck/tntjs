@@ -36,6 +36,9 @@ declare namespace TNT {
         getValue(key: string): Variable;
         setValue(key: string, v: Variable): void;
         onSetValue(handler: () => void): void;
+        get variableNames(): string[];
+        containsVariable(variableName: string): boolean;
+        merge(anotherTable: SymbolTable, ifExists: (oldValue: Variable, newValue: Variable) => Variable): void;
     }
 }
 declare namespace TNT {
@@ -93,13 +96,6 @@ declare namespace TNT {
     }
 }
 declare namespace TNTScript {
-    function codeSplit(code: string): void;
-    function codeBlock(code: any): void;
-    function keySearch(key: string, code: string): void;
-    function functionSplit(code: string, original?: boolean): void;
-    function jsTypeToTNTType(TypeName: any): void;
-}
-declare namespace TNTScript {
     class PluginMain implements TNT.Plugin {
         private prv_executor;
         get id(): string;
@@ -115,14 +111,35 @@ declare namespace TNTScript {
         value: any;
     };
     export class ScriptExecutor {
-        exec(scriptContent: string, data?: Object): true | Object;
+        TNTSymbolTableOWN: {};
+        SymbolTableOWN: Object;
+        exec(scriptContent: string, data?: TNT.SymbolTable): void;
         ValueProcess(reg: string): value;
-        TNTRenderDOM(HTML: string, DOM: HTMLElement): void;
+        renderDOM(HTML: string, DOM: HTMLElement): void;
+        evaluate(expression: string): any;
     }
     export {};
+}
+declare namespace ScriptRun {
+    function RunScriptCode(codes: any): void;
+    function init(codes: string): any[];
+    function lineRun(code: string): string;
+    const VariableCode: (code: string, dataobj: any) => void;
+    const RenderCode: (code: string, dataobj: any) => void;
+    const WhileCode: (code: string) => void;
 }
 declare namespace TNTScript {
     class TagRenderer implements TNT.Renderable {
         render(): void;
     }
+}
+declare namespace TNTScript {
+    function codeSplit(code: string): any[];
+    function codeBlock(code: any): (string | any[])[];
+    function keySearch(key: string, code: string): string;
+    function functionSplit(code: string, original?: boolean): {
+        agv: any[];
+        functioncanvalue: {};
+    };
+    function jsTypeToTNTType(TypeName: any): "string" | "number" | "bool";
 }
