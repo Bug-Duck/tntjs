@@ -1,5 +1,5 @@
 namespace ScriptRun {
-    export function RunScriptCode(codes) {
+    export function RunScriptCode(codes,dataobj) {
         const codeList = init(codes);
         let index = 1
         for (const code of codeList) {
@@ -7,6 +7,7 @@ namespace ScriptRun {
             index += 1;
             // Errors.line += 1;
         }
+        return dataobj.SymbolTableOWN
     }
 
     export function init(codes: string) {
@@ -34,7 +35,7 @@ namespace ScriptRun {
             this.ValueProcess(code);
         }
     }
-
+    
     export const VariableCode = (code: string, dataobj) => {
         const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(' '));
         const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(' '));
@@ -72,5 +73,14 @@ namespace ScriptRun {
         //         break;
         //     }
         // }
+    }
+
+    export const ImportCode = (code:string, dataobj) => {
+        const pake = TNTScript.keySearch('import',code);
+        const pakege = dataobj.ValueProcess(pake);
+        const http = new XMLHttpRequest();
+        const filecode = http.open('GET',pakege,false);
+        const Variable = RunScriptCode(filecode, dataobj);
+        TNT.Globals.symbolTable.merge(Variable,(TNT.Globals.symbolTable.getValue("w").value))
     }
 }
