@@ -13,11 +13,10 @@ namespace TNTScript {
     }
 
     export class ScriptExecutor {
-        TNTSymbolTableOWN: {};
-        SymbolTableOWN: Object;
+        SymbolTableOWN: TNT.SymbolTable;
         exec(scriptContent: string, data: TNT.SymbolTable = new TNT.SymbolTable()) {
             this.SymbolTableOWN = data; // Inner data space
-            ScriptRun.RunScriptCode(scriptContent)
+            ScriptRun.RunScriptCode(scriptContent, this)
         }
 
         ValueProcess(reg: string) {

@@ -388,7 +388,7 @@ var TNTScript;
     class ScriptExecutor {
         exec(scriptContent, data = new TNT.SymbolTable()) {
             this.SymbolTableOWN = data;
-            ScriptRun.RunScriptCode(scriptContent);
+            ScriptRun.RunScriptCode(scriptContent, this);
         }
         ValueProcess(reg) {
             const isString = /(\"|\').+(\"|\')/;
@@ -507,13 +507,14 @@ var TNTScript;
 TNT.Globals.plug(new TNTScript.PluginMain());
 var ScriptRun;
 (function (ScriptRun) {
-    function RunScriptCode(codes) {
+    function RunScriptCode(codes, dataobj) {
         const codeList = init(codes);
         let index = 1;
         for (const code of codeList) {
             lineRun(code);
             index += 1;
         }
+        return dataobj.SymbolTableOWN;
     }
     ScriptRun.RunScriptCode = RunScriptCode;
     function init(codes) {
@@ -563,7 +564,44 @@ var ScriptRun;
         const condition = i[0];
         const codes = i[1];
     };
+    ScriptRun.ImportCode = (code, dataobj) => {
+        const pake = TNTScript.keySearch('import', code);
+        const pakege = dataobj.ValueProcess(pake);
+        const http = new XMLHttpRequest();
+        const filecode = http.open('GET', pakege, false);
+        const Variable = RunScriptCode(filecode, dataobj);
+        TNT.Globals.symbolTable.merge(Variable, (TNT.Globals.symbolTable.getValue("w").value));
+    };
 })(ScriptRun || (ScriptRun = {}));
+var TNTScript;
+(function (TNTScript) {
+    class ScriptSymbolTable extends TNT.SymbolTable {
+        constructor() {
+            super();
+            this.print = (text) => {
+                console.log(text);
+            };
+            this.sleep = (time) => {
+                setTimeout(() => { }, time * 1000);
+            };
+            this.range = (startIndex = 0, endIndex) => {
+                const result = [];
+                let i = startIndex;
+                while (i == endIndex) {
+                    result.push(i);
+                    i += 1;
+                }
+                ;
+                return result;
+            };
+        }
+    }
+    TNTScript.ScriptSymbolTable = ScriptSymbolTable;
+    let Globals;
+    (function (Globals) {
+        Globals.scriptsymboltable = new ScriptSymbolTable();
+    })(Globals = TNTScript.Globals || (TNTScript.Globals = {}));
+})(TNTScript || (TNTScript = {}));
 var TNTScript;
 (function (TNTScript) {
     class TagRenderer {
