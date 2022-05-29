@@ -110,11 +110,10 @@ namespace TNTScript {
             } else if (isMathGex.test(reg)) {
                 //TODO: 表达式
             } else if (isXML.test(reg)) {
-                const result: value = {
+                return {
                     type: 'XML',
                     value: reg,
-                }
-                return result;
+                };
             }
         }
 

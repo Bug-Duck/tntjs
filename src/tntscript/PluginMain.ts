@@ -48,7 +48,7 @@ namespace TNTScript {
         }
         onInit(): void {
             // Do some initialize here.
-            console.log("Here")
+            console.log("Here");
 
             // Find all the tnt tags
             for (const tntTag of document.querySelectorAll('tnt')) {

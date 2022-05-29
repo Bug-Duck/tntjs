@@ -15,27 +15,27 @@ namespace TNTScript {
         constructor() {
             super();
             this.print = (text: string) => {
-                console.log(text)
+                console.log(text);
             };
             this.sleep = (time: number) => {
                 setTimeout(
                     () => {},
                     time * 1000
-                )
+                );
             };
             this.range = (startIndex: number = 0,endIndex: number) => {
-                const result: Array<number> = []
+                const result: Array<number> = [];
                 let i = startIndex;
                 while (i == endIndex) {
-                    result.push(i)
+                    result.push(i);
                     i += 1;
                 };
-                return result
+                return result;
             }
         }
     }
 
     export namespace Globals {
-        export let scriptsymboltable = new ScriptSymbolTable()
+        export let scriptsymboltable = new ScriptSymbolTable();
     }
 }
