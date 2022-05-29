@@ -42,6 +42,15 @@ namespace TNT {
             return prv_pluginList;
         }
 
+        export function hasPlugin(pluginId: string): boolean {
+            for(const plugin of prv_pluginList) {
+                if (plugin.id === pluginId) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         export function removePlugin(pluginId: string): void {
             let counter = 0;
             let found = false;

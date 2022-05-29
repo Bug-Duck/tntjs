@@ -126,6 +126,11 @@ namespace TNTScript {
         }
         evaluate(expression: string): any {
             // TODO: evaluate the value
+            const value = TNT.Globals.symbolTable.getValue(expression.trim());
+            if (value.type === TNT.StringType) {
+                return value.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            }
+            return value.value;
         }
     }
 }

@@ -9,12 +9,18 @@
 
 namespace TNT {
     // The types
-    export const StringType = new TypeInfo("tnt", "string");
-    export const NumberType = new TypeInfo("tnt", "number");
-    export const ObjectType = new TypeInfo("tnt", "object");
-    export const TNTFunctionType = new TypeInfo("tnt", "function");
-    export const JSFunctionType = new TypeInfo("js", "function");
-    export const HTMLStringType = new TypeInfo("tnt", "html_string");
+    export const StringType = new TypeInfo("tnt", "string", "");
+    export const NumberType = new TypeInfo("tnt", "number", 0);
+    export const ObjectType = new TypeInfo("tnt", "object", null);
+    export const TNTFunctionType = new TypeInfo("tnt", "function", null);
+    export const JSFunctionType = new TypeInfo("js", "function", () => {});
+    export const HTMLStringType = new TypeInfo("tnt", "html_string", "<div></div>");
+    export const jsTypeToTNT = {
+        "string": StringType,
+        "number": NumberType,
+        "object": ObjectType,
+        "function": JSFunctionType,
+    };
 
     // A variable.
     export class Variable {
@@ -89,5 +95,14 @@ namespace TNT {
                 this.setValue(i, this.containsVariable(i) ? ifExists(this.getValue(i), anotherTable.getValue(i)) : anotherTable.getValue(i));
             }
         }
+    }
+
+    export function jsType2TNT(jsType: string): TypeInfo {
+        for (const i in jsTypeToTNT) {
+            if (i === jsType) {
+                return jsTypeToTNT[i];
+            }
+        }
+        return ObjectType;
     }
 }

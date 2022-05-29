@@ -8,10 +8,14 @@
     <title>Document</title>
 </head>
 <body>
+    <tnt-debug></tnt-debug>
     <v>testValue</v>
     <script>
-        new TNTState.Value("testValue").setValue(23333)
-        console.log(TNT.Globals.symbolTable)
+        window.onload = () => {
+            new TNT.TNT();
+            new TNTSimpApi.Value("testValue", TNT.NumberType).setValue(23333)
+            console.log(TNT.Globals.symbolTable);
+        };
     </script>
 </body>
 </html>
