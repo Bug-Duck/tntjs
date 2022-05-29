@@ -10,9 +10,10 @@ var TNTDebug;
 var TNT;
 (function (TNT) {
     class TypeInfo {
-        constructor(namespaceName, typeName) {
+        constructor(namespaceName, typeName, defaultValue) {
             this.prv_namespaceName = namespaceName;
             this.prv_typeName = typeName;
+            this.prv_defaultValue = defaultValue;
         }
         toString() {
             return `${this.prv_namespaceName}:type.${this.prv_typeName}`;
@@ -23,17 +24,26 @@ var TNT;
         get owner() {
             return this.prv_typeName;
         }
+        get defaultValue() {
+            return this.prv_defaultValue;
+        }
     }
     TNT.TypeInfo = TypeInfo;
 })(TNT || (TNT = {}));
 var TNT;
 (function (TNT) {
-    TNT.StringType = new TNT.TypeInfo("tnt", "string");
-    TNT.NumberType = new TNT.TypeInfo("tnt", "number");
-    TNT.ObjectType = new TNT.TypeInfo("tnt", "object");
-    TNT.TNTFunctionType = new TNT.TypeInfo("tnt", "function");
-    TNT.JSFunctionType = new TNT.TypeInfo("js", "function");
-    TNT.HTMLStringType = new TNT.TypeInfo("tnt", "html_string");
+    TNT.StringType = new TNT.TypeInfo("tnt", "string", "");
+    TNT.NumberType = new TNT.TypeInfo("tnt", "number", 0);
+    TNT.ObjectType = new TNT.TypeInfo("tnt", "object", null);
+    TNT.TNTFunctionType = new TNT.TypeInfo("tnt", "function", null);
+    TNT.JSFunctionType = new TNT.TypeInfo("js", "function", () => { });
+    TNT.HTMLStringType = new TNT.TypeInfo("tnt", "html_string", "<div></div>");
+    TNT.jsTypeToTNT = {
+        "string": TNT.StringType,
+        "number": TNT.NumberType,
+        "object": TNT.ObjectType,
+        "function": TNT.JSFunctionType,
+    };
     class Variable {
         constructor(value, type) {
             this.prv_validate(value, type);
@@ -96,6 +106,15 @@ var TNT;
         }
     }
     TNT.SymbolTable = SymbolTable;
+    function jsType2TNT(jsType) {
+        for (const i in TNT.jsTypeToTNT) {
+            if (i === jsType) {
+                return TNT.jsTypeToTNT[i];
+            }
+        }
+        return TNT.ObjectType;
+    }
+    TNT.jsType2TNT = jsType2TNT;
 })(TNT || (TNT = {}));
 var TNT;
 (function (TNT) {
@@ -131,6 +150,15 @@ var TNT;
             return prv_pluginList;
         }
         Globals.getAllPlugins = getAllPlugins;
+        function hasPlugin(pluginId) {
+            for (const plugin of prv_pluginList) {
+                if (plugin.id === pluginId) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        Globals.hasPlugin = hasPlugin;
         function removePlugin(pluginId) {
             let counter = 0;
             let found = false;
@@ -430,6 +458,50 @@ var TemplateLanguage;
     }
     TemplateLanguage.tpfor = tpfor;
 })(TemplateLanguage || (TemplateLanguage = {}));
+var TNTSimpApi;
+(function (TNTSimpApi) {
+    class PluginMain {
+        get id() {
+            return "tntjsapi-simp";
+        }
+        get rendererList() {
+            return [];
+        }
+        get tags() {
+            return [];
+        }
+        get version() {
+            return "1.0.0-integrated";
+        }
+        onInit() { }
+    }
+    TNTSimpApi.PluginMain = PluginMain;
+    class Value {
+        constructor(name, type) {
+            this.name = name;
+            this.valueObject = new TNT.Variable(type.defaultValue, type);
+        }
+        setValue(value) {
+            if (TNT.Globals.hasPlugin("tntdebug")) {
+                console.log(`[tntjsapi-simp] Setting value ${value} for variable ${this.name}...`);
+            }
+            this.valueObject.value = value;
+            TNT.Globals.symbolTable.setValue(this.name, this.valueObject);
+            if (TNT.Globals.hasPlugin("tntdebug")) {
+                console.log(`[tntjsapi-simp] Set value ${value} for variable ${this.name}.`);
+            }
+            return this;
+        }
+        get value() {
+            return this.valueObject.value;
+        }
+        get type() {
+            return this.valueObject.type;
+        }
+    }
+    TNTSimpApi.Value = Value;
+})(TNTSimpApi || (TNTSimpApi = {}));
+TNT.Globals.plug(new TNTSimpApi.PluginMain());
 var TNTScript;
 (function (TNTScript) {
     class ScriptExecutor {
@@ -516,6 +588,11 @@ var TNTScript;
             DOM.innerHTML = HTML;
         }
         evaluate(expression) {
+            const value = TNT.Globals.symbolTable.getValue(expression.trim());
+            if (value.type === TNT.StringType) {
+                return value.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            }
+            return value.value;
         }
     }
     TNTScript.ScriptExecutor = ScriptExecutor;
@@ -799,23 +876,4 @@ var TNTScript;
     }
     TNTScript.jsTypeToTNTType = jsTypeToTNTType;
 })(TNTScript || (TNTScript = {}));
-var TNTState;
-(function (TNTState) {
-    class Value {
-        constructor(name) {
-            this.name = name;
-            this.valueObject = TNT.Globals.symbolTable.getValue(this.name);
-        }
-        setValue(value) {
-            TNT.Globals.symbolTable.setValue(this.name, value);
-        }
-        get vlaue() {
-            return this.valueObject.value;
-        }
-        get type() {
-            return this.valueObject.type;
-        }
-    }
-    TNTState.Value = Value;
-})(TNTState || (TNTState = {}));
 //# sourceMappingURL=tnt.js.map
