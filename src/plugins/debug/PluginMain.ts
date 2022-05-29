@@ -5,7 +5,7 @@
  * description: The main class of the debugger plugin.
  */
 
-/// <reference path="../runtime/GlobalEnvironment.ts" />
+/// <reference path="../../runtime/GlobalEnvironment.ts" />
 
 namespace TNTDebug {
     export class PluginMain implements TNT.Plugin {
