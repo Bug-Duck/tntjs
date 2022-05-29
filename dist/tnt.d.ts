@@ -1,13 +1,3 @@
-declare namespace TNTState {
-    class Value {
-        name: string;
-        valueObject: TNT.Variable;
-        constructor(name: any);
-        setValue(value: any): void;
-        get vlaue(): any;
-        get type(): TNT.TypeInfo;
-    }
-}
 declare namespace TNTDebug {
     class DebugRenderTracer implements TNT.Renderable {
         render(): void;
@@ -113,15 +103,10 @@ declare namespace TNT {
         render(): void;
     }
 }
-declare namespace TNTScript {
-    function codeSplit(code: string): any[];
-    function codeBlock(code: any): (string | any[])[];
-    function keySearch(key: string, code: string): string;
-    function functionSplit(code: string, original?: boolean): {
-        agv: any[];
-        functioncanvalue: {};
-    };
-    function jsTypeToTNTType(TypeName: any): "string" | "number" | "bool";
+declare namespace TemplateLanguage {
+}
+declare namespace TemplateLanguage {
+    function tpfor(dom: any): void;
 }
 declare namespace TNTScript {
     type value = {
@@ -170,5 +155,25 @@ declare namespace TNTScript {
 declare namespace TNTScript {
     class TagRenderer implements TNT.Renderable {
         render(): void;
+    }
+}
+declare namespace TNTScript {
+    function codeSplit(code: string): any[];
+    function codeBlock(code: any): (string | any[])[];
+    function keySearch(key: string, code: string): string;
+    function functionSplit(code: string, original?: boolean): {
+        agv: any[];
+        functioncanvalue: {};
+    };
+    function jsTypeToTNTType(TypeName: string): string;
+}
+declare namespace TNTState {
+    class Value {
+        name: string;
+        valueObject: TNT.Variable;
+        constructor(name: any);
+        setValue(value: any): void;
+        get vlaue(): any;
+        get type(): TNT.TypeInfo;
     }
 }

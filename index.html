@@ -8,10 +8,20 @@
     <title>Document</title>
 </head>
 <body>
-    <v>testValue</v>
+    <p>
+        1
+        <p>1-1</p>
+        <p>1-2</p>
+    </p>
+    <p>
+        2
+        <p>2-1</p>
+    </p>
     <script>
-        new TNTState.Value("testValue").setValue(23333)
-        console.log(TNT.Globals.symbolTable)
+        const dom = document.getElementsByTagName("p");
+        for (const i of dom) {
+            console.log(i.innerHTML)
+        }
     </script>
 </body>
 </html>
