@@ -45,13 +45,13 @@ namespace TNTScript {
     }
 
     export function codeBlock(code) {
-        const v: string = code.replace(/\{.+\}/,'');
+        const v: string = code.replace(/\{.+\}/, '');
         const codes: string = /\{.+\}/.exec(code)[0];
-        return [v,codeSplit(codes.substring(1,codes.length - 1))];
+        return [v, codeSplit(codes.substring(1,codes.length - 1))];
     }
 
     export function keySearch(key: string,code: string) {
-        return code.replace(new RegExp(`${key} `),'')
+        return code.replace(new RegExp(`${key} `), '')
     }
 
     export function functionSplit(code: string, original: boolean = false) {
@@ -123,29 +123,17 @@ namespace TNTScript {
                 const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(' '));
                 values.functioncanvalue[name[0]] = new ScriptExecutor().ValueProcess(v[0]);
             } else {
-                if (original) {
-                    values.agv.push(new ScriptExecutor().ValueProcess(value));
-                } else {
-                    values.agv.push(value)
-                }
+                values.agv.push(original ? new ScriptExecutor().ValueProcess(value) : value);
             }
         }
         return values;
     }
 
-    export function jsTypeToTNTType(TypeName) {
-        switch (TypeName) {
-            case "String":
-                return 'string';
-                break;
-            case "Number":
-                return 'number';
-                break;
-            case "Boolean":
-                return 'bool';
-                break;
-            default:
-                break;
-        }
+    export function jsTypeToTNTType(TypeName: string): string {
+        return ({
+            "String": "string",
+            "Number": "number",
+            "Boolean": "bool",
+        })[TypeName];
     }
 }
