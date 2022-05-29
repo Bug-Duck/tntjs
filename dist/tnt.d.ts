@@ -94,14 +94,25 @@ declare namespace TNT {
     }
 }
 declare namespace TNT {
+    class StaticVTagRenderer {
+        private prv_firstRendering;
+        private customRenderer?;
+        constructor(customRenderer?: (vTagContent: string) => string);
+        private defaultRenderer;
+        render(): void;
+    }
+}
+declare namespace TNT {
     class TNT {
         private prv_vTagRenderer;
+        private prv_svTagRenderer;
         private prv_options;
         private prv_isDebug;
         private prv_refreshLock;
         private prv_checkOptionTags;
         constructor();
         render(): void;
+        onceRender(): void;
         get vTagRenderer(): VTagRenderer;
     }
 }

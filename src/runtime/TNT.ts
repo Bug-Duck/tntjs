@@ -8,6 +8,7 @@
 namespace TNT {
     export class TNT {
         private prv_vTagRenderer: VTagRenderer;
+        private prv_svTagRenderer: StaticVTagRenderer;
         private prv_options: string[];
         private prv_isDebug: boolean = true;
         private prv_refreshLock: boolean = true;
@@ -91,6 +92,7 @@ namespace TNT {
 
             // Initialize renderer
             this.prv_vTagRenderer = new VTagRenderer();
+            this.prv_svTagRenderer = new StaticVTagRenderer();
 
             // Initialize plugins
             let pluginsShouldMove: string[] = [];
@@ -145,6 +147,7 @@ namespace TNT {
 
             // Do the first rendering.
             this.render();
+            this.onceRender();
 
             // Unlock the refreshing
             this.prv_refreshLock = false;
@@ -193,6 +196,9 @@ namespace TNT {
 
             // Unlock the refresh function
             this.prv_refreshLock = false;
+        }
+        onceRender() {
+            this.prv_svTagRenderer.render();
         }
         get vTagRenderer(): VTagRenderer {
             return this.prv_vTagRenderer;
