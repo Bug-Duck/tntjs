@@ -1,3 +1,13 @@
+declare namespace TNTState {
+    class Value {
+        name: string;
+        valueObject: TNT.Variable;
+        constructor(name: any);
+        setValue(value: any): void;
+        get vlaue(): any;
+        get type(): TNT.TypeInfo;
+    }
+}
 declare namespace TNTDebug {
     class DebugRenderTracer implements TNT.Renderable {
         render(): void;

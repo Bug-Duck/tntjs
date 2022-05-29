@@ -6,13 +6,13 @@ This table is a comparison of TNTScript's datas' type and JavaScript's datas' ty
 
 |JavaScript|TNTScript|
 |-|-|
-|String|string|
-|Number&BigInt|number|
-|Boolean|bool|
-|Object|obj|
-|Array|list|
+|string|string|
+|number|number|
+|boolean|boolean|
+|object|object|
+|array|array|
 |Docment|dom|
-|Function|jsfunc|
+|function|function|
 |Array(TNTScript's code list)|func|
 |/|code|
 |jsx|htmlstring|
