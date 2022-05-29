@@ -16,7 +16,7 @@ namespace TNT {
             this.prv_defaultValue = defaultValue;
         }
         toString(): string {
-            return `${this.prv_namespaceName}:type.${this.prv_typeName}`
+            return `${this.prv_namespaceName}:type.${this.prv_typeName}`;
         }
         get name(): string {
             return this.prv_typeName;

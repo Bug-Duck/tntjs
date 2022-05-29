@@ -14,3 +14,4 @@ We use a lot of custom HTML tags. The TNT.js has two parts, including the TNT Ru
 [User Guide](user-guide/Overview.md)
 [TNT.js Javascript API Documentation](api/Overview.md)
 [TNT.js Datatype Documentation](datastype/Overview.md)
+[TNT.js Code Style Documentation](style/Overview.md)

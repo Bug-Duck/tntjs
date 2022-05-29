@@ -5,3 +5,4 @@ dist/tnt.js.map
 Backup/**
 test/**
 index.html
+pnpm-lock.yaml
