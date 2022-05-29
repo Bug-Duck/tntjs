@@ -10,8 +10,8 @@ namespace TNT {
         private prv_vTagRenderer: VTagRenderer;
         private prv_svTagRenderer: StaticVTagRenderer;
         private prv_options: string[];
-        private prv_isDebug: boolean = true;
-        private prv_refreshLock: boolean = true;
+        private prv_isDebug = true;
+        private prv_refreshLock = true;
 
 
         // This function will check the option tags.
@@ -95,11 +95,11 @@ namespace TNT {
             this.prv_svTagRenderer = new StaticVTagRenderer();
 
             // Initialize plugins
-            let pluginsShouldMove: string[] = [];
+            const pluginsShouldMove: string[] = [];
 
             for (const plugin of Globals.getAllPlugins()) {
 
-                console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`)
+                console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
 
                 try {
                     // Check dependencies
@@ -120,7 +120,7 @@ namespace TNT {
                                 for (const dependency of plugin.dependencies) {
                                     console.log(`${dependency}`);
                                 }
-                                console.log(`While found: `);
+                                console.log("While found: ");
                                 for (const h of have) {
                                     console.log(h);
                                 }
@@ -159,7 +159,7 @@ namespace TNT {
             // Protect the tags
             for (const plugin of Globals.getAllPlugins()) {
                 for (const tag of plugin.tags) {
-                    let tagDOM = document.querySelectorAll(tag);
+                    const tagDOM = document.querySelectorAll(tag);
                     for (const el of tagDOM) {
                         // each element
                         try {
@@ -185,7 +185,7 @@ namespace TNT {
             // Take off the protection
             for (const plugin of Globals.getAllPlugins()) {
                 for (const tag of plugin.tags) {
-                    let tagDOM = document.querySelectorAll(tag);
+                    const tagDOM = document.querySelectorAll(tag);
                     for (const el of tagDOM) {
                         // each element
                         el.innerHTML = el.getAttribute("data-tnt-plugin-value-backup");

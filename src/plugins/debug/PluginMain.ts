@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference */
+/* eslint-disable @typescript-eslint/no-namespace */
 /**
  * file: PluginMain.ts
  * creator: 27Onion

@@ -14,14 +14,14 @@ namespace TNT {
         }
         private defaultRenderer(s: string): string {
             try {
-                return `${Globals.evaluate(s)}`
+                return `${Globals.evaluate(s)}`;
             } catch (e) {
                 return `Error while rendering element: ${e}`;
             }
         }
         render() {
             if (this.prv_firstRendering) {
-                const svTags = document.querySelectorAll('sv');
+                const svTags = document.querySelectorAll("sv");
                 for (const i of svTags) {
                     i.innerHTML = this.customRenderer?.(i.innerHTML) ?? this.defaultRenderer(i.innerHTML);
                 }
