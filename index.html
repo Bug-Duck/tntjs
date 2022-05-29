@@ -9,12 +9,18 @@
 </head>
 <body>
     <tnt-debug></tnt-debug>
-    <v>testValue</v>
+    <v>testValue</v> <br />
+    <v>vtest</v> in v; <br />
+    <sv>vtest</sv> in sv;
     <script>
         window.onload = () => {
-            new TNT.TNT();
-            new TNTSimpApi.Value("testValue", TNT.NumberType).setValue(23333)
+            new TNTSimpApi.Value("testValue", TNT.NumberType).setValue(23333);
             console.log(TNT.Globals.symbolTable);
+            const a = new TNTSimpApi.Value("vtest", TNT.NumberType).setValue(2333);
+            setTimeout(() => {
+                a.setValue(114514);
+            }, 1000);
+            new TNT.TNT();
         };
     </script>
 </body>

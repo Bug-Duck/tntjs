@@ -272,6 +272,34 @@ var TNT;
     TNT.DataRenderer = DataRenderer;
 })(TNT || (TNT = {}));
 var TNT;
+(function (TNT) {
+    class StaticVTagRenderer {
+        constructor(customRenderer = undefined) {
+            this.prv_firstRendering = true;
+            this.customRenderer = customRenderer;
+        }
+        defaultRenderer(s) {
+            try {
+                return `${TNT.Globals.evaluate(s)}`;
+            }
+            catch (e) {
+                return `Error while rendering element: ${e}`;
+            }
+        }
+        render() {
+            var _a, _b;
+            if (this.prv_firstRendering) {
+                const svTags = document.querySelectorAll('sv');
+                for (const i of svTags) {
+                    i.innerHTML = (_b = (_a = this.customRenderer) === null || _a === void 0 ? void 0 : _a.call(this, i.innerHTML)) !== null && _b !== void 0 ? _b : this.defaultRenderer(i.innerHTML);
+                }
+            }
+            this.prv_firstRendering = true;
+        }
+    }
+    TNT.StaticVTagRenderer = StaticVTagRenderer;
+})(TNT || (TNT = {}));
+var TNT;
 (function (TNT_1) {
     class TNT {
         constructor() {
@@ -285,6 +313,7 @@ var TNT;
             });
             this.prv_checkOptionTags();
             this.prv_vTagRenderer = new TNT_1.VTagRenderer();
+            this.prv_svTagRenderer = new TNT_1.StaticVTagRenderer();
             let pluginsShouldMove = [];
             for (const plugin of TNT_1.Globals.getAllPlugins()) {
                 console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
@@ -324,6 +353,7 @@ var TNT;
                 TNT_1.Globals.removePlugin(pluginId);
             }
             this.render();
+            this.onceRender();
             this.prv_refreshLock = false;
         }
         prv_checkOptionTags() {
@@ -399,6 +429,9 @@ var TNT;
                 }
             }
             this.prv_refreshLock = false;
+        }
+        onceRender() {
+            this.prv_svTagRenderer.render();
         }
         get vTagRenderer() {
             return this.prv_vTagRenderer;
