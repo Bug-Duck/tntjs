@@ -5,6 +5,8 @@
  * description: The plugin's main class.
  */
 
+/// <reference path="./ScriptExecutor.ts" />
+
 namespace TNTScript {
     export class PluginMain implements TNT.Plugin {
         private prv_executor = new ScriptExecutor();

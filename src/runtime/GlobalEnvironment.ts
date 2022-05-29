@@ -17,7 +17,7 @@ namespace TNT {
         return false;
     }
     export namespace Globals {
-        export let symbolTable: SymbolTable = new SymbolTable();
+        export const symbolTable: SymbolTable = new SymbolTable();
         export let instances: Array<TNT> = [];
         let valueEvaluator: (expr: string) => any = (expr: string) => {
             const value = symbolTable.getValue(expr.trim());

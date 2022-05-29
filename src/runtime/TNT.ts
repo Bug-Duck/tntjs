@@ -84,7 +84,7 @@ namespace TNT {
                 if (!this.prv_refreshLock) {
                     this.render();
                 }
-            })
+            });
 
             // Check option tags
             this.prv_checkOptionTags();
