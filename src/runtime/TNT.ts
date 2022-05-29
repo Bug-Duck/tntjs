@@ -186,7 +186,7 @@ namespace TNT {
                     for (const el of tagDOM) {
                         // each element
                         el.innerHTML = el.getAttribute("data-tnt-plugin-value-backup");
-                        el.removeAttribute("data-tnt-plugin-value-backup")
+                        el.removeAttribute("data-tnt-plugin-value-backup");
                     }
                 }
             }

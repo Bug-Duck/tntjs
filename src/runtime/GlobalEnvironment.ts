@@ -8,31 +8,13 @@
 /// <reference path="SymbolTable.ts"/>
 
 namespace TNT {
-    function prv_stringContains(char: string, s: string): boolean {
-        for (const i of s) {
-            if (i === char) {
-                return true;
-            }
-        }
-        return false;
-    }
     export namespace Globals {
         export const symbolTable: SymbolTable = new SymbolTable();
         export let instances: Array<TNT> = [];
         let valueEvaluator: (expr: string) => any = (expr: string) => {
             const value = symbolTable.getValue(expr.trim());
             if (value.type === StringType) {
-                let answer = value.value as string;
-                while (prv_stringContains('&', answer)) {
-                    answer = answer.replace('&', "&amp;");
-                }
-                while (prv_stringContains('<', answer)) {
-                    answer = answer.replace('<', "&lt;");
-                }
-                while (prv_stringContains('>', answer)) {
-                    answer = answer.replace('>', "&gt;");
-                }
-                return answer;
+                return value.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
             }
             return value.value;
         }

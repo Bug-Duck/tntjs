@@ -7,12 +7,12 @@ namespace TNT {
             for (const i of this.TagDataAttributes) {
                 const text = i.getAttribute('tnt-td');
                 const data = this.Analysis(text);
-                domData.push([i,data])
+                domData.push([i,data]);
             }
             Globals.symbolTable.onSetValue(() => {
                 for (const i of domData) {
                     for (const d of i[1]) {
-                        i[0][d] = i[1][d]
+                        i[0][d] = i[1][d];
                     }
                 }
             })
@@ -24,12 +24,12 @@ namespace TNT {
             for (const i of this.TagDataAttributes) {
                 const text = i.getAttribute('tnt-sd');
                 const data = this.Analysis(text);
-                domData.push([i,data])
+                domData.push([i,data]);
             }
             Globals.symbolTable.onSetValue(() => {
                 for (const i of domData) {
                     for (const d of i[1]) {
-                        i[0].style[d] = i[1][d]
+                        i[0].style[d] = i[1][d];
                     }
                 }
             })

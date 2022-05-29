@@ -22,7 +22,7 @@ namespace TNTDebug {
             return "1.0.0-integrated";
         }
         onInit(): void {
-            console.log("[Debugger] Debug mode enabled. ")
+            console.log("[Debugger] Debug mode enabled. ");
         }
         
     }
