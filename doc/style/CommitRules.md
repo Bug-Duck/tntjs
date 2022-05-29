@@ -1,7 +1,7 @@
 # Commit Rules
 
 ## Overview
-This documentation is about the rules of git commiting messages.
+This documentation is about the rules of git committing messages.
 
 ## Rules
 
