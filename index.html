@@ -8,20 +8,14 @@
     <title>Document</title>
 </head>
 <body>
-    <p>
-        1
-        <p>1-1</p>
-        <p>1-2</p>
-    </p>
-    <p>
-        2
-        <p>2-1</p>
-    </p>
+    <tnt-debug></tnt-debug>
+    <v>testValue</v>
     <script>
-        const dom = document.getElementsByTagName("p");
-        for (const i of dom) {
-            console.log(i.innerHTML)
-        }
+        window.onload = () => {
+            new TNT.TNT();
+            new TNTSimpApi.Value("testValue", TNT.NumberType).setValue(23333)
+            console.log(TNT.Globals.symbolTable);
+        };
     </script>
 </body>
 </html>

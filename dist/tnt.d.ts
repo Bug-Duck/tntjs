@@ -7,10 +7,12 @@ declare namespace TNT {
     class TypeInfo {
         private prv_namespaceName;
         private prv_typeName;
-        constructor(namespaceName: string, typeName: string);
+        private prv_defaultValue;
+        constructor(namespaceName: string, typeName: string, defaultValue: any);
         toString(): string;
         get name(): string;
         get owner(): string;
+        get defaultValue(): any;
     }
 }
 declare namespace TNT {
@@ -20,6 +22,12 @@ declare namespace TNT {
     const TNTFunctionType: TypeInfo;
     const JSFunctionType: TypeInfo;
     const HTMLStringType: TypeInfo;
+    const jsTypeToTNT: {
+        string: TypeInfo;
+        number: TypeInfo;
+        object: TypeInfo;
+        function: TypeInfo;
+    };
     class Variable {
         private prv_value;
         private prv_type;
@@ -40,6 +48,7 @@ declare namespace TNT {
         containsVariable(variableName: string): boolean;
         merge(anotherTable: SymbolTable, ifExists: (oldValue: Variable, newValue: Variable) => Variable): void;
     }
+    function jsType2TNT(jsType: string): TypeInfo;
 }
 declare namespace TNT {
     namespace Globals {
@@ -50,6 +59,7 @@ declare namespace TNT {
         function addPlugin(plugin: Plugin): void;
         function plug(plugin: Plugin): void;
         function getAllPlugins(): Array<Plugin>;
+        function hasPlugin(pluginId: string): boolean;
         function removePlugin(pluginId: string): void;
     }
 }
@@ -107,6 +117,23 @@ declare namespace TemplateLanguage {
 }
 declare namespace TemplateLanguage {
     function tpfor(dom: any): void;
+}
+declare namespace TNTSimpApi {
+    class PluginMain implements TNT.Plugin {
+        get id(): string;
+        get rendererList(): TNT.Renderable[];
+        get tags(): string[];
+        get version(): string;
+        onInit(): void;
+    }
+    class Value {
+        name: string;
+        valueObject: TNT.Variable;
+        constructor(name: string, type: TNT.TypeInfo);
+        setValue(value: any): Value;
+        get value(): any;
+        get type(): TNT.TypeInfo;
+    }
 }
 declare namespace TNTScript {
     type value = {
@@ -166,14 +193,4 @@ declare namespace TNTScript {
         functioncanvalue: {};
     };
     function jsTypeToTNTType(TypeName: string): string;
-}
-declare namespace TNTState {
-    class Value {
-        name: string;
-        valueObject: TNT.Variable;
-        constructor(name: any);
-        setValue(value: any): void;
-        get vlaue(): any;
-        get type(): TNT.TypeInfo;
-    }
 }
