@@ -16,7 +16,7 @@ namespace ScriptRun {
             index += 1;
             // Errors.line += 1;
         }
-        return dataobj.SymbolTableOWN
+        return dataobj.SymbolTableOWN;
     }
 
     export function init(codes: string) {
@@ -26,12 +26,12 @@ namespace ScriptRun {
 
     export function lineRun(code: string) {
         if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
-            ScriptRun.VariableCode(code, this)
+            ScriptRun.VariableCode(code, this);
         } else if (/(for|while|def|render|when) .+/.test(code)) {
             if (/render/.test(code)) {
-                ScriptRun.RenderCode(code, this)
+                ScriptRun.RenderCode(code, this);
             } else if (/while/.test(code)) {
-                ScriptRun.WhileCode(code)
+                ScriptRun.WhileCode(code);
             } else if (/def/.test(code)) {
                 // TODO: 定义函数语句
             } else if (/for/.test(code)) {
@@ -39,7 +39,7 @@ namespace ScriptRun {
             }
         } else if (code === 'break') {
             // 如果检测到跳出循环语句 则返回"break"
-            return "break"
+            return "break";
         } else {
             this.ValueProcess(code);
         }
@@ -59,14 +59,14 @@ namespace ScriptRun {
             //     TNTSymbolTableOWN,
             // );
         } else {
-            TNT.Globals.symbolTable.setValue(process.type, process.value)
+            TNT.Globals.symbolTable.setValue(process.type, process.value);
         }
         // Refresh the page.
         // TNTValueTagProcessing();
     }
 
     export const RenderCode = (code: string, dataobj) => {
-        const html = TNTScript.keySearch('render', code)
+        const html = TNTScript.keySearch('render', code);
         // TODO: 渲染render关键字
         // TNTRenderDOM(html, TNTSymbolTableOWN.__selfdom__)
     }
@@ -90,6 +90,6 @@ namespace ScriptRun {
         const http = new XMLHttpRequest();
         const filecode = http.open('GET',pakege,false);
         const Variable = RunScriptCode(filecode, dataobj);
-        TNT.Globals.symbolTable.merge(Variable,(TNT.Globals.symbolTable.getValue("w").value))
+        TNT.Globals.symbolTable.merge(Variable,(TNT.Globals.symbolTable.getValue("w").value));
     }
 }
