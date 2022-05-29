@@ -43,7 +43,7 @@ declare namespace TNT {
 }
 declare namespace TNT {
     namespace Globals {
-        let symbolTable: SymbolTable;
+        const symbolTable: SymbolTable;
         let instances: Array<TNT>;
         function setValueEvaluator(fn: (expr: string) => any): void;
         function evaluate(expr: string): any;
@@ -60,6 +60,14 @@ declare namespace TNTDebug {
         get tags(): string[];
         get version(): string;
         onInit(): void;
+    }
+}
+declare namespace TNT {
+    class DataRenderer {
+        TagDataAttributes: NodeListOf<Element>;
+        TagDataRender(): void;
+        TagStyleRender(): void;
+        Analysis(t: string): Object;
     }
 }
 declare namespace TNT {
@@ -96,14 +104,14 @@ declare namespace TNT {
     }
 }
 declare namespace TNTScript {
-    class PluginMain implements TNT.Plugin {
-        private prv_executor;
-        get id(): string;
-        get rendererList(): TNT.Renderable[];
-        get tags(): string[];
-        get version(): string;
-        onInit(): void;
-    }
+    function codeSplit(code: string): any[];
+    function codeBlock(code: any): (string | any[])[];
+    function keySearch(key: string, code: string): string;
+    function functionSplit(code: string, original?: boolean): {
+        agv: any[];
+        functioncanvalue: {};
+    };
+    function jsTypeToTNTType(TypeName: any): "string" | "number" | "bool";
 }
 declare namespace TNTScript {
     type value = {
@@ -118,6 +126,16 @@ declare namespace TNTScript {
         evaluate(expression: string): any;
     }
     export {};
+}
+declare namespace TNTScript {
+    class PluginMain implements TNT.Plugin {
+        private prv_executor;
+        get id(): string;
+        get rendererList(): TNT.Renderable[];
+        get tags(): string[];
+        get version(): string;
+        onInit(): void;
+    }
 }
 declare namespace ScriptRun {
     function RunScriptCode(codes: any, dataobj: any): any;
@@ -143,14 +161,4 @@ declare namespace TNTScript {
     class TagRenderer implements TNT.Renderable {
         render(): void;
     }
-}
-declare namespace TNTScript {
-    function codeSplit(code: string): any[];
-    function codeBlock(code: any): (string | any[])[];
-    function keySearch(key: string, code: string): string;
-    function functionSplit(code: string, original?: boolean): {
-        agv: any[];
-        functioncanvalue: {};
-    };
-    function jsTypeToTNTType(TypeName: any): "string" | "number" | "bool";
 }

@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Page</title>
-    <script src="./dist/tnt.js"></script>
-    <!-- <script>
+    <script src="dist/tnt.js"></script>
+    <script>
         window.onload = () => {
             TNT.Globals.symbolTable.setValue("test",
                 new TNT.Variable("Hello, World!",
@@ -18,15 +18,16 @@
                         "test", 
                         new TNT.Variable(
                             "<span style=\"color:red;\">こんにちは、世界です！</span>",
-                        TNT.StringType));
+                        TNT.HTMLStringType));
                 }, 3000
             )
         }
-    </script> -->
-    <!-- <v>test</v>
+    </script>
+    <v>test</v>
 </head>
-<body> -->
-    <!-- <script>
+<!-- <body>
+    <tnt-debug></tnt-debug>
+    <script>
         TNT.Globals.symbolTable.setValue(
             'websiteName',
             'Google',
@@ -43,15 +44,18 @@
             websiteName:
             <v>websiteName</v>
         </a>
-    </div> -->
-</body>
+    </div>
+</body> -->
     <tnt>
         x = 2
     </tnt>
     <v>x</v>
-<body>
+<!-- <body>
     <for i in xxx>
         
     </for>
-</body>
+</body> -->
+<script>
+    console.time("22222")
+</script>
 </html>
