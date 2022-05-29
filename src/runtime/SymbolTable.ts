@@ -28,16 +28,16 @@ namespace TNT {
         }
         private prv_validate(value: any, type: TypeInfo) {
             if (type === StringType && typeof (value) !== "string") {
-                throw new TypeError("value should ba a string.")
+                throw new TypeError("value should ba a string.");
             }
             if (type === HTMLStringType && typeof (value) !== "string") {
-                throw new TypeError("value should ba a string.")
+                throw new TypeError("value should ba a string.");
             }
             if (type === NumberType && typeof (value) !== "number") {
-                throw new TypeError("value should ba a number.")
+                throw new TypeError("value should ba a number.");
             }
             if (type === JSFunctionType && typeof (value) !== "function") {
-                throw new TypeError("value should ba a javascript function.")
+                throw new TypeError("value should ba a javascript function.");
             }
         }
         get value() {
@@ -80,25 +80,13 @@ namespace TNT {
 
         // Check if contains the variable.
         containsVariable(variableName: string): boolean {
-            for (const i of this.variableNames) {
-                if (i === variableName) {
-                    return true;
-                }
-            }
-            return false;
+            return -1 !== this.variableNames.indexOf(variableName);
         }
 
         // Merge table.
         merge(anotherTable: SymbolTable, ifExists: (oldValue: Variable, newValue: Variable) => Variable): void {
-            let herNames = anotherTable.variableNames;
-            for (const i of herNames) {
-                if (this.containsVariable(i)) {
-                    // Exists
-                    this.setValue(i, ifExists(this.getValue(i), anotherTable.getValue(i)));
-                } else {
-                    // New variable
-                    this.setValue(i, anotherTable.getValue(i));
-                }
+            for (const i of anotherTable.variableNames) {
+                this.setValue(i, this.containsVariable(i) ? ifExists(this.getValue(i), anotherTable.getValue(i)) : anotherTable.getValue(i));
             }
         }
     }
