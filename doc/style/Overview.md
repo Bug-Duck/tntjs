@@ -1,7 +1,7 @@
 # TNT.js Code Style Documentation
 
 ## Overview
-This documentation is about the code style of the TNT.js development. Every developers who develops the TNT.js (runtime and the integrated plugins) should follow the rules.
+This documentation is about the code style of the TNT.js development. Every developer who develops TNT.js (either runtime or integrated plugins) should follow those rules.
 
 ## Portal
 
