@@ -6,7 +6,7 @@ namespace TNT {
             const domData = [];
             for (const i of this.prv_tagDataAttributes) {
                 const text = i.getAttribute("tnt-td");
-                const data = this.Analysis(text);
+                const data = this.analysis(text);
                 domData.push([i, data]);
             }
             Globals.symbolTable.onSetValue(() => {
@@ -23,7 +23,7 @@ namespace TNT {
             const domData = [];
             for (const i of this.prv_tagDataAttributes) {
                 const text = i.getAttribute("tnt-sd");
-                const data = this.Analysis(text);
+                const data = this.analysis(text);
                 domData.push([i, data]);
             }
             Globals.symbolTable.onSetValue(() => {
@@ -35,7 +35,7 @@ namespace TNT {
             });
         }
 
-        Analysis(t: string): any {
+        analysis(t: string): any {
             let word: string;
             let keyword: string;
             const words: Array<string> = [];
