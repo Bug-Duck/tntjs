@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable no-undef */
 module.exports = {
     "env": {
@@ -20,10 +21,11 @@ module.exports = {
             "error",
             4
         ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
+        //"linebreak-style": [
+        //  "error",
+        //"unix"
+        //],
+        "linebreak-style": "off",
         "quotes": [
             "error",
             "double"
@@ -32,6 +34,7 @@ module.exports = {
             "error",
             "always"
         ],
+        "no-empty": "off",
         "@typescript-eslint/no-namespace": "off",
         "@typescript-eslint/triple-slash-reference": "off",
         "@typescript-eslint/no-explicit-any": "off",
