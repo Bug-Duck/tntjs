@@ -1,3 +1,10 @@
+/**
+ * file: DataRenderer.ts
+ * creator: 27Onion
+ * create time: June 2nd, 2022, 22:01
+ * description: The data renderer.
+ */
+
 namespace TNT {
     export class DataRenderer {
         private prv_tagDataAttributes: NodeListOf<Element>;
