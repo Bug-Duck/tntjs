@@ -10,7 +10,7 @@
 namespace ScriptRun {
     export function RunScriptCode(codes,dataobj) {
         const codeList = init(codes);
-        let index = 1
+        let index = 1;
         for (const code of codeList) {
             lineRun(code);
             index += 1;
@@ -37,7 +37,7 @@ namespace ScriptRun {
             } else if (/for/.test(code)) {
                 //TODO: for循环
             }
-        } else if (code === 'break') {
+        } else if (code === "break") {
             // 如果检测到跳出循环语句 则返回"break"
             return "break";
         } else {
@@ -46,8 +46,8 @@ namespace ScriptRun {
     }
     
     export const VariableCode = (code: string, dataobj) => {
-        const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(' '));
-        const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(' '));
+        const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(" "));
+        const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(" "));
         const process = dataobj.ValueProcess(v[0]);
         // TODO: 变量赋值的值重构后存储
         if (/let /.test(code)) {
@@ -63,16 +63,16 @@ namespace ScriptRun {
         }
         // Refresh the page.
         // TNTValueTagProcessing();
-    }
+    };
 
     export const RenderCode = (code: string, dataobj) => {
-        const html = TNTScript.keySearch('render', code);
+        const html = TNTScript.keySearch("render", code);
         // TODO: 渲染render关键字
         // TNTRenderDOM(html, TNTSymbolTableOWN.__selfdom__)
-    }
+    };
 
     export const WhileCode = (code: string) => {
-        const i = TNTScript.codeBlock(TNTScript.keySearch('while', code));
+        const i = TNTScript.codeBlock(TNTScript.keySearch("while", code));
         const condition = i[0];
         const codes = i[1];
         // 如果TNTBoom函数返回true 即代表识别到跳出语句 则跳出循环
@@ -82,14 +82,14 @@ namespace ScriptRun {
         //         break;
         //     }
         // }
-    }
+    };
 
     export const ImportCode = (code:string, dataobj) => {
-        const pake = TNTScript.keySearch('import',code);
+        const pake = TNTScript.keySearch("import",code);
         const pakege = dataobj.ValueProcess(pake);
         const http = new XMLHttpRequest();
-        const filecode = http.open('GET',pakege,false);
+        const filecode = http.open("GET",pakege,false);
         const Variable = RunScriptCode(filecode, dataobj);
         TNT.Globals.symbolTable.merge(Variable,(TNT.Globals.symbolTable.getValue("w").value));
-    }
+    };
 }

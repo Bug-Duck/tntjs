@@ -12,7 +12,7 @@ namespace TNTScript {
             // Render phase.
 
             // 1. Get all the tags.
-            let tags = document.querySelectorAll('tnt');
+            const tags = document.querySelectorAll("tnt");
 
             // 2. Iterate each tag.
             for (const tag of tags) {
@@ -21,8 +21,8 @@ namespace TNTScript {
                 const tagInnerHTML = tag.getAttribute("data-tnt-plugin-value-backup");
 
                 // If the tag isn't hidden, the hide it.
-                if ((tag as HTMLElement).style.getPropertyValue('display') !== "none") {
-                    (tag as HTMLElement).style.setProperty('display', 'none');
+                if ((tag as HTMLElement).style.getPropertyValue("display") !== "none") {
+                    (tag as HTMLElement).style.setProperty("display", "none");
                 }
             }
         }

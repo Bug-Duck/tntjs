@@ -5,7 +5,7 @@ namespace TNT {
             this.TagDataAttributes = document.querySelectorAll("[tnt-td]");
             const domData = [];
             for (const i of this.TagDataAttributes) {
-                const text = i.getAttribute('tnt-td');
+                const text = i.getAttribute("tnt-td");
                 const data = this.Analysis(text);
                 domData.push([i,data]);
             }
@@ -15,14 +15,14 @@ namespace TNT {
                         i[0][d] = i[1][d];
                     }
                 }
-            })
+            });
         }
 
         TagStyleRender() {
             this.TagDataAttributes = document.querySelectorAll("[tnt-sd]");
             const domData = [];
             for (const i of this.TagDataAttributes) {
-                const text = i.getAttribute('tnt-sd');
+                const text = i.getAttribute("tnt-sd");
                 const data = this.Analysis(text);
                 domData.push([i,data]);
             }
@@ -32,7 +32,7 @@ namespace TNT {
                         i[0].style[d] = i[1][d];
                     }
                 }
-            })
+            });
         }
 
         Analysis(t: string): Object {
@@ -40,9 +40,9 @@ namespace TNT {
             let keyword: string;
             const words: Array<string> = [];
             let KeyValue: Object;
-            let whenKeyWord: boolean = false;
+            let whenKeyWord = false;
             for (const i of t) {
-                if (i === ',') {
+                if (i === ",") {
                     words.push(word);
                     word = "";
                 } else {
@@ -51,8 +51,8 @@ namespace TNT {
             }
             word = "";
             for (const i of words) {
-                if (i === '>') {
-                    KeyValue[keyword.replace(' ', '')] = word.replace(' ', '');
+                if (i === ">") {
+                    KeyValue[keyword.replace(" ", "")] = word.replace(" ", "");
                     keyword = "";
                     word = "";
                     whenKeyWord = false;
