@@ -72,10 +72,21 @@ declare namespace TNTDebug {
         onInit(): void;
     }
 }
-declare namespace TemplateLanguage {
+declare namespace tntem {
+    class TNTem implements TNT.Renderable {
+        render(): void;
+        DoMainRender(): void;
+    }
 }
-declare namespace TemplateLanguage {
+declare namespace tntem {
+    function tphttpget(dom: any): void;
+    function tphttppost(dom: any): void;
+}
+declare namespace tntem {
     function tpfor(dom: any): void;
+}
+declare namespace tntem {
+    function tpif(dom: any): void;
 }
 declare namespace TNTSimpApi {
     class PluginMain implements TNT.Plugin {
