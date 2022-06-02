@@ -10,14 +10,14 @@
 namespace TNT {
     export namespace Globals {
         export const symbolTable: SymbolTable = new SymbolTable();
-        export let instances: Array<TNT> = [];
+        export const instances: Array<TNT> = [];
         let valueEvaluator: (expr: string) => any = (expr: string) => {
             const value = symbolTable.getValue(expr.trim());
             if (value.type === StringType) {
                 return value.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
             }
             return value.value;
-        }
+        };
 
         export function setValueEvaluator(fn: (expr: string) => any) {
             valueEvaluator = fn;
