@@ -199,20 +199,67 @@ var TNTDebug;
     TNTDebug.PluginMain = PluginMain;
 })(TNTDebug || (TNTDebug = {}));
 TNT.Globals.plug(new TNTDebug.PluginMain());
-var TemplateLanguage;
-(function (TemplateLanguage) {
-    class run {
-        constructor(dom) {
+var tntem;
+(function (tntem) {
+    class TNTem {
+        render() {
+            this.DoMainRender();
+        }
+        DoMainRender() {
+            const gets = document.getElementsByTagName("t-get");
+            for (const i of gets) {
+                tntem.tphttpget(i);
+            }
         }
     }
-})(TemplateLanguage || (TemplateLanguage = {}));
-var TemplateLanguage;
-(function (TemplateLanguage) {
+    tntem.TNTem = TNTem;
+})(tntem || (tntem = {}));
+var tntem;
+(function (tntem) {
+    function tphttpget(dom) {
+        const http = new XMLHttpRequest();
+        dom.innerHTML = http.open('GET', dom.innerHTML, true);
+    }
+    tntem.tphttpget = tphttpget;
+    function tphttppost(dom) {
+        const http = new XMLHttpRequest();
+        dom.innerHTML = http.open('POST', dom.innerHTML, true);
+    }
+    tntem.tphttppost = tphttppost;
+})(tntem || (tntem = {}));
+var tntem;
+(function (tntem) {
     function tpfor(dom) {
         const HTMLCodes = dom.innerHTML;
+        let IterationValue;
+        let IterationName;
+        let IterationObject;
+        IterationObject.forEach((iter, key) => {
+            TNT.Globals.symbolTable.setValue(IterationName, new TNT.Variable(iter, TNT.ObjectType));
+        });
     }
-    TemplateLanguage.tpfor = tpfor;
-})(TemplateLanguage || (TemplateLanguage = {}));
+    tntem.tpfor = tpfor;
+})(tntem || (tntem = {}));
+var tntem;
+(function (tntem) {
+    function tpif(dom) {
+        const HTMLCodes = dom.innerHTML;
+        const be = [];
+        switch (be[1]) {
+            case 'equals':
+                if (be[0] === be[1]) {
+                }
+                ;
+                break;
+            case 'unequls':
+                if (be[0] !== be[2]) {
+                }
+                ;
+                break;
+        }
+    }
+    tntem.tpif = tpif;
+})(tntem || (tntem = {}));
 var TNTSimpApi;
 (function (TNTSimpApi) {
     class PluginMain {
@@ -721,7 +768,7 @@ var TNT;
         render() {
             var _a, _b;
             if (this.prv_firstRendering) {
-                const svTags = document.querySelectorAll('sv');
+                const svTags = document.querySelectorAll("sv");
                 for (const i of svTags) {
                     i.innerHTML = (_b = (_a = this.customRenderer) === null || _a === void 0 ? void 0 : _a.call(this, i.innerHTML)) !== null && _b !== void 0 ? _b : this.defaultRenderer(i.innerHTML);
                 }
@@ -746,7 +793,7 @@ var TNT;
             this.prv_checkOptionTags();
             this.prv_vTagRenderer = new TNT_1.VTagRenderer();
             this.prv_svTagRenderer = new TNT_1.StaticVTagRenderer();
-            let pluginsShouldMove = [];
+            const pluginsShouldMove = [];
             for (const plugin of TNT_1.Globals.getAllPlugins()) {
                 console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
                 try {
@@ -763,7 +810,7 @@ var TNT;
                                 for (const dependency of plugin.dependencies) {
                                     console.log(`${dependency}`);
                                 }
-                                console.log(`While found: `);
+                                console.log("While found: ");
                                 for (const h of have) {
                                     console.log(h);
                                 }
@@ -789,33 +836,33 @@ var TNT;
             this.prv_refreshLock = false;
         }
         prv_checkOptionTags() {
-            let debugModeOptionTags = document.querySelectorAll("tnt-debug");
+            const debugModeOptionTags = document.querySelectorAll("tnt-debug");
             if (debugModeOptionTags.length === 0) {
                 if (window.location.href.startsWith("file:")) {
                     console.warn("Warning: It seems that you are developing the webpage but you don't enable the debug mode.\nIt's better for you to enable the debug mode by the html tag <tnt-debug></tnt-debug> to enable more debugging features.");
                     console.warn("If your application is designed to run on file:/// protocal, please ignore this warning.");
                 }
-                TNT_1.Globals.removePlugin('tntdebug');
+                TNT_1.Globals.removePlugin("tntdebug");
                 this.prv_isDebug = false;
             }
-            let noTNTScriptTags = document.querySelectorAll("tnt-no-script");
+            const noTNTScriptTags = document.querySelectorAll("tnt-no-script");
             if (noTNTScriptTags.length !== 0) {
                 console.warn("Warning: Disabling TNT script may cause some unexpected results. If you're sure you want to disabl the TNT Script feature, please ignore this warning.");
-                TNT_1.Globals.removePlugin('tntscript');
+                TNT_1.Globals.removePlugin("tntscript");
             }
-            let disablePluginTags = document.querySelectorAll('tnt-disable-plugin');
+            const disablePluginTags = document.querySelectorAll("tnt-disable-plugin");
             for (const tag of disablePluginTags) {
-                const pluginId = tag.getAttribute('plugin');
+                const pluginId = tag.getAttribute("plugin");
                 if (pluginId !== null) {
                     TNT_1.Globals.removePlugin(pluginId);
                 }
             }
-            let pureModeTags = document.querySelectorAll('tnt-pure-mode');
-            let noPluginModeTags = document.querySelectorAll('tnt-no-plugin');
+            const pureModeTags = document.querySelectorAll("tnt-pure-mode");
+            const noPluginModeTags = document.querySelectorAll("tnt-no-plugin");
             if (pureModeTags.length !== 0 || noPluginModeTags.length !== 0) {
-                console.warn('Warning: You disabled all the plugins, including the TNT Script plugin and TNT Debugger plugin! Are you sure that\'s what you want? If not, please turn off the Pure Mode option. ');
-                console.log('Hint: Use <tnt-disable-plugin plugin="plugin_id_to_delete"></tnt-disable-plugin> to disable a single plugin. \nUse <tnt-no-script></tnt-disable-plugin> to disable the TNT Script integrated plugin (equal to <tnt-disable-plugin plugin="tntscript"></tnt-disable-plugin>). Remove the <tnt-debug></tnt-debug> tag to disable the debugger plugin.');
-                let pluginNames = [];
+                console.warn("Warning: You disabled all the plugins, including the TNT Script plugin and TNT Debugger plugin! Are you sure that's what you want? If not, please turn off the Pure Mode option. ");
+                console.log("Hint: Use <tnt-disable-plugin plugin=\"plugin_id_to_delete\"></tnt-disable-plugin> to disable a single plugin. \nUse <tnt-no-script></tnt-disable-plugin> to disable the TNT Script integrated plugin (equal to <tnt-disable-plugin plugin=\"tntscript\"></tnt-disable-plugin>). Remove the <tnt-debug></tnt-debug> tag to disable the debugger plugin.");
+                const pluginNames = [];
                 for (const plugin of TNT_1.Globals.getAllPlugins()) {
                     pluginNames.push(plugin.id);
                 }
@@ -823,10 +870,10 @@ var TNT;
                     TNT_1.Globals.removePlugin(pluginId);
                 }
             }
-            let flipModeTags = document.querySelectorAll('tnt-flip');
+            const flipModeTags = document.querySelectorAll("tnt-flip");
             if (flipModeTags.length !== 0) {
-                window.addEventListener('load', () => {
-                    document.querySelector('html').style.setProperty('transform', 'scaleX(-1)');
+                window.addEventListener("load", () => {
+                    document.querySelector("html").style.setProperty("transform", "scaleX(-1)");
                 });
             }
         }
@@ -834,7 +881,7 @@ var TNT;
             this.prv_refreshLock = true;
             for (const plugin of TNT_1.Globals.getAllPlugins()) {
                 for (const tag of plugin.tags) {
-                    let tagDOM = document.querySelectorAll(tag);
+                    const tagDOM = document.querySelectorAll(tag);
                     for (const el of tagDOM) {
                         try {
                             el.setAttribute("data-tnt-plugin-value-backup", el.innerHTML);
@@ -853,7 +900,7 @@ var TNT;
             }
             for (const plugin of TNT_1.Globals.getAllPlugins()) {
                 for (const tag of plugin.tags) {
-                    let tagDOM = document.querySelectorAll(tag);
+                    const tagDOM = document.querySelectorAll(tag);
                     for (const el of tagDOM) {
                         el.innerHTML = el.getAttribute("data-tnt-plugin-value-backup");
                         el.removeAttribute("data-tnt-plugin-value-backup");
@@ -887,7 +934,7 @@ var TNT;
         }
         render() {
             var _a, _b, _c, _d;
-            const vTags = document.querySelectorAll('v');
+            const vTags = document.querySelectorAll("v");
             for (const i of vTags) {
                 const rendered = i.getAttribute("data-rendered");
                 if (rendered === null) {
@@ -897,7 +944,7 @@ var TNT;
                 }
                 else {
                     const content = i.getAttribute("data-original");
-                    let newRenderedContent = (_d = (_c = this.customRenderer) === null || _c === void 0 ? void 0 : _c.call(this, content)) !== null && _d !== void 0 ? _d : this.defaultRenderer(content);
+                    const newRenderedContent = (_d = (_c = this.customRenderer) === null || _c === void 0 ? void 0 : _c.call(this, content)) !== null && _d !== void 0 ? _d : this.defaultRenderer(content);
                     if (i.innerHTML !== newRenderedContent) {
                         i.innerHTML = newRenderedContent;
                     }

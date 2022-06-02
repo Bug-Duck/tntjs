@@ -1,4 +1,4 @@
-namespace TemplateLanguage {
+namespace tntem {
     export function tphttpget(dom) {
         const http = new XMLHttpRequest();
         dom.innerHTML = http.open('GET', dom.innerHTML, true);

@@ -1,4 +1,4 @@
-namespace TemplateLanguage {
+namespace tntem {
     export function tpfor(dom) {
         const HTMLCodes = dom.innerHTML;
         let IterationValue;
