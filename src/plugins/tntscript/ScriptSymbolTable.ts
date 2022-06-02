@@ -23,19 +23,19 @@ namespace TNTScript {
                     time * 1000
                 );
             };
-            this.range = (startIndex: number = 0,endIndex: number) => {
+            this.range = (startIndex = 0,endIndex: number) => {
                 const result: Array<number> = [];
                 let i = startIndex;
                 while (i == endIndex) {
                     result.push(i);
                     i += 1;
-                };
+                }
                 return result;
-            }
+            };
         }
     }
 
     export namespace Globals {
-        export let scriptsymboltable = new ScriptSymbolTable();
+        export const scriptsymboltable = new ScriptSymbolTable();
     }
 }

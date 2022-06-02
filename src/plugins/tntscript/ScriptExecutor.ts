@@ -25,33 +25,33 @@ namespace TNTScript {
         SymbolTableOWN: TNT.SymbolTable;
         exec(scriptContent: string, data: TNT.SymbolTable = new TNT.SymbolTable()) {
             this.SymbolTableOWN = data; // Inner data space
-            ScriptRun.RunScriptCode(scriptContent, this)
+            ScriptRun.RunScriptCode(scriptContent, this);
         }
 
         ValueProcess(reg: string) {
             // Regular Expression
-            const isString = /(\"|\').+(\"|\')/;
+            const isString = /("|').+("|')/;
             const isNumber = /[0-9]+/;
             const isBool = /(true|false)/;
             const isVar = /[_A-z0-9]/;
             const isMathGex = /(.+ ?(\+|-|\*|\/)+ ?.+)+/;
             const isXML = /<.+>/;
-            const iscodes = /\{.+\}/
+            const iscodes = /\{.+\}/;
             if (/.+\(.+\)/.test(reg)) { // Interpreting function content
-                const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
+                const name = /[^(.+)]+/.exec(reg)[0].replace(/\s*/g, "");
                 // TODO: Script类型type值
-                if (TNT.Globals.symbolTable.getValue(name).value === 'function') {
+                if (TNT.Globals.symbolTable.getValue(name).value === "function") {
                     let buffer = "";
-                    let __parameters__ = /\(.+\)/.exec(reg);
+                    const __parameters__ = /\(.+\)/.exec(reg);
                     let __parameter__ = __parameters__[0];
                     __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
-                    const parameters = TNTScript.functionSplit(__parameter__)
-                    for (const i of parameters['agv']) {
+                    const parameters = TNTScript.functionSplit(__parameter__);
+                    for (const i of parameters["agv"]) {
                         buffer = buffer + i;
-                        buffer = buffer + ',';
+                        buffer = buffer + ",";
                     }
-                    for (const i in parameters['functioncanvalue']) {
-                        buffer = buffer + i + '=' + ',';
+                    for (const i in parameters["functioncanvalue"]) {
+                        buffer = buffer + i + "=" + ",";
                     }
                     const results = Function(`TNT.TNTSymbolTable.${name}.value(${buffer})`)();
                     const result: value = {
@@ -59,14 +59,14 @@ namespace TNTScript {
                         value: results,
                     };
                     return result;
-                } else if (TNT.Globals.symbolTable.getValue(name).value === 'tnt') {
+                } else if (TNT.Globals.symbolTable.getValue(name).value === "tnt") {
                     // TODO:TNTScript函数调用
-                    let __parameters__ = /\(.+\)/.exec(reg);
+                    const __parameters__ = /\(.+\)/.exec(reg);
                     let __parameter__ = __parameters__[0];
                     __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
                     // TODO: Parameters is the arguments of the function.
                     const parameters = TNTScript.functionSplit(__parameter__);
-                    let par = {};
+                    const par = {};
                     // Get the default parameters and the default values
                     // TNTSymbolTable[name].parameter.forEach((ele, i) => {
                     //     par[ele] = parameters.agv[i];
@@ -82,13 +82,13 @@ namespace TNTScript {
                 }
             } else if (iscodes.test(reg)) {
                 return {
-                    type: 'code',
+                    type: "code",
                     value: TNTScript.codeSplit(reg.substring(1, reg.length - 1)),
-                }
+                };
             } else if (isNumber.test(reg)) {
                 // Number literal processing
                 return {
-                    type: 'number',
+                    type: "number",
                     value: Number(reg)
                 };
             } else if (isString.test(reg)) {
@@ -96,7 +96,7 @@ namespace TNTScript {
             } else if (isBool.test(reg)) {
                 // Boolean literal processing
                 return {
-                    type: 'bool',
+                    type: "bool",
                     value: Boolean(reg),
                 };
             } else if (isVar.test(reg)) {
@@ -111,7 +111,7 @@ namespace TNTScript {
                 //TODO: 表达式
             } else if (isXML.test(reg)) {
                 return {
-                    type: 'XML',
+                    type: "XML",
                     value: reg,
                 };
             }

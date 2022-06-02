@@ -12,12 +12,12 @@ namespace TNTScript {
             if (ignoreNext) {
                 // Add the current char to the string.
                 currentString += i;
-                if (i === '\\') {
+                if (i === "\\") {
                     // Escaping characters
                     stringIgnoreNext = true;
                     continue;
                 }
-                if (i === '"' && !stringIgnoreNext) {
+                if (i === "\"" && !stringIgnoreNext) {
                     // End the string.
                     ignoreNext = false;
                 }
@@ -26,10 +26,10 @@ namespace TNTScript {
                 }
                 continue;
             } else {
-                if (i === ';') {
+                if (i === ";") {
                     buffer.push(currentString);
                     currentString = "";
-                } else if (i === '"') {
+                } else if (i === "\"") {
                     currentString += i;
                     ignoreNext = true;
                 } else {
@@ -45,16 +45,16 @@ namespace TNTScript {
     }
 
     export function codeBlock(code) {
-        const v: string = code.replace(/\{.+\}/, '');
+        const v: string = code.replace(/\{.+\}/, "");
         const codes: string = /\{.+\}/.exec(code)[0];
         return [v, codeSplit(codes.substring(1,codes.length - 1))];
     }
 
     export function keySearch(key: string,code: string) {
-        return code.replace(new RegExp(`${key} `), '')
+        return code.replace(new RegExp(`${key} `), "");
     }
 
-    export function functionSplit(code: string, original: boolean = false) {
+    export function functionSplit(code: string, original = false) {
         let ignoreNext = false;
         let stringIgnoreNext = false;
         let bracketMatchingMode = false;
@@ -66,14 +66,14 @@ namespace TNTScript {
             // Bracket Matching Mode
             if (bracketMatchingMode) {
                 currentString += i;
-                if (i === '}') {
+                if (i === "}") {
                     bracketMatchingStack.pop();
                     if (bracketMatchingStack.length === 0) {
                         buffer.push(currentString + "}");
                         bracketMatchingMode = false;
                         continue;
                     }
-                } else if (i === '{') {
+                } else if (i === "{") {
                     bracketMatchingStack.push(null);
                 }
                 continue;
@@ -82,12 +82,12 @@ namespace TNTScript {
             if (ignoreNext) {
                 // Add the current char to the string.
                 currentString += i;
-                if (i === '\\') {
+                if (i === "\\") {
                     // Escaping characters
                     stringIgnoreNext = true;
                     continue;
                 }
-                if (i === '"' && !stringIgnoreNext) {
+                if (i === "\"" && !stringIgnoreNext) {
                     // End the string.
                     ignoreNext = false;
                 }
@@ -96,13 +96,13 @@ namespace TNTScript {
                 }
                 continue;
             } else {
-                if (i === ',') {
+                if (i === ",") {
                     buffer.push(currentString.trim());
                     currentString = "";
-                } else if (i === '"') {
+                } else if (i === "\"") {
                     currentString += i;
                     ignoreNext = true;
-                } else if (i === '{') {
+                } else if (i === "{") {
                     // Right bracket
                     bracketMatchingMode = true;
                     bracketMatchingStack = [null];
@@ -119,8 +119,8 @@ namespace TNTScript {
         const values = { agv: [], functioncanvalue: {} };
         for (const value of buffer) {
             if (/.+ ?= ?.+/.test(value)) {
-                const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(' '));
-                const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(' '));
+                const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(" "));
+                const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(" "));
                 values.functioncanvalue[name[0]] = new ScriptExecutor().ValueProcess(v[0]);
             } else {
                 values.agv.push(original ? new ScriptExecutor().ValueProcess(value) : value);
