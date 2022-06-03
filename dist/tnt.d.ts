@@ -53,7 +53,7 @@ declare namespace TNT {
 declare namespace TNT {
     namespace Globals {
         const symbolTable: SymbolTable;
-        let instances: Array<TNT>;
+        const instances: Array<TNT>;
         function setValueEvaluator(fn: (expr: string) => any): void;
         function evaluate(expr: string): any;
         function addPlugin(plugin: Plugin): void;
@@ -72,10 +72,20 @@ declare namespace TNTDebug {
         onInit(): void;
     }
 }
+declare namespace TemplateLanguage {
+    class PluginMain implements TNT.Plugin {
+        get id(): string;
+        get rendererList(): TNT.Renderable[];
+        get tags(): string[];
+        get version(): string;
+        onInit(): void;
+    }
+}
 declare namespace tntem {
     class TNTem implements TNT.Renderable {
         render(): void;
         DoMainRender(): void;
+        test(): void;
     }
 }
 declare namespace tntem {
@@ -146,7 +156,7 @@ declare namespace TNTScript {
         constructor();
     }
     namespace Globals {
-        let scriptsymboltable: ScriptSymbolTable;
+        const scriptsymboltable: ScriptSymbolTable;
     }
 }
 declare namespace TNTScript {
@@ -166,10 +176,10 @@ declare namespace TNTScript {
 }
 declare namespace TNT {
     class DataRenderer {
-        TagDataAttributes: NodeListOf<Element>;
-        TagDataRender(): void;
-        TagStyleRender(): void;
-        Analysis(t: string): Object;
+        private prv_tagDataAttributes;
+        tagDataRender(): void;
+        tagStyleRender(): void;
+        analysis(t: string): any;
     }
 }
 declare namespace TNT {
