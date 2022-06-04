@@ -1,4 +1,4 @@
-namespace tntem {
+namespace TemplateLanguage {
     export function tpif(dom) {
         const HTMLCodes = dom.innerHTML;
         const be: Array<string> = [];
