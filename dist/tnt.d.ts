@@ -1,3 +1,34 @@
+declare namespace TemplateLanguage {
+    namespace Globals {
+        const templateData: Template;
+    }
+}
+declare namespace TemplateLanguage {
+    class TemplateRenderer implements TNT.Renderable {
+        render(): void;
+        DoMainRender(): void;
+        test(): void;
+    }
+    function templatePlugin(func: () => void): void;
+}
+declare namespace TemplateLanguage {
+    class PluginMain implements TNT.Plugin {
+        get id(): string;
+        get rendererList(): TNT.Renderable[];
+        get tags(): string[];
+        get version(): string;
+        onInit(): void;
+    }
+}
+declare namespace TemplateLanguage {
+    class Template {
+        Plugin(name: string, func: () => void): void;
+        httpGet(dom: any): void;
+        httpPost(dom: any): void;
+        forCodes(dom: any): void;
+        ifCodes(dom: any): void;
+    }
+}
 declare namespace TNTDebug {
     class DebugRenderTracer implements TNT.Renderable {
         render(): void;
@@ -71,32 +102,6 @@ declare namespace TNTDebug {
         get version(): string;
         onInit(): void;
     }
-}
-declare namespace TemplateLanguage {
-    class PluginMain implements TNT.Plugin {
-        get id(): string;
-        get rendererList(): TNT.Renderable[];
-        get tags(): string[];
-        get version(): string;
-        onInit(): void;
-    }
-}
-declare namespace tntem {
-    class TNTem implements TNT.Renderable {
-        render(): void;
-        DoMainRender(): void;
-        test(): void;
-    }
-}
-declare namespace tntem {
-    function tphttpget(dom: any): void;
-    function tphttppost(dom: any): void;
-}
-declare namespace tntem {
-    function tpfor(dom: any): void;
-}
-declare namespace tntem {
-    function tpif(dom: any): void;
 }
 declare namespace TNTSimpApi {
     class PluginMain implements TNT.Plugin {

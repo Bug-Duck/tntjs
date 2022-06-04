@@ -1,3 +1,93 @@
+var TemplateLanguage;
+(function (TemplateLanguage) {
+    let Globals;
+    (function (Globals) {
+        Globals.templateData = new TemplateLanguage.Template();
+    })(Globals = TemplateLanguage.Globals || (TemplateLanguage.Globals = {}));
+})(TemplateLanguage || (TemplateLanguage = {}));
+var TemplateLanguage;
+(function (TemplateLanguage) {
+    class TemplateRenderer {
+        render() {
+            this.DoMainRender();
+            this.test();
+        }
+        DoMainRender() {
+            const getHttpRequests = document.getElementsByTagName("t-get");
+            for (const i of getHttpRequests) {
+                TemplateLanguage.Globals.templateData.httpGet(i);
+            }
+        }
+        test() {
+            const x = document.getElementsByTagName("p");
+            for (const i of x) {
+                i.innerHTML = "Hello World!";
+            }
+        }
+    }
+    TemplateLanguage.TemplateRenderer = TemplateRenderer;
+    function templatePlugin(func) {
+    }
+    TemplateLanguage.templatePlugin = templatePlugin;
+})(TemplateLanguage || (TemplateLanguage = {}));
+var TemplateLanguage;
+(function (TemplateLanguage) {
+    class PluginMain {
+        get id() {
+            return "temlang";
+        }
+        get rendererList() {
+            return [new TemplateLanguage.TemplateRenderer()];
+        }
+        get tags() {
+            return [];
+        }
+        get version() {
+            return "1.0.0-integrated";
+        }
+        onInit() { }
+    }
+    TemplateLanguage.PluginMain = PluginMain;
+})(TemplateLanguage || (TemplateLanguage = {}));
+TNT.Globals.plug(new TemplateLanguage.PluginMain());
+var TemplateLanguage;
+(function (TemplateLanguage) {
+    class Template {
+        Plugin(name, func) {
+            this[name] = func;
+        }
+        httpGet(dom) {
+            const http = new XMLHttpRequest();
+            dom.innerHTML = http.open("GET", dom.innerHTML, true);
+        }
+        httpPost(dom) {
+            const http = new XMLHttpRequest();
+            dom.innerHTML = http.open("POST", dom.innerHTML, true);
+        }
+        forCodes(dom) {
+            const HTMLCodes = dom.innerHTML;
+            let IterationValue;
+            let IterationName;
+            let IterationObject;
+            IterationObject.forEach((iter, key) => {
+                TNT.Globals.symbolTable.setValue(IterationName, new TNT.Variable(iter, TNT.ObjectType));
+            });
+        }
+        ifCodes(dom) {
+            const HTMLCodes = dom.innerHTML;
+            const be = [];
+            switch (be[1]) {
+                case "equals":
+                    if (be[0] === be[1]) { }
+                    break;
+                case "unequls":
+                    if (be[0] !== be[2]) { }
+                    break;
+            }
+        }
+    }
+    TemplateLanguage.Template = Template;
+})(TemplateLanguage || (TemplateLanguage = {}));
 var TNTDebug;
 (function (TNTDebug) {
     class DebugRenderTracer {
@@ -199,89 +289,6 @@ var TNTDebug;
     TNTDebug.PluginMain = PluginMain;
 })(TNTDebug || (TNTDebug = {}));
 TNT.Globals.plug(new TNTDebug.PluginMain());
-var TemplateLanguage;
-(function (TemplateLanguage) {
-    class PluginMain {
-        get id() {
-            return "temlang";
-        }
-        get rendererList() {
-            return [];
-        }
-        get tags() {
-            return [];
-        }
-        get version() {
-            return "1.0.0-integrated";
-        }
-        onInit() { }
-    }
-    TemplateLanguage.PluginMain = PluginMain;
-})(TemplateLanguage || (TemplateLanguage = {}));
-var tntem;
-(function (tntem) {
-    class TNTem {
-        render() {
-            this.DoMainRender();
-            this.test();
-        }
-        DoMainRender() {
-            const gets = document.getElementsByTagName("t-get");
-            for (const i of gets) {
-                tntem.tphttpget(i);
-            }
-        }
-        test() {
-            const x = document.getElementsByTagName("p");
-            for (const i of x) {
-                i.innerHTML = "Hello World!";
-            }
-        }
-    }
-    tntem.TNTem = TNTem;
-})(tntem || (tntem = {}));
-var tntem;
-(function (tntem) {
-    function tphttpget(dom) {
-        const http = new XMLHttpRequest();
-        dom.innerHTML = http.open("GET", dom.innerHTML, true);
-    }
-    tntem.tphttpget = tphttpget;
-    function tphttppost(dom) {
-        const http = new XMLHttpRequest();
-        dom.innerHTML = http.open("POST", dom.innerHTML, true);
-    }
-    tntem.tphttppost = tphttppost;
-})(tntem || (tntem = {}));
-var tntem;
-(function (tntem) {
-    function tpfor(dom) {
-        const HTMLCodes = dom.innerHTML;
-        let IterationValue;
-        let IterationName;
-        let IterationObject;
-        IterationObject.forEach((iter, key) => {
-            TNT.Globals.symbolTable.setValue(IterationName, new TNT.Variable(iter, TNT.ObjectType));
-        });
-    }
-    tntem.tpfor = tpfor;
-})(tntem || (tntem = {}));
-var tntem;
-(function (tntem) {
-    function tpif(dom) {
-        const HTMLCodes = dom.innerHTML;
-        const be = [];
-        switch (be[1]) {
-            case "equals":
-                if (be[0] === be[1]) { }
-                break;
-            case "unequls":
-                if (be[0] !== be[2]) { }
-                break;
-        }
-    }
-    tntem.tpif = tpif;
-})(tntem || (tntem = {}));
 var TNTSimpApi;
 (function (TNTSimpApi) {
     class PluginMain {

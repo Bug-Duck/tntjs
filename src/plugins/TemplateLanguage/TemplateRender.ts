@@ -6,9 +6,9 @@ namespace TemplateLanguage {
         }
 
         DoMainRender() {
-            const gets = document.getElementsByTagName("t-get");
-            for (const i of gets) {
-                tphttpget(i);
+            const getHttpRequests = document.getElementsByTagName("t-get");
+            for (const i of getHttpRequests) {
+                Globals.templateData.httpGet(i);
             }
         }
 
@@ -18,5 +18,9 @@ namespace TemplateLanguage {
                 i.innerHTML = "Hello World!";
             }
         }
+    }
+
+    export function templatePlugin(func: () => void) {
+
     }
 }
