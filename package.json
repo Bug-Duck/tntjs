@@ -14,8 +14,7 @@
   "author": "BugDuck, 27Onion, Acbox",
   "license": "MIT",
   "dependencies": {
-    "tsc": "^2.0.4",
-    "typescript": "^4.7.2"
+    "typescript": "^4.6.3"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.26.0",

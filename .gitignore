@@ -6,3 +6,4 @@ Backup/**
 test/**
 index.html
 pnpm-lock.yaml
+package-lock.json
