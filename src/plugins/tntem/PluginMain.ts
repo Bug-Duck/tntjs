@@ -1,10 +1,11 @@
+/// <reference path="TemplateRender.ts" />
 namespace TemplateLanguage {
     export class PluginMain implements TNT.Plugin {
         get id(): string {
             return "temlang";
         }
         get rendererList(): TNT.Renderable[] {
-            return [];
+            return [new TemplateRenderer()];
         }
         get tags(): string[] {
             return [];
@@ -15,3 +16,5 @@ namespace TemplateLanguage {
         onInit(): void {}
     }
 }
+
+TNT.Globals.plug(new TemplateLanguage.PluginMain());

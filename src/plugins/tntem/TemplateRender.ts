@@ -1,5 +1,5 @@
-namespace tntem {
-    export class TNTem implements TNT.Renderable {
+namespace TemplateLanguage {
+    export class TemplateRenderer implements TNT.Renderable {
         render() {
             this.DoMainRender();
         }
