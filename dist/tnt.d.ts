@@ -1,15 +1,14 @@
 declare namespace TemplateLanguage {
     namespace Globals {
-        const templateData: Template;
+        const templateSymbol: Template;
+        const addComponents: (compon: Component) => void;
+        const render: (dom: any) => void;
     }
 }
 declare namespace TemplateLanguage {
     class TemplateRenderer implements TNT.Renderable {
         render(): void;
-        DoMainRender(): void;
-        test(): void;
     }
-    function templatePlugin(func: () => void): void;
 }
 declare namespace TemplateLanguage {
     class PluginMain implements TNT.Plugin {
@@ -22,11 +21,11 @@ declare namespace TemplateLanguage {
 }
 declare namespace TemplateLanguage {
     class Template {
-        Plugin(name: string, func: () => void): void;
-        httpGet(dom: any): void;
-        httpPost(dom: any): void;
-        forCodes(dom: any): void;
-        ifCodes(dom: any): void;
+    }
+    class Component {
+        name: string;
+        exec: (dom: any, par?: Record<string, unknown>) => (string | void);
+        constructor(name: string, ComponentExec: (dom: any, ...par: any) => (string | void));
     }
 }
 declare namespace TNTDebug {

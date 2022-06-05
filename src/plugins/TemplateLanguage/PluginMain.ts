@@ -13,7 +13,12 @@ namespace TemplateLanguage {
         get version(): string {
             return "1.0.0-integrated";
         }
-        onInit(): void {}
+        onInit(): void {
+            const testst = document.getElementsByTagName("p");
+            for (const i of testst) {
+                i.innerHTML = "testst";
+            }
+        }
     }
 }
 

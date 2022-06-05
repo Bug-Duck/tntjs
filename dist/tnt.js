@@ -2,33 +2,50 @@ var TemplateLanguage;
 (function (TemplateLanguage) {
     let Globals;
     (function (Globals) {
-        Globals.templateData = new TemplateLanguage.Template();
+        Globals.templateSymbol = new TemplateLanguage.Template();
+        Globals.addComponents = (compon) => {
+            Globals.templateSymbol[compon.name] = compon.exec;
+        };
+        Globals.render = (dom) => {
+            for (const component in Globals.templateSymbol) {
+                const componentDocument = document.getElementsByTagName(component);
+            }
+        };
+        Globals.addComponents(new TemplateLanguage.Component("get", (dom) => {
+            const http = new XMLHttpRequest();
+            dom.innerHTML = http.open("GET", dom.innerHTML, true);
+        }));
+        Globals.addComponents(new TemplateLanguage.Component("post", (dom) => {
+            const http = new XMLHttpRequest();
+            dom.innerHTML = http.open("POST", dom.innerHTML, true);
+        }));
+        Globals.addComponents(new TemplateLanguage.Component("if", (dom, comparisonValue, condition, valueBeingCompared) => {
+            const HTMLCodes = dom.innerHTML;
+            const be = [];
+            switch (be[1]) {
+                case "equals":
+                    if (be[0] === be[1]) { }
+                    break;
+                case "unequls":
+                    if (be[0] !== be[2]) { }
+                    break;
+            }
+        }));
+        Globals.addComponents(new TemplateLanguage.Component("for", (dom, traversalBody, way, iterateOverObject) => {
+            const HTMLCodes = dom.innerHTML;
+            iterateOverObject.forEach((iter, key) => {
+                TNT.Globals.symbolTable.setValue(traversalBody, new TNT.Variable(iter, TNT.ObjectType));
+            });
+        }));
     })(Globals = TemplateLanguage.Globals || (TemplateLanguage.Globals = {}));
 })(TemplateLanguage || (TemplateLanguage = {}));
 var TemplateLanguage;
 (function (TemplateLanguage) {
     class TemplateRenderer {
         render() {
-            this.DoMainRender();
-            this.test();
-        }
-        DoMainRender() {
-            const getHttpRequests = document.getElementsByTagName("t-get");
-            for (const i of getHttpRequests) {
-                TemplateLanguage.Globals.templateData.httpGet(i);
-            }
-        }
-        test() {
-            const x = document.getElementsByTagName("p");
-            for (const i of x) {
-                i.innerHTML = "Hello World!";
-            }
         }
     }
     TemplateLanguage.TemplateRenderer = TemplateRenderer;
-    function templatePlugin(func) {
-    }
-    TemplateLanguage.templatePlugin = templatePlugin;
 })(TemplateLanguage || (TemplateLanguage = {}));
 var TemplateLanguage;
 (function (TemplateLanguage) {
@@ -45,7 +62,12 @@ var TemplateLanguage;
         get version() {
             return "1.0.0-integrated";
         }
-        onInit() { }
+        onInit() {
+            const testst = document.getElementsByTagName("p");
+            for (const i of testst) {
+                i.innerHTML = "testst";
+            }
+        }
     }
     TemplateLanguage.PluginMain = PluginMain;
 })(TemplateLanguage || (TemplateLanguage = {}));
@@ -53,40 +75,15 @@ TNT.Globals.plug(new TemplateLanguage.PluginMain());
 var TemplateLanguage;
 (function (TemplateLanguage) {
     class Template {
-        Plugin(name, func) {
-            this[name] = func;
-        }
-        httpGet(dom) {
-            const http = new XMLHttpRequest();
-            dom.innerHTML = http.open("GET", dom.innerHTML, true);
-        }
-        httpPost(dom) {
-            const http = new XMLHttpRequest();
-            dom.innerHTML = http.open("POST", dom.innerHTML, true);
-        }
-        forCodes(dom) {
-            const HTMLCodes = dom.innerHTML;
-            let IterationValue;
-            let IterationName;
-            let IterationObject;
-            IterationObject.forEach((iter, key) => {
-                TNT.Globals.symbolTable.setValue(IterationName, new TNT.Variable(iter, TNT.ObjectType));
-            });
-        }
-        ifCodes(dom) {
-            const HTMLCodes = dom.innerHTML;
-            const be = [];
-            switch (be[1]) {
-                case "equals":
-                    if (be[0] === be[1]) { }
-                    break;
-                case "unequls":
-                    if (be[0] !== be[2]) { }
-                    break;
-            }
-        }
     }
     TemplateLanguage.Template = Template;
+    class Component {
+        constructor(name, ComponentExec) {
+            this.name = name;
+            this.exec = ComponentExec;
+        }
+    }
+    TemplateLanguage.Component = Component;
 })(TemplateLanguage || (TemplateLanguage = {}));
 var TNTDebug;
 (function (TNTDebug) {

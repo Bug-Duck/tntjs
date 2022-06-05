@@ -61,5 +61,5 @@ namespace TNTScript {
         }
     }
 }
-
+ 
 TNT.Globals.plug(new TNTScript.PluginMain());
