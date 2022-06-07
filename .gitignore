@@ -1,8 +1,9 @@
-node_modules/**
-dist/tnt.js.map
-.vscode/**
-.VSCodeCounter/**
-Backup/**
-test/**
+node_modules/
+dist/
+.vscode/
+.VSCodeCounter/
+Backup/
+test/
 index.html
 pnpm-lock.yaml
+package-lock.json

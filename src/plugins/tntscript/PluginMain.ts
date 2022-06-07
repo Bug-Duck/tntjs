@@ -51,7 +51,7 @@ namespace TNTScript {
             console.log("Here");
 
             // Find all the tnt tags
-            for (const tntTag of document.querySelectorAll('tnt')) {
+            for (const tntTag of document.querySelectorAll("tnt")) {
                 this.prv_executor.exec(tntTag.innerHTML);
             }
 
@@ -61,5 +61,5 @@ namespace TNTScript {
         }
     }
 }
-
+ 
 TNT.Globals.plug(new TNTScript.PluginMain());
