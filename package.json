@@ -17,9 +17,9 @@
     "typescript": "^4.6.3"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.26.0",
-    "@typescript-eslint/parser": "^5.26.0",
-    "eslint": "^8.16.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "eslint": "^8.17.0",
     "javascript-obfuscator": "^4.0.0"
   }
 }
