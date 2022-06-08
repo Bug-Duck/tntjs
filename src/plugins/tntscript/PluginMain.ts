@@ -5,61 +5,41 @@
  * description: The plugin's main class.
  */
 
-//                            _ooOoo_  
-//                           o8888888o  
-//                           88" . "88  
-//                           (| -_- |)  
-//                            O\ = /O  
-//                        ____/`---'\____  
-//                      .   ' \\| |// `.  
-//                       / \\||| : |||// \  
-//                     / _||||| -:- |||||- \  
-//                       | | \\\ - /// | |  
-//                     | \_| ''\---/'' | |  
-//                      \ .-\__ `-` ___/-. /  
-//                   ___`. .' /--.--\ `. . __  
-//                ."" '< `.___\_<|>_/___.' >'"".  
-//               | | : `- \`.;`\ _ /`;.`/ - ` : | |  
-//                 \ \ `-. \_ __\ /__ _/ .-` / /  
-//         ======`-.____`-.___\_____/___.-`____.-'======  
-//                            `=---='  
-//  
-//         .............................................
-// 不要生气。不要生气。不要生气。这个部分是箱子负责的，只要他代码不要污染
-// Runtime，就不用管他，让他乱去好了，我不生气。我不生气。我不生气。
+import { Globals } from "src/runtime/GlobalEnvironment";
+import { Plugin, Renderable } from "src/runtime/Pluggable";
+import { ScriptExecutor } from "./ScriptExecutor";
+import { TagRenderer } from "./TagRenderer";
 
-/// <reference path="./ScriptExecutor.ts" />
+export class PluginMain implements Plugin {
+  #executor = new ScriptExecutor();
 
-namespace TNTScript {
-    export class PluginMain implements TNT.Plugin {
-      private prv_executor = new ScriptExecutor();
+  get id(): string {
+    return "tntscript";
+  }
 
-      get id(): string {
-        return "tntscript";
-      }
-      get rendererList(): TNT.Renderable[] {
-        return [new TagRenderer()];
-      }
-      get tags(): string[] {
-        return ["tnt"];
-      }
-      get version(): string {
-        return "v1.0.0-integrated";
-      }
-      onInit(): void {
-        // Do some initialize here.
-        console.log("Here");
+  get rendererList(): Renderable[] {
+    return [new TagRenderer()];
+  }
 
-        // Find all the tnt tags
-        for (const tntTag of document.querySelectorAll("tnt")) {
-          this.prv_executor.exec(tntTag.innerHTML);
-        }
+  get tags(): string[] {
+    return ["tnt"];
+  }
 
-        TNT.Globals.setValueEvaluator((e: string) => {
-          return this.prv_executor.evaluate(e);
-        });
-      }
-    }
+  get version(): string {
+    return "v1.0.0-integrated";
+  }
+
+  onInit(): void {
+    // find all tnt tags
+    document.querySelectorAll("tnt").forEach((tntTag) => {
+      this.#executor.exec(tntTag.innerHTML);
+    });
+
+    Globals.valueEvaluator = ((e: string) => {
+      return this.#executor.evaluate(e);
+    });
+  }
 }
+
  
-TNT.Globals.plug(new TNTScript.PluginMain());
+Globals.plug(new PluginMain());

@@ -8,6 +8,7 @@ import TypeInfo from "./TypeInfo";
 export const StringType = new TypeInfo("tnt", "string", "");
 export const NumberType = new TypeInfo("tnt", "number", 0);
 export const ObjectType = new TypeInfo("tnt", "object", null);
+export const BoolType = new TypeInfo("tnt", "bool", false);
 export const TNTFunctionType = new TypeInfo("tnt", "function", null);
 export const JSFunctionType = new TypeInfo("js", "function", () => { /**/ });
 export const HTMLStringType = new TypeInfo("tnt", "html_string", "<div></div>");
@@ -16,8 +17,9 @@ export const TNTTypeMap = {
   number: NumberType,
   object: ObjectType,
   function: JSFunctionType,
+  boolean: BoolType,
 };
-export type VariableValueType = string | number | object | (() => unknown);
+export type VariableValueType = string | number | object | boolean | (() => unknown);
 
 export class Variable {
   #value: VariableValueType;
@@ -102,10 +104,6 @@ export class SymbolTable {
 }
 
 export function jsType2TNT(jsType: string): TypeInfo {
-  Object.entries(TNTTypeMap).forEach(([key, type]) => {
-    if (key === jsType) {
-      return type;
-    }
-  });
+  if (Reflect.has(TNTTypeMap, jsType)) return TNTTypeMap[jsType];
   return ObjectType;
 }
