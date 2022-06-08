@@ -37,52 +37,44 @@ export default class TNT {
     this.disablePlugins(pluginsToBeDisabled);
 
     // Initialize plugins
-    const pluginsShouldMove: string[] = [];
+    const plugins = Globals.getAllPlugins();
 
-    for (const plugin of Globals.getAllPlugins()) {
+    plugins.forEach((plugin) => {
       console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
       try {
-        // Check dependencies
-        if (plugin.dependencies) {
-          // Check each dependency
-          for (const dependency of plugin.dependencies) {
-            const have: string[] = [];
-            // Iterating all plugins
-            for (const p of Globals.getAllPlugins()) {
+        // Check each dependency
+        plugin.dependencies.forEach((dependency) => {
+          const foundDependencies: string[] = [];
+          // Iterating all plugins
+          plugins.forEach((p) => {
             // Found the dependency, add to the record  
-              if (p.id === dependency) {
-                have.push(p.id);
-              }
+            if (p.id === dependency) {
+              foundDependencies.push(p.id);
             }
-            // Compare the record length
-            if (have.length !== plugin.dependencies.length) {
-              console.log(`Missing dependencies of ${plugin.id}. Required: `);
-              plugin.dependencies.forEach((dependency) => {
-                console.log(`${dependency}`);
-              });
-              console.log("But found: ");
-              have.forEach((h) => {
-                console.log(h);
-              });
-              console.log("Plugin loading failed.");
-              throw new Error("dependencies missing");
-            }
+          });
+          // Compare the record length
+          if (foundDependencies.length !== plugin.dependencies.length) {
+            console.log(`Missing dependencies of ${plugin.id}. Required: `);
+            plugin.dependencies.forEach((dependency) => {
+              console.log(`${dependency}`);
+            });
+            console.log("But found: ");
+            foundDependencies.forEach((h) => {
+              console.log(h);
+            });
+            console.log("Plugin loading failed.");
+            throw new Error("dependencies missing");
           }
-        }
+        });
         plugin.onInit();
       } catch (e) {
         // If any error occurred, the plugin will NOT be loaded.
         console.log(`Error while loading plugin ${plugin.id}: ${e}`);
-        pluginsShouldMove.push(plugin.id);
-        continue;
+        Globals.removePlugin(plugin.id);
+        return;
       }
       console.log(`Successfully loaded plugin ${plugin.id}`);
-    }
-
-    // Remove the invalid plugins
-    for (const pluginId of pluginsShouldMove) {
-      Globals.removePlugin(pluginId);
-    }
+    });
 
     // Do the first rendering.
     this.render();
@@ -141,14 +133,10 @@ export default class TNT {
   onPureModeOn() {
     console.warn("Warning: You disabled all the plugins, including the TNT Script plugin and TNT Debugger plugin! Are you sure that's what you want? If not, please turn off the Pure Mode option. ");
     console.log("Hint: Use <tnt-disable-plugin plugin=\"plugin_id_to_delete\"></tnt-disable-plugin> to disable a single plugin. \nUse <tnt-no-script></tnt-disable-plugin> to disable the TNT Script integrated plugin (equal to <tnt-disable-plugin plugin=\"tntscript\"></tnt-disable-plugin>). Remove the <tnt-debug></tnt-debug> tag to disable the debugger plugin.");
-    // Disable all the plugins.
-    const pluginNames: string[] = [];
-    for (const plugin of Globals.getAllPlugins()) {
-      pluginNames.push(plugin.id);
-    }
-    for (const pluginId of pluginNames) {
-      Globals.removePlugin(pluginId);
-    }
+    // disable all plugins
+    Globals.getAllPlugins().forEach((plugin) => {
+      Globals.removePlugin(plugin.id);
+    });
   }
 
   onFlipModeOn() {
@@ -159,14 +147,18 @@ export default class TNT {
 
 
   render() {
-    // Lock the refreshing function to avoid infinity recursion.
+    const plugins = Globals.getAllPlugins();
+    // lock the refreshing function to avoid infinity recursion
     this.#refreshLock = true;
 
-    // Protect the tags
-    for (const plugin of Globals.getAllPlugins()) {
-      for (const tag of plugin.tags) {
+    // render the content (calls on updating and initializing)
+    this.#vTagRenderer.render();
+
+    // protect tags
+    plugins.forEach((plugin) => {
+      plugin.tags.forEach((tag) =>  {
         const tagDOM = document.querySelectorAll(tag);
-        for (const el of tagDOM) {
+        tagDOM.forEach((el) => {
           // each element
           try {
             el.setAttribute("data-tnt-plugin-value-backup", el.innerHTML);
@@ -174,33 +166,23 @@ export default class TNT {
           } catch (e) {
             // continue regardless of error
           }
-        }
-      }
-    }
-
-    // Render the content. Calls on updating and initializing
-    this.#vTagRenderer.render();
-
-    // Render for the plugin
-    for (const plugin of Globals.getAllPlugins()) {
-      for (const renderer of plugin.rendererList) {
+        });
+      });
+      // render plugins
+      plugin.rendererList.forEach((renderer) => { 
         renderer.render();
-      }
-    }
-
-    // Take off the protection
-    for (const plugin of Globals.getAllPlugins()) {
-      for (const tag of plugin.tags) {
+      });
+      // take off the protection
+      plugin.tags.forEach((tag) => {
         const tagDOM = document.querySelectorAll(tag);
-        for (const el of tagDOM) {
-        // each element
+        tagDOM.forEach((el) => {
           el.innerHTML = el.getAttribute("data-tnt-plugin-value-backup");
           el.removeAttribute("data-tnt-plugin-value-backup");
-        }
-      }
-    }
+        });
+      });
+    });
 
-    // Unlock the refresh function
+    // unlock the refresh function
     this.#refreshLock = false;
   }
 

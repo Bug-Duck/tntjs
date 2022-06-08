@@ -7,25 +7,26 @@
 import { Globals } from "./GlobalEnvironment";
 
 export default class StaticVTagRenderer {
-  private customRenderer?: (vTagContent: string) => string;
-  private renderer: (vTagContent: string) => string;
+  #customRenderer?: (vTagContent: string) => string;
+  #renderer: (vTagContent: string) => string;
 
   constructor(customRenderer: (vTagContent: string) => string = undefined) {
-    this.customRenderer = customRenderer;
-    this.renderer = this.customRenderer ?? this.defaultRenderer;
+    this.#customRenderer = customRenderer;
+    this.#renderer = this.#customRenderer ?? this.#defaultRenderer;
   }
 
-  private defaultRenderer(s: string): string {
+  #defaultRenderer(s: string): string {
     try {
       return `${Globals.evaluate(s)}`;
     } catch (e) {
       return `Error while rendering element: ${e}`;
     }
   }
+
   render() {
     const svTags = document.querySelectorAll("sv");
     svTags.forEach((tag) => {
-      tag.innerHTML = this.renderer(tag.innerHTML);
+      tag.innerHTML = this.#renderer(tag.innerHTML);
     });
   }
 }

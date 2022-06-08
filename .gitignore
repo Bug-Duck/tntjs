@@ -6,3 +6,4 @@ Backup/
 test/
 index.html
 .DS_Store
+dist/

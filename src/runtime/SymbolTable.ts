@@ -30,18 +30,20 @@ export class Variable {
   }
 
   #validate(value: VariableValueType, type: TypeInfo) {
-    if (type === StringType && typeof (value) !== "string") {
-      throw new TypeError("value should ba a string.");
+    let expectedType = null;
+    if (type === StringType && typeof value !== "string") {
+      expectedType = "string";
     }
-    if (type === HTMLStringType && typeof (value) !== "string") {
-      throw new TypeError("value should ba a string.");
+    if (type === HTMLStringType && typeof value !== "string") {
+      expectedType = "string";
     }
-    if (type === NumberType && typeof (value) !== "number") {
-      throw new TypeError("value should ba a number.");
+    if (type === NumberType && typeof value !== "number") {
+      expectedType = "number";
     }
-    if (type === JSFunctionType && typeof (value) !== "function") {
-      throw new TypeError("value should ba a javascript function.");
+    if (type === JSFunctionType && typeof value !== "function") {
+      expectedType = "JavaScript function";
     }
+    if (expectedType) throw new TypeError(`Expected ${expectedType} but got ${typeof value}`);
   }
 
   get value() {

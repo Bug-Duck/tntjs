@@ -44,26 +44,26 @@ export class Globals {
   }
 
   // Add the plugin to the registry list.
-  static addPlugin(plugin: Plugin): void {
+  static addPlugin(plugin: Plugin) {
     this.pluginList.push(plugin);
   }
 
-  static plug(plugin: Plugin): void {
+  static plug(plugin: Plugin) {
     this.addPlugin(plugin);
   }
 
-  static getAllPlugins(): Plugin[] {
+  static getAllPlugins() {
     return this.pluginList;
   }
 
-  static hasPlugin(pluginId: string): boolean {
+  static hasPlugin(pluginId: string) {
     const pluginsFound = this.pluginList.filter((plugin) => {
       return plugin.id === pluginId;
     });
     return pluginsFound.length > 0;
   }
 
-  static removePlugin(pluginId: string): void {
+  static removePlugin(pluginId: string) {
     this.pluginList = this.pluginList.filter((plugin) => {
       return plugin.id !== pluginId;
     });

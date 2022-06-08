@@ -12,8 +12,8 @@ export interface Renderable {
 
 export interface Plugin {
   get id(): string;
-  get rendererList(): Array<Renderable>;
-  get tags(): Array<string>;
+  get rendererList(): Renderable[];
+  get tags(): string[];
   get version(): string;
   dependencies?: string[];
   onInit(): void;

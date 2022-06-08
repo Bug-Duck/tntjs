@@ -5,10 +5,10 @@
 import { Globals } from "./GlobalEnvironment";
 
 export default class VTagRenderer {
-  private customRenderer;
+  #customRenderer;
 
   constructor (customRenderer: (vTagContent: string) => string = undefined) {
-    this.customRenderer = customRenderer;
+    this.#customRenderer = customRenderer;
   }
 
   defaultRenderer (s: string): string {
@@ -21,24 +21,24 @@ export default class VTagRenderer {
 
   render () {
     const vTags = document.querySelectorAll("v");
-    const renderer = this.customRenderer ?? this.defaultRenderer;
-    for (const tag of vTags) {
+    const renderer = this.#customRenderer ?? this.defaultRenderer;
+    vTags.forEach((tag) => {
       const rendered = tag.getAttribute("data-rendered");
       if (rendered === null) {
-      // tag always should be rendered
+        // tags should always be rendered
         tag.setAttribute("data-rendered", "YES");
         tag.setAttribute("data-original", tag.innerHTML);
-        tag.innerHTML = this.customRenderer?.(tag.innerHTML) ?? this.defaultRenderer(tag.innerHTML);
+        tag.innerHTML = renderer(tag.innerHTML);
         return;
       }
       // if rendered, we should check if the tag really should be rendered or not
-      // This is called the DIFF CHECK
+      // this process is called the DIFF CHECK
       const content = tag.getAttribute("data-original");
-      const newRenderedContent = renderer(content);
-      // Compare if the element should be rerendered.
-      if (tag.innerHTML !== newRenderedContent) {
-        tag.innerHTML = newRenderedContent;
-      }
-    }
+      const newlyRenderedContent = renderer(content);
+      // compare if the element should be rerendered
+      tag.innerHTML = tag.innerHTML !== newlyRenderedContent ?
+        newlyRenderedContent :
+        tag.innerHTML;
+    });
   }
 }
