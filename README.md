@@ -1,6 +1,4 @@
-# TNT.js
-
-![输入图片说明](tnt.js.logo.length.png)
+![TNT.js](tntjs-banner.png)
 ![GitHub](https://img.shields.io/github/license/Bug-Duck/tntjs)
 ![version](https://img.shields.io/badge/version-0.0.3-green)
 ![watch](https://img.shields.io/github/watchers/Bug-Duck/tntjs?color=blue&logo=github&style=flat-square)
@@ -9,9 +7,13 @@
 [![website](https://img.shields.io/badge/website-bugduck.cn-yellowgreen)](https://www.bugduck.cn)
 [![BiliBili](https://img.shields.io/static/v1?label=bilibili&message=BugDuck开源团队&color=ff69b4&logo=bilibili)](https://space.bilibili.com/1959824394?spm_id_from=333.337.0.0)
 
+# TNT.js
+
+The JavaScript framework for modern web.
+
 ## Notice
 
-We're currently rebuilding our project. We will separate tntjs into two parts, one part is tnt, which is responsible for the low-level hot update interaction, the other part is TNTscript, which is used for actual development.
+We're currently rebuilding our project. We will separate TNT.js into two parts, one part is tnt, which is responsible for the low-level hot update interaction, the other part is TNTscript, which is used for actual development.
 
 ## Roadmap
 
