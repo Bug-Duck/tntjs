@@ -32,6 +32,10 @@ module.exports = {
     "semi": [
       "error",
       "always"
-    ]
+    ],
+    "eqeqeq": [
+      "error",
+      "always"
+    ],
   }
 };

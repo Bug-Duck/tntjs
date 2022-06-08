@@ -6,15 +6,15 @@
  */
 
 namespace TNT {
-    export interface Renderable {
-        render(): void;
-    }
-    export interface Plugin {
-        get id(): string;
-        get rendererList(): Array<Renderable>;
-        get tags(): Array<string>;
-        get version(): string;
-        dependencies?: string[];
-        onInit(): void;
-    }
+  export interface Renderable {
+    render(): void;
+  }
+  export interface Plugin {
+    get id(): string;
+    get rendererList(): Array<Renderable>;
+    get tags(): Array<string>;
+    get version(): string;
+    dependencies?: string[];
+    onInit(): void;
+  }
 }

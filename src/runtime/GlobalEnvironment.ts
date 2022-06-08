@@ -12,59 +12,59 @@ namespace TNT {
         export const symbolTable: SymbolTable = new SymbolTable();
         export const instances: Array<TNT> = [];
         let valueEvaluator: (expr: string) => any = (expr: string) => {
-            const value = symbolTable.getValue(expr.trim());
-            if (value.type === StringType) {
-                return value.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            }
-            return value.value;
+          const value = symbolTable.getValue(expr.trim());
+          if (value.type === StringType) {
+            return value.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          }
+          return value.value;
         };
 
         export function setValueEvaluator(fn: (expr: string) => any) {
-            valueEvaluator = fn;
+          valueEvaluator = fn;
         }
 
         export function evaluate(expr: string): any {
-            return valueEvaluator(expr);
+          return valueEvaluator(expr);
         }
 
         let prv_pluginList: Array<Plugin> = [];
 
         // Add the plugin to the registry list.
         export function addPlugin(plugin: Plugin): void {
-            prv_pluginList.push(plugin);
+          prv_pluginList.push(plugin);
         }
 
         export function plug(plugin: Plugin): void {
-            addPlugin(plugin);
+          addPlugin(plugin);
         }
 
         export function getAllPlugins(): Array<Plugin> {
-            return prv_pluginList;
+          return prv_pluginList;
         }
 
         export function hasPlugin(pluginId: string): boolean {
-            for(const plugin of prv_pluginList) {
-                if (plugin.id === pluginId) {
-                    return true;
-                }
+          for(const plugin of prv_pluginList) {
+            if (plugin.id === pluginId) {
+              return true;
             }
-            return false;
+          }
+          return false;
         }
 
         export function removePlugin(pluginId: string): void {
-            let counter = 0;
-            let found = false;
-            for(const plugin of prv_pluginList) {
-                if (plugin.id === pluginId) {
-                    found = true;
-                    break;
-                }
-                counter++;
+          let counter = 0;
+          let found = false;
+          for(const plugin of prv_pluginList) {
+            if (plugin.id === pluginId) {
+              found = true;
+              break;
             }
-            if (!found) {
-                return;
-            }
-            prv_pluginList = prv_pluginList.slice(0, counter).concat(prv_pluginList.slice(counter + 1));
+            counter++;
+          }
+          if (!found) {
+            return;
+          }
+          prv_pluginList = prv_pluginList.slice(0, counter).concat(prv_pluginList.slice(counter + 1));
         }
 
     }
