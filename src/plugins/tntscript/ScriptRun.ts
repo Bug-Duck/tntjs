@@ -57,7 +57,7 @@ export function variableStatement (code: string, dataObj) {
   const process = dataObj.ValueProcess(v[0]);
   // TODO: 变量赋值的值重构后存储
   if (/let /.test(code)) {
-    // TODO:局部变量赋值
+    // TODO: 局部变量赋值
     // const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(" "));
     // newData(
     //     process.type,
@@ -79,7 +79,7 @@ export const renderStatement = (code: string, dataObj) => {
 };
 
 export function whileStatement (code: string) {
-  // TODO: 这里类型监测出了点问题，因此注释
+  // FIXME: 这里类型监测出了点问题，因此注释
   // const i = codeBlock(keySearch("while", code));
   // const condition = i[0];
   // const codes = i[1];
@@ -96,6 +96,6 @@ export const importCode = (code: string, dataObj) => {
   const http = new XMLHttpRequest();
   const fileCode = http.open("GET", importedPackage, false);
   const newTable = runScriptCode(fileCode, dataObj);
-  // TODO: fix this merge
+  // FIXME: fix this merge
   Globals.symbolTable.merge(newTable, (oldValue, _newValue) => oldValue);
 };

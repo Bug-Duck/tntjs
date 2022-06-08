@@ -12,7 +12,7 @@ export class DataRenderer {
       const data = this.analysis(text);
       domData.push([tag, data]);
     });
-    // TODO: the below code seems useless :(
+    // FIXME: the below code seems useless :(
     // Globals.symbolTable.onSetValue(() => {
     //   for (const i of domData) {
     //     for (const d of i[1]) {
@@ -30,7 +30,7 @@ export class DataRenderer {
       const data = this.analysis(text);
       domData.push([i, data]);
     }
-    // TODO: useless code?
+    // FIXME: useless code?
     // Globals.symbolTable.onSetValue(() => {
     //   for (const i of domData) {
     //     for (const d of i[1]) {
