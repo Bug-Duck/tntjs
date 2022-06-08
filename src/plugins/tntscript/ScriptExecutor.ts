@@ -15,7 +15,7 @@
  * Now close this file and go play with something else.
  */
 
-namespace TNTScript {
+export class TNTScript {
     type value = {
         type: string;
         value: any
