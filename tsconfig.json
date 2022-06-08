@@ -1,17 +1,14 @@
 {
-    "compilerOptions": {
-        "module": "None",
-        "removeComments": true,
-        "outFile": "dist/tnt.js",
-        "baseUrl": "./",
-        "sourceMap": true,
-        "declaration": true,
-        "target": "ES6"
-    },
-    "include": [
-        "./src/**/*.ts"
-    ],
-    "exclude": [
-        "./tnt.d.ts"
-    ]
+  "compilerOptions": {
+    "module": "None",
+    "removeComments": true,
+    "outFile": "dist/tnt.js",
+    "baseUrl": "./",
+    "sourceMap": true,
+    "declaration": true,
+    "target": "es2017",
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["./tnt.d.ts"],
+  "lib": ["es2020"]
 }

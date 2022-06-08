@@ -1,5 +1,18 @@
 var TemplateLanguage;
 (function (TemplateLanguage) {
+    class Template {
+    }
+    TemplateLanguage.Template = Template;
+    class Component {
+        constructor(name, ComponentExec) {
+            this.name = name;
+            this.exec = ComponentExec;
+        }
+    }
+    TemplateLanguage.Component = Component;
+})(TemplateLanguage || (TemplateLanguage = {}));
+var TemplateLanguage;
+(function (TemplateLanguage) {
     let Globals;
     (function (Globals) {
         Globals.templateSymbol = new TemplateLanguage.Template();
@@ -72,19 +85,6 @@ var TemplateLanguage;
     TemplateLanguage.PluginMain = PluginMain;
 })(TemplateLanguage || (TemplateLanguage = {}));
 TNT.Globals.plug(new TemplateLanguage.PluginMain());
-var TemplateLanguage;
-(function (TemplateLanguage) {
-    class Template {
-    }
-    TemplateLanguage.Template = Template;
-    class Component {
-        constructor(name, ComponentExec) {
-            this.name = name;
-            this.exec = ComponentExec;
-        }
-    }
-    TemplateLanguage.Component = Component;
-})(TemplateLanguage || (TemplateLanguage = {}));
 var TNTDebug;
 (function (TNTDebug) {
     class DebugRenderTracer {
@@ -802,183 +802,5 @@ var TNT;
         }
     }
     TNT.StaticVTagRenderer = StaticVTagRenderer;
-})(TNT || (TNT = {}));
-var TNT;
-(function (TNT_1) {
-    class TNT {
-        constructor() {
-            this.prv_isDebug = true;
-            this.prv_refreshLock = true;
-            TNT_1.Globals.instances.push(this);
-            TNT_1.Globals.symbolTable.onSetValue(() => {
-                if (!this.prv_refreshLock) {
-                    this.render();
-                }
-            });
-            this.prv_checkOptionTags();
-            this.prv_vTagRenderer = new TNT_1.VTagRenderer();
-            this.prv_svTagRenderer = new TNT_1.StaticVTagRenderer();
-            const pluginsShouldMove = [];
-            for (const plugin of TNT_1.Globals.getAllPlugins()) {
-                console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
-                try {
-                    if (plugin.dependencies !== undefined) {
-                        for (const dependency of plugin.dependencies) {
-                            const have = [];
-                            for (const p of TNT_1.Globals.getAllPlugins()) {
-                                if (p.id === dependency) {
-                                    have.push(p.id);
-                                }
-                            }
-                            if (have.length !== plugin.dependencies.length) {
-                                console.log(`Missing dependencies of ${plugin.id}. Required: `);
-                                for (const dependency of plugin.dependencies) {
-                                    console.log(`${dependency}`);
-                                }
-                                console.log("While found: ");
-                                for (const h of have) {
-                                    console.log(h);
-                                }
-                                console.log("Plugin loading failed.");
-                                throw new Error("dependencies missing");
-                            }
-                        }
-                    }
-                    plugin.onInit();
-                }
-                catch (e) {
-                    console.log(`Error whil loading plugin ${plugin.id}: ${e}`);
-                    pluginsShouldMove.push(plugin.id);
-                    continue;
-                }
-                console.log(`Successfully loaded plugin ${plugin.id}`);
-            }
-            for (const pluginId of pluginsShouldMove) {
-                TNT_1.Globals.removePlugin(pluginId);
-            }
-            this.render();
-            this.onceRender();
-            this.prv_refreshLock = false;
-        }
-        prv_checkOptionTags() {
-            const debugModeOptionTags = document.querySelectorAll("tnt-debug");
-            if (debugModeOptionTags.length === 0) {
-                if (window.location.href.startsWith("file:")) {
-                    console.warn("Warning: It seems that you are developing the webpage but you don't enable the debug mode.\nIt's better for you to enable the debug mode by the html tag <tnt-debug></tnt-debug> to enable more debugging features.");
-                    console.warn("If your application is designed to run on file:/// protocal, please ignore this warning.");
-                }
-                TNT_1.Globals.removePlugin("tntdebug");
-                this.prv_isDebug = false;
-            }
-            const noTNTScriptTags = document.querySelectorAll("tnt-no-script");
-            if (noTNTScriptTags.length !== 0) {
-                console.warn("Warning: Disabling TNT script may cause some unexpected results. If you're sure you want to disabl the TNT Script feature, please ignore this warning.");
-                TNT_1.Globals.removePlugin("tntscript");
-            }
-            const disablePluginTags = document.querySelectorAll("tnt-disable-plugin");
-            for (const tag of disablePluginTags) {
-                const pluginId = tag.getAttribute("plugin");
-                if (pluginId !== null) {
-                    TNT_1.Globals.removePlugin(pluginId);
-                }
-            }
-            const pureModeTags = document.querySelectorAll("tnt-pure-mode");
-            const noPluginModeTags = document.querySelectorAll("tnt-no-plugin");
-            if (pureModeTags.length !== 0 || noPluginModeTags.length !== 0) {
-                console.warn("Warning: You disabled all the plugins, including the TNT Script plugin and TNT Debugger plugin! Are you sure that's what you want? If not, please turn off the Pure Mode option. ");
-                console.log("Hint: Use <tnt-disable-plugin plugin=\"plugin_id_to_delete\"></tnt-disable-plugin> to disable a single plugin. \nUse <tnt-no-script></tnt-disable-plugin> to disable the TNT Script integrated plugin (equal to <tnt-disable-plugin plugin=\"tntscript\"></tnt-disable-plugin>). Remove the <tnt-debug></tnt-debug> tag to disable the debugger plugin.");
-                const pluginNames = [];
-                for (const plugin of TNT_1.Globals.getAllPlugins()) {
-                    pluginNames.push(plugin.id);
-                }
-                for (const pluginId of pluginNames) {
-                    TNT_1.Globals.removePlugin(pluginId);
-                }
-            }
-            const flipModeTags = document.querySelectorAll("tnt-flip");
-            if (flipModeTags.length !== 0) {
-                window.addEventListener("load", () => {
-                    document.querySelector("html").style.setProperty("transform", "scaleX(-1)");
-                });
-            }
-        }
-        render() {
-            this.prv_refreshLock = true;
-            for (const plugin of TNT_1.Globals.getAllPlugins()) {
-                for (const tag of plugin.tags) {
-                    const tagDOM = document.querySelectorAll(tag);
-                    for (const el of tagDOM) {
-                        try {
-                            el.setAttribute("data-tnt-plugin-value-backup", el.innerHTML);
-                            el.innerHTML = "";
-                        }
-                        catch (e) {
-                        }
-                    }
-                }
-            }
-            this.prv_vTagRenderer.render();
-            for (const plugin of TNT_1.Globals.getAllPlugins()) {
-                for (const renderer of plugin.rendererList) {
-                    renderer.render();
-                }
-            }
-            for (const plugin of TNT_1.Globals.getAllPlugins()) {
-                for (const tag of plugin.tags) {
-                    const tagDOM = document.querySelectorAll(tag);
-                    for (const el of tagDOM) {
-                        el.innerHTML = el.getAttribute("data-tnt-plugin-value-backup");
-                        el.removeAttribute("data-tnt-plugin-value-backup");
-                    }
-                }
-            }
-            this.prv_refreshLock = false;
-        }
-        onceRender() {
-            this.prv_svTagRenderer.render();
-        }
-        get vTagRenderer() {
-            return this.prv_vTagRenderer;
-        }
-    }
-    TNT_1.TNT = TNT;
-})(TNT || (TNT = {}));
-var TNT;
-(function (TNT) {
-    class VTagRenderer {
-        constructor(customRenderer = undefined) {
-            this.customRenderer = customRenderer;
-        }
-        defaultRenderer(s) {
-            try {
-                return `${TNT.Globals.evaluate(s)}`;
-            }
-            catch (e) {
-                return `Error while rendering element: ${e}`;
-            }
-        }
-        render() {
-            var _a, _b, _c, _d;
-            const vTags = document.querySelectorAll("v");
-            for (const i of vTags) {
-                const rendered = i.getAttribute("data-rendered");
-                if (rendered === null) {
-                    i.setAttribute("data-rendered", "YES");
-                    i.setAttribute("data-original", i.innerHTML);
-                    i.innerHTML = (_b = (_a = this.customRenderer) === null || _a === void 0 ? void 0 : _a.call(this, i.innerHTML)) !== null && _b !== void 0 ? _b : this.defaultRenderer(i.innerHTML);
-                }
-                else {
-                    const content = i.getAttribute("data-original");
-                    const newRenderedContent = (_d = (_c = this.customRenderer) === null || _c === void 0 ? void 0 : _c.call(this, content)) !== null && _d !== void 0 ? _d : this.defaultRenderer(content);
-                    if (i.innerHTML !== newRenderedContent) {
-                        i.innerHTML = newRenderedContent;
-                    }
-                    else {
-                    }
-                }
-            }
-        }
-    }
-    TNT.VTagRenderer = VTagRenderer;
 })(TNT || (TNT = {}));
 //# sourceMappingURL=tnt.js.map
