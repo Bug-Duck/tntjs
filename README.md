@@ -13,7 +13,7 @@ The JavaScript framework for modern web.
 
 ## Notice
 
-We're currently rebuilding our project. We will separate TNT.js into two parts, one part is tnt, which is responsible for the low-level hot update interaction, the other part is TNTscript, which is used for actual development.
+This is the **development branch** of TNT.js. Everything is under heavy development is may be unstable.
 
 ## Roadmap
 
