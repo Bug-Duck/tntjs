@@ -15,8 +15,8 @@
  * Now close this file and go play with something else.
  */
 
-import { SymbolTable, VariableValueType, StringType } from "src/runtime/SymbolTable";
-import { Globals } from "src/runtime/GlobalEnvironment";
+import { SymbolTable, VariableValueType, StringType } from "runtime/SymbolTable";
+import { Globals } from "runtime/GlobalEnvironment";
 import { functionSplit, jsTypeToTNTType, codeSplit, FunctionParameterType } from "./lexicalAnalysis";
 import { runScriptCode } from "./ScriptRun";
 

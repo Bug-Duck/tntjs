@@ -4,12 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="dist/tnt.js"></script>
+    <script src="http://192.168.50.119:8080/tnt.js"></script>
     <title>Document</title>
 </head>
 <body>
-    <t-get>http://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=850625057</t-get>
-    <p>55555</p>
-    <p>666666</p>
+    <tnt-debug></tnt-debug>
+    <v>testValue</v>
+    <script>
+        window.onload = () => {
+            new TNT.TNT();
+            new TNTSimpApi.Value("testValue", TNT.NumberType).setValue(23333)
+            console.log(TNT.Globals.symbolTable);
+        };
+    </script>
 </body>
 </html>

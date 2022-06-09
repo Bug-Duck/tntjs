@@ -2,12 +2,14 @@
  * The type class.
  */
 
+import { VariableValueType } from "./SymbolTable";
+
 export default class TypeInfo {
   #namespaceName: string;
   #typeName: string;
-  #defaultValue: unknown;
+  #defaultValue: VariableValueType;
 
-  constructor(namespaceName: string, typeName: string, defaultValue: unknown) {
+  constructor(namespaceName: string, typeName: string, defaultValue: VariableValueType) {
     this.#namespaceName = namespaceName;
     this.#typeName = typeName;
     this.#defaultValue = defaultValue;
@@ -25,11 +27,11 @@ export default class TypeInfo {
     return this.#typeName;
   }
 
-  get defaultValue(): unknown {
+  get defaultValue(): VariableValueType {
     return this.#defaultValue;
   }
 
-  set defaultValue(value: unknown) {
+  set defaultValue(value: VariableValueType) {
     this.#defaultValue = value;
   }
 }

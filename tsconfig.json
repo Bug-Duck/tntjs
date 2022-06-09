@@ -2,11 +2,18 @@
   "compilerOptions": {
     "module": "None",
     "removeComments": true,
-    "outFile": "dist/tnt.js",
     "baseUrl": "./",
     "sourceMap": true,
     "declaration": true,
     "target": "es2017",
+    "paths": {
+      "runtime/*": [
+        "src/runtime/*"
+      ],
+      "plugins/*": [
+        "src/plugins/*"
+      ]
+    }
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["./tnt.d.ts"],

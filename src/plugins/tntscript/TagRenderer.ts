@@ -5,7 +5,7 @@
  * description: The tag renderer.
  */
 
-import { Renderable } from "src/runtime/Pluggable";
+import { Renderable } from "runtime/Pluggable";
 
 export class TagRenderer implements Renderable {
   render() {

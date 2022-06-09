@@ -5,8 +5,8 @@
  * description: The plugin's main class.
  */
 
-import { Globals } from "src/runtime/GlobalEnvironment";
-import { Plugin, Renderable } from "src/runtime/Pluggable";
+import { Globals } from "runtime/GlobalEnvironment";
+import { Plugin, Renderable } from "runtime/Pluggable";
 import { ScriptExecutor } from "./ScriptExecutor";
 import { TagRenderer } from "./TagRenderer";
 

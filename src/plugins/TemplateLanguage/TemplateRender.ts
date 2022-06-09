@@ -1,7 +1,5 @@
-namespace TemplateLanguage {
-    export class TemplateRenderer implements TNT.Renderable {
-      render() {
-            
-      }
-    }
+import { Renderable } from "runtime/Pluggable";
+
+export class TemplateRenderer implements Renderable {
+  render() { /* TODO: implement this */}
 }
