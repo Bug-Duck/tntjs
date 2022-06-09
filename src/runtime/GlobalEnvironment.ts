@@ -15,10 +15,6 @@ export class Globals {
   static valueEvaluator: (expr: string) => VariableValueType;
   static pluginList: Plugin[] = [];
 
-  constructor() {
-    this.valueEvaluator = Globals.defaultValueEvaluator;
-  }
-
   static #escapeString(str: string): string {
     return str
       .replace(/[\n\r]/g, "\\n")
@@ -40,7 +36,7 @@ export class Globals {
   }
 
   static evaluate(expr: string): VariableValueType {
-    return this.valueEvaluator(expr);
+    return (this.valueEvaluator ?? this.defaultValueEvaluator)(expr);
   }
 
   // Add the plugin to the registry list.

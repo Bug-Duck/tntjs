@@ -4,6 +4,12 @@ import { Renderable } from "runtime/Pluggable";
 import { TemplateRenderer } from "./TemplateRender";
 
 export class PluginMain implements Plugin {
+  dependencies: string[];
+
+  constructor() {
+    this.dependencies = [];
+  }
+
   onInit(): void {
     const paragraphs = document.getElementsByTagName("p");
     [...paragraphs].forEach((p) => {

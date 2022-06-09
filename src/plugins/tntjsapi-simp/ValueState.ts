@@ -20,6 +20,10 @@ export class PluginMain implements Plugin {
     return "1.0.0-integrated";
   }
 
+  get dependencies(): string[] {
+    return [];
+  }
+
   onInit() { /* not implemented */ }
 }
 

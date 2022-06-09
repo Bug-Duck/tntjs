@@ -7,6 +7,12 @@ import { Plugin, Renderable } from "runtime/Pluggable";
 import { DebugRenderTracer } from "./DebugRenderTracer";
 
 export class PluginMain implements Plugin {
+  dependencies: string[];
+
+  constructor() {
+    this.dependencies = [];
+  }
+
   get id(): string {
     return "tntdebug";
   }

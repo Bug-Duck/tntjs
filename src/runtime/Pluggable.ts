@@ -15,7 +15,7 @@ export interface Plugin {
   get rendererList(): Renderable[];
   get tags(): string[];
   get version(): string;
-  dependencies?: string[];
+  dependencies: string[];
   onInit(): void;
 }
 

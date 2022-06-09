@@ -11,7 +11,12 @@ import { ScriptExecutor } from "./ScriptExecutor";
 import { TagRenderer } from "./TagRenderer";
 
 export class PluginMain implements Plugin {
+  dependencies: string[];
   #executor = new ScriptExecutor();
+
+  constructor() {
+    this.dependencies = [];
+  }
 
   get id(): string {
     return "tntscript";

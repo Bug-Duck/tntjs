@@ -38,7 +38,6 @@ export default class TNT {
 
     // Initialize plugins
     const plugins = Globals.getAllPlugins();
-
     plugins.forEach((plugin) => {
       console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
       try {
@@ -118,7 +117,7 @@ export default class TNT {
   }
 
   onTNTScriptDisabled() {
-    console.warn("Warning: Disabling TNT script may cause some unexpected results. If you're sure you want to disabl the TNT Script feature, please ignore this warning.");
+    console.warn("Warning: Disabling TNT script may cause some unexpected results. If you're sure you want to disable the TNT Script feature, please ignore this warning.");
     Globals.removePlugin("tntscript");
   }
 
@@ -144,7 +143,6 @@ export default class TNT {
       document.querySelector("html").style.setProperty("transform", "scaleX(-1)");
     });
   }
-
 
   render() {
     const plugins = Globals.getAllPlugins();
