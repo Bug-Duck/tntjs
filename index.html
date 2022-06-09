@@ -9,16 +9,25 @@
   <body>
     <tnt-debug></tnt-debug>
     <v>testValue</v>
+
+    <get>http://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=850625057</get>
+    <p>5555</p>
+    <p>666666</p>
     <script type="module">
       import TNT from "./dist/src/runtime/TNT.js";
       import { Value } from "./dist/src/plugins/tntjsapi-simp/ValueState.js";
       import { Globals } from "./dist/src/runtime/GlobalEnvironment.js";
       import { NumberType } from "./dist/src/runtime/SymbolTable.js";
+      import { PluginMain as TemplatePlugin } from "./dist/src/plugins/TemplateLanguage/PluginMain.js";
+      import { PluginMain as DebugPlugin } from "./dist/src/plugins/debug/PluginMain.js";
+
       window.onload = () => {
-          console.log(Globals.getAllPlugins())
-          const t = new TNT();
-          new Value("testValue", NumberType).setValue(23333)
-          console.log(Globals.symbolTable);
+        // console.log(TemplatePlugin);
+        // Globals.plug(new TemplatePlugin());
+        console.log(Globals.getAllPlugins())
+        const t = new TNT();
+        new Value("testValue", NumberType).setValue(23333)
+        console.log(Globals.symbolTable);
       };
     </script>
   </body>

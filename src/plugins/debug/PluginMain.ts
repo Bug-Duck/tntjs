@@ -7,27 +7,29 @@ import { Plugin, Renderable } from "runtime/Pluggable";
 import { DebugRenderTracer } from "./DebugRenderTracer";
 
 export class PluginMain implements Plugin {
-  dependencies: string[];
-
-  constructor() {
-    this.dependencies = [];
-  }
-
   get id(): string {
     return "tntdebug";
   }
+
   get rendererList(): Renderable[] {
     return [new DebugRenderTracer()];
   }
+
   get tags(): string[] {
     return [];
   }
+
   get version(): string {
     return "1.0.0-integrated";
   }
+
+  get dependencies(): string[] {
+    return [];
+  }
+
   onInit(): void {
     console.log("[Debugger] Debug mode enabled. ");
-  }   
+  }
 }
 
 

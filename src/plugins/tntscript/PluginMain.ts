@@ -11,12 +11,7 @@ import { ScriptExecutor } from "./ScriptExecutor";
 import { TagRenderer } from "./TagRenderer";
 
 export class PluginMain implements Plugin {
-  dependencies: string[];
   #executor = new ScriptExecutor();
-
-  constructor() {
-    this.dependencies = [];
-  }
 
   get id(): string {
     return "tntscript";
@@ -32,6 +27,10 @@ export class PluginMain implements Plugin {
 
   get version(): string {
     return "v1.0.0-integrated";
+  }
+
+  get dependencies(): string[] {
+    return [];
   }
 
   onInit(): void {
