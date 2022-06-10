@@ -2,6 +2,7 @@ import { Globals } from "runtime/GlobalEnvironment";
 import { Plugin, Renderable } from "runtime/Pluggable";
 import { Variable, VariableValueType } from "runtime/SymbolTable";
 import TypeInfo from "runtime/TypeInfo";
+import { Logger } from "src/utils/logger";
 
 export class PluginMain implements Plugin {
   get id(): string {
@@ -30,6 +31,7 @@ export class PluginMain implements Plugin {
 export class Value {
   name: string;
   valueObject: Variable;
+  #logger = new Logger("tntjsapi-simp");
 
   constructor(name: string, type: TypeInfo) {
     this.name = name;
@@ -37,14 +39,10 @@ export class Value {
   }
 
   setValue(value: VariableValueType): Value {
-    if (Globals.hasPlugin("tntdebug")) {
-      console.log(`[tntjsapi-simp] Setting value ${value} for variable ${this.name}...`);
-    }
+    this.#logger.debug(`Setting value ${value} for variable ${this.name}...`);
     this.valueObject.value = value;
     Globals.symbolTable.setValue(this.name, this.valueObject);
-    if (Globals.hasPlugin("tntdebug")) {
-      console.log(`[tntjsapi-simp] Set value ${value} for variable ${this.name}.`);
-    }
+    this.#logger.debug(`Set value ${value} for variable ${this.name}.`);
     return this;  // to enable chain-calls
   }
 

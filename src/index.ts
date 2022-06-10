@@ -18,4 +18,5 @@ import "./plugins/tntscript/ScriptExecutor";
 import "./plugins/tntscript/ScriptRun";
 import "./plugins/tntscript/ScriptSymbolTable";
 import "./plugins/tntscript/TagRenderer";
-import "./plugins/tntscript/lexicalAnalysis";
+import "./plugins/tntscript/LexicalAnalysis";
+import "./utils/logger";

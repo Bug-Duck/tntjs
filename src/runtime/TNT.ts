@@ -5,11 +5,13 @@
 import VTagRenderer from "./VTagRenderer";
 import StaticVTagRenderer from "./StaticVTagRenderer";
 import { Globals } from "./GlobalEnvironment";
+import { Logger } from "src/utils/logger";
 
 export default class TNT {
   #vTagRenderer: VTagRenderer;
   #svTagRenderer: StaticVTagRenderer;
   #refreshLock = true;
+  #logger = new Logger("TNT Runtime");
 
   constructor() {
     // Entry point of a TNT page.
@@ -39,7 +41,7 @@ export default class TNT {
     // Initialize plugins
     const plugins = Globals.getAllPlugins();
     plugins.forEach((plugin) => {
-      console.log(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
+      this.#logger.debug(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
       try {
         // Check each dependency
         plugin.dependencies.forEach((dependency) => {
@@ -53,26 +55,23 @@ export default class TNT {
           });
           // Compare the record length
           if (foundDependencies.length !== plugin.dependencies.length) {
-            console.log(`Missing dependencies of ${plugin.id}. Required: `);
-            plugin.dependencies.forEach((dependency) => {
-              console.log(`${dependency}`);
-            });
-            console.log("But found: ");
-            foundDependencies.forEach((h) => {
-              console.log(h);
-            });
-            console.log("Plugin loading failed.");
-            throw new Error("dependencies missing");
+            const err =
+              `Missing dependencies of ${plugin.id}.\n` +
+              `Required: ${plugin.dependencies.join(", ")}\n` +
+              `But found: ${foundDependencies.join(", ")}\n` +
+              "Plugin failed to load.";
+            this.#logger.error(err, true);
+            throw new Error("Plugin dependencies missing");
           }
         });
         plugin.onInit();
       } catch (e) {
         // If any error occurred, the plugin will NOT be loaded.
-        console.error(`Error while loading plugin ${plugin.id}:\n${e}`);
+        this.#logger.error(`Error while loading plugin ${plugin.id}:\n${e}`, true);
         Globals.removePlugin(plugin.id);
         return;
       }
-      console.log(`Successfully loaded plugin ${plugin.id}`);
+      this.#logger.debug(`Successfully loaded plugin ${plugin.id}`);
     });
 
     // Do the first rendering.
@@ -110,14 +109,18 @@ export default class TNT {
 
   onDebugModeDisabled() {
     if (window.location.href.startsWith("file:")) {
-      console.warn("Warning: It seems that you are developing the webpage but you don't enable the debug mode.\nIt's better for you to enable the debug mode by the html tag <tnt-debug></tnt-debug> to enable more debugging features.");
-      console.warn("If your application is designed to run on file:/// protocal, please ignore this warning.");
+      this.#logger.warn(
+        "It seems that you are developing the webpage but you don't enable the debug mode.\n" +
+        "It's better for you to enable the debug mode by the html tag <tnt-debug></tnt-debug> to enable more debugging features.\n" + 
+        "If your application is designed to run on file:/// protocol, please ignore this warning.",
+        true
+      );
     }
     Globals.removePlugin("tntdebug");
   }
 
   onTNTScriptDisabled() {
-    console.warn("Warning: Disabling TNT script may cause some unexpected results. If you're sure you want to disable the TNT Script feature, please ignore this warning.");
+    this.#logger.warn("Disabling TNT script may cause some unexpected results. If you're sure you want to disable the TNT Script feature, please ignore this warning.", true);
     Globals.removePlugin("tntscript");
   }
 
@@ -130,8 +133,13 @@ export default class TNT {
   }
 
   onPureModeOn() {
-    console.warn("Warning: You disabled all the plugins, including the TNT Script plugin and TNT Debugger plugin! Are you sure that's what you want? If not, please turn off the Pure Mode option. ");
-    console.log("Hint: Use <tnt-disable-plugin plugin=\"plugin_id_to_delete\"></tnt-disable-plugin> to disable a single plugin. \nUse <tnt-no-script></tnt-disable-plugin> to disable the TNT Script integrated plugin (equal to <tnt-disable-plugin plugin=\"tntscript\"></tnt-disable-plugin>). Remove the <tnt-debug></tnt-debug> tag to disable the debugger plugin.");
+    this.#logger.warn(
+      "You disabled all the plugins, including the TNT Script plugin and TNT Debugger plugin! Are you sure that's what you want? If not, please turn off the Pure Mode option.\n\n" +
+      "Hint:\n- Use <tnt-disable-plugin plugin=\"plugin_id_to_delete\"></tnt-disable-plugin> to disable a single plugin. \n" +
+      "- Use <tnt-no-script></tnt-no-script> to disable the TNT Script integrated plugin (equal to <tnt-disable-plugin plugin=\"tntscript\"></tnt-disable-plugin>).\n" +
+      "- Remove the <tnt-debug></tnt-debug> tag to disable the debugger plugin.\n",
+      true
+    );
     // disable all plugins
     Globals.getAllPlugins().forEach((plugin) => {
       Globals.removePlugin(plugin.id);

@@ -1,7 +1,10 @@
 import { Renderable } from "runtime/Pluggable";
+import { Logger } from "src/utils/logger";
 
 export class DebugRenderTracer implements Renderable {
+  #logger = new Logger("TNT Plugin Debugger");
+
   render(): void {
-    console.log("[Debugger] Renderer called to perform a render.");
+    this.#logger.debug("Renderer called to perform a render.");
   }
 }

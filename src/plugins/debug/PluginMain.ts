@@ -5,8 +5,11 @@
 import { Globals } from "runtime/GlobalEnvironment";
 import { Plugin, Renderable } from "runtime/Pluggable";
 import { DebugRenderTracer } from "./DebugRenderTracer";
+import { Logger } from "utils/logger";
 
 export class PluginMain implements Plugin {
+  #logger = new Logger("TNT Plugin Debugger");
+
   get id(): string {
     return "tntdebug";
   }
@@ -28,9 +31,8 @@ export class PluginMain implements Plugin {
   }
 
   onInit(): void {
-    console.log("[Debugger] Debug mode enabled. ");
+    this.#logger.debug("[Debugger] Debug mode enabled. ");
   }
 }
-
 
 Globals.plug(new PluginMain());

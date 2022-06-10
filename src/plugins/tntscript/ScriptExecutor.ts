@@ -17,7 +17,7 @@
 
 import { SymbolTable, VariableValueType, StringType } from "runtime/SymbolTable";
 import { Globals } from "runtime/GlobalEnvironment";
-import { functionSplit, jsTypeToTNTType, codeSplit, FunctionParameterType } from "./lexicalAnalysis";
+import { functionSplit, jsTypeToTNTType, codeSplit, FunctionParameterType } from "./LexicalAnalysis";
 import { runScriptCode } from "./ScriptRun";
 
 export interface ValueType {
