@@ -64,7 +64,7 @@ export class Variable {
 
 export class SymbolTable {
   #onSetValueHandlers: Array<() => void> = [];
-  #content: unknown = {};
+  #content: Record<string, Variable> = {};
 
   // Get value via the variable name.
   getValue(key: string): Variable {

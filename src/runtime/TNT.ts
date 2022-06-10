@@ -68,7 +68,7 @@ export default class TNT {
         plugin.onInit();
       } catch (e) {
         // If any error occurred, the plugin will NOT be loaded.
-        console.log(`Error while loading plugin ${plugin.id}: ${e}`);
+        console.error(`Error while loading plugin ${plugin.id}:\n${e}`);
         Globals.removePlugin(plugin.id);
         return;
       }
@@ -89,7 +89,7 @@ export default class TNT {
     const isDebugModeOn = document.querySelectorAll("tnt-debug").length === 0;
 
     // TNT Script
-    const isTNTScriptOn = document.querySelectorAll("tnt-no-script").length !== 0;
+    const isTNTScriptOn = document.querySelectorAll("tnt-no-script").length === 0;
 
     // Plugins to be disabled
     const pluginsToBeDisabled = [...document.querySelectorAll("tnt-disable-plugin")].map((tag) => (

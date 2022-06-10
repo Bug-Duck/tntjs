@@ -1,13 +1,15 @@
 // FIXME: implement everything and check unused variables
 
 import { Globals } from "runtime/GlobalEnvironment";
-import { SymbolTable } from "runtime/SymbolTable";
-import { codeSplit, keySearch } from "./lexicalAnalysis";
+import { StringType, SymbolTable } from "runtime/SymbolTable";
+import { codeSplit, jsTypeToTNTType, keySearch } from "./lexicalAnalysis";
+import { ScriptExecutor } from "./ScriptExecutor";
+import { Variable } from "runtime/SymbolTable";
 
-export function runScriptCode(codes, dataObj): SymbolTable {
+export function runScriptCode(codes, dataObj: ScriptExecutor): SymbolTable {
   const codeList = init(codes);
   codeList.forEach((code) => {
-    lineRun(code);
+    lineRun(code, dataObj);
   });
   return dataObj.innerSymbolTable;
 }
@@ -17,16 +19,22 @@ export function init(codes: string) {
   return list;
 }
 
-export function lineRun(code: string) {
+export function lineRun(code: string, dataObj: ScriptExecutor) {
   // TODO: refactor those keywords into an array
-  const isKeyword = /(for|while|def|render|when) .+/;
+  const keywords = ["for", "while", "def", "render", "when"];
+  let keywordConstructor = "";
+  keywords.forEach((keyword) => {
+    keywordConstructor += `${keyword}|`;
+  });
+  keywordConstructor = keywordConstructor.substring(0, keywordConstructor.length - 1) + " .+";
+  const isKeyword = RegExp(keywordConstructor);
   if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
-    variableStatement(code, this);
+    variableStatement(code, dataObj);
     return;
   }
   if (isKeyword.test(code)) {
     if (/render/.test(code)) {
-      renderStatement(code, this);
+      renderStatement(code, dataObj);
     } else if (/while/.test(code)) {
       whileStatement(code);
     } else if (/def/.test(code)) {
@@ -40,13 +48,13 @@ export function lineRun(code: string) {
     // 如果检测到跳出循环语句 则返回"break"
     return "break";
   } else {
-    this.ValueProcess(code);
+    dataObj.processValue(code);
   }
 }
     
-export function variableStatement (code: string, dataObj) {
+export function variableStatement (code: string, dataObj: ScriptExecutor) {
   const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(" "));
-  const process = dataObj.ValueProcess(v[0]);
+  const process = dataObj.processValue(v[0]);
   // TODO: 变量赋值的值重构后存储
   if (/let /.test(code)) {
     // TODO: 局部变量赋值
@@ -58,7 +66,7 @@ export function variableStatement (code: string, dataObj) {
     //     TNTSymbolTableOWN,
     // );
   } else {
-    Globals.symbolTable.setValue(process.type, process.value);
+    Globals.symbolTable.setValue(process.type, new Variable(process.value, StringType));
   }
   // Refresh the page.
   // TNTValueTagProcessing();

@@ -46,9 +46,8 @@ export class ScriptExecutor {
 
   onFunction (reg: string) {
     const name = /[^(.+)]+/.exec(reg)[0].replace(/\s*/g, "");
-
     // TODO: Script 类型 type 值
-    if (Globals.symbolTable.getValue(name).value === "function") {
+    if (Globals.symbolTable.getValue(name)?.value === "function") {
       let buffer = "";
       const parameters = this.getFunctionParameter(reg);
 
@@ -59,14 +58,13 @@ export class ScriptExecutor {
       Object.values(parameters.optionalArgs).forEach((arg) => {
         buffer = buffer + arg + "=,";
       });
-
       const results = Function(`TNT.TNTSymbolTable.${name}.value(${buffer})`)();
       return {
         type: jsTypeToTNTType(typeof results),
         value: results,
       };
     }
-    if (Globals.symbolTable.getValue(name).value === "tnt") {
+    if (Globals.symbolTable.getValue(name)?.value === "tnt") {
       // TODO: TNTScript函数调用
       // const parameters = /\(.+\)/.exec(reg);
       // let parameter = parameters[0].substring(1, parameters[0].length - 1);
@@ -92,7 +90,7 @@ export class ScriptExecutor {
     }
   }
 
-  processValue (reg: string) {
+  processValue (reg: string): ValueType {
     // Regular Expressions
     const isString = /("|').+("|')/;
     const isNumber = /[0-9]+/;
@@ -135,7 +133,7 @@ export class ScriptExecutor {
     }
     if (isVar.test(reg)) {
       // Variable processing
-      const results = Globals.symbolTable.getValue(reg).value;
+      const results = Globals.symbolTable.getValue(reg)?.value;
       const result: ValueType = {
         type: jsTypeToTNTType(typeof (results)),
         value: results,
@@ -175,5 +173,9 @@ export class ScriptExecutor {
       return value.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
     return value.value;
+  }
+
+  get innerSymbolTable() {
+    return this.#innerSymbolTable;
   }
 }

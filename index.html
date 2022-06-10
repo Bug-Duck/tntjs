@@ -9,10 +9,36 @@
   <body>
     <tnt-debug></tnt-debug>
     <v>testValue</v>
+    <v>websiteName</v>
+    <v>i</v>
+    <v>websites</v>
 
     <get>http://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=850625057</get>
     <p>5555</p>
     <p>666666</p>
+    <tnt>
+        websites = {
+            Baidu: {
+                href: "baidu.com",
+                color: 'blue'
+            },
+            Google: {
+                href: "google.com",
+                color: 'green'
+            },
+            Bing: {
+                href: "bing.com",
+                color: "yellow"
+            }
+        };
+        websites.ner(i);
+        when dom('lan') be clicked {
+            websiteName = i;
+            lin = websites[i].href;
+            lanColor = website[i].color;
+            i.next()
+        }
+    </tnt>
     <script type="module">
       import TNT from "./dist/src/runtime/TNT.js";
       import { Value } from "./dist/src/plugins/tntjsapi-simp/ValueState.js";
@@ -20,6 +46,7 @@
       import { NumberType } from "./dist/src/runtime/SymbolTable.js";
       import { PluginMain as TemplatePlugin } from "./dist/src/plugins/TemplateLanguage/PluginMain.js";
       import { PluginMain as DebugPlugin } from "./dist/src/plugins/debug/PluginMain.js";
+      import { PluginMain as TNTScriptPlugin } from "./dist/src/plugins/tntscript/PluginMain.js";
 
       window.onload = () => {
         // console.log(TemplatePlugin);
