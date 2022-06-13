@@ -1,4 +1,4 @@
-![TNT.js](http://image.bugduck.cn/logo/tntjs-banner.png)
+![TNT.js](https://img1.imgtp.com/2022/06/13/lPea2J3u.png)
 ![GitHub](https://img.shields.io/github/license/Bug-Duck/tntjs)
 ![version](https://img.shields.io/badge/version-0.0.3-green)
 ![watch](https://img.shields.io/github/watchers/Bug-Duck/tntjs?color=blue&logo=github&style=flat-square)
@@ -116,7 +116,7 @@ Below is the basic structure of TNTjs (might not be up-to-date):
 
 We're all middle school students and we don't have that much money. So sponsoring TNTjs will give us an extra reward to let us keep updating!😉
 
-![Sponsor us](http://image.bugduck.cn/other/skm-zhifubao.jpg)
+![Sponsor us](https://img1.imgtp.com/2022/06/13/19puVIav.jpg)
 
 ## Contributors✨
 * illustrate
