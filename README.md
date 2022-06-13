@@ -1,4 +1,4 @@
-![TNT.js](tntjs-banner.png)
+![TNT.js](http://image.bugduck.cn/logo/tntjs-banner.png)
 ![GitHub](https://img.shields.io/github/license/Bug-Duck/tntjs)
 ![version](https://img.shields.io/badge/version-0.0.3-green)
 ![watch](https://img.shields.io/github/watchers/Bug-Duck/tntjs?color=blue&logo=github&style=flat-square)
@@ -11,22 +11,22 @@
 
 The JavaScript framework for modern web.
 
-## Notice
+## Notice🔖
 
 We're currently rebuilding our project. We will separate TNT.js into two parts, one part is tnt, which is responsible for the low-level hot update interaction, the other part is TNTscript, which is used for actual development.
 
-## Roadmap
+## Roadmap 🗺
 
 Please refer to [TNT.js Roadmap](https://github.com/Bug-Duck/tntjs/blob/master/roadmap.md).
 
-## Introduction
+## Introduction💡
 
 TNTjs was separated into two parts:
 
 - TNT is a lightweight hot update language framework
 - TNTScript is a script language based on JavaScript. Its main goal is to create a lightweight, easy-to-learn but still powerful language like Python. TNTScript solved the issue that TypeScript can't be ran directly in the browsers. The topmost feature of TNTScript is dynamic, meaning that the values on the webpage will change regarding to the actual values stored inside TNT!
 
-## Demo
+## Demo🎈
 
 ```html
 <!DOCTYPE html>
@@ -57,11 +57,11 @@ You are using the: Chrome
 
 And the variable defined inside the `v` tag will be rendered as its actual value.
 
-## Documentation
+## Documentation📖
 
-Please refer to <https://bug-duck.github.io/tntjs> for more information.
+Please refer to <https://tntjs.bugduck.cn/doc.html> for more information.
 
-## File structure
+## File structure📑
 
 Below is the basic structure of TNTjs (might not be up-to-date):
 
@@ -71,7 +71,7 @@ Below is the basic structure of TNTjs (might not be up-to-date):
 > >
 > > src 主文件
 > >
-> > > runtime tntjs 的底层实现
+> > > runtime tntjs的底层实现
 > > >
 > > > > TNT.ts
 > > > >
@@ -85,22 +85,24 @@ Below is the basic structure of TNTjs (might not be up-to-date):
 > > > >
 > > > > VTagRenderer.ts
 > > > >
+> > > plugins
 > > > > tntscript TNTscript 轻量编程语言开发目录
-> > > > ScriptExecutor.ts 主文件
-> > > >
-> > > > PluginMain.ts
-> > > >
-> > > > TagRenderer.ts
-> > > >
-> > > > lexicalAnalysis.ts 词法分析
-> > > >
+> > > > >
+> > > > > ScriptExecutor.ts 主文件
+> > > > >
+> > > > > PluginMain.ts
+> > > > >
+> > > > > TagRenderer.ts
+> > > > >
+> > > > > lexicalAnalysis.ts 词法分析
+> > > > >
 > > > > debug
-> > > > DebugRenderTracer.ts
-> > > >
-> > > > PluginMain.ts
-> > > >
-> > > > dist 编译产物
-> > > > tnt.d.ts
+> > > > > DebugRenderTracer.ts
+> > > > >
+> > > > > PluginMain.ts
+> > > > >
+> > dist 编译产物
+> > > tnt.d.ts
 > > >
 > > > tnt.js 代码
 > > >
@@ -110,13 +112,23 @@ Below is the basic structure of TNTjs (might not be up-to-date):
 > > >
 > > > tnt.fuck.js ♂♂♂ 哲学文件 ♂♂♂
 
-## Sponsoring
+## Sponsoring🧧
 
-We're all middle school students and we don't have that much money. So sponsoring TNTjs will give us an extra reward to let us keep updating!
+We're all middle school students and we don't have that much money. So sponsoring TNTjs will give us an extra reward to let us keep updating!😉
 
-![Sponsor us](https://img-blog.csdnimg.cn/369cf4080e44416b9e78e58872615d6b.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA566x5a2Q5ZCbc2hlZXA=,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center)
+![Sponsor us](http://image.bugduck.cn/other/skm-zhifubao.jpg)
 
-## CHANGELOG
+## Contributors✨
+* illustrate
+  + ⭐:Community Administrator
+  + 🖊:Major contributors
+  + 👨‍🎓:Student
+
+|![Acbox](https://github.com/sheepbox8646.png)|![samzhangjy](https://github.com/samzhangjy.png)|![mono](http://q1.qlogo.cn/g?b=qq&nk=3151435932&s=640)|![27Onion](https://github.com/onion108.png)|![鸭](http://q1.qlogo.cn/g?b=qq&nk=3593809064&s=640)|![Rotten-LKZ](https://github.com/Rotten-LKZ.png)|
+|:-:|:-:|:-:|:-:|:-:|:-:|
+|箱子Acbox<br />⭐🖊👨‍🎓|SamZhang<br />⭐🖊👨‍🎓|mono <br />⭐🖊|27Onion<br />🖊👨‍🎓|leonfyr <br />🖊👨‍🎓|Rotten-LKZ <br />👨‍🎓|
+
+## CHANGELOG⏰
 
 ### Development Stage
 
