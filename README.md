@@ -117,7 +117,7 @@ Below is the basic structure of TNTjs (might not be up-to-date):
 We're all middle school students and we don't have that much money. So sponsoring TNTjs will give us an extra reward to let us keep updating!😉
 
 ![Sponsor us on ZhiFuBao](https://img1.imgtp.com/2022/06/13/19puVIav.jpg)
-![Sponsor us on WeChat](http://image.bugduck.cn/other/skm-weixin.png)
+![Sponsor us on WeChat](https://image.bugduck.cn/other/skm-weixin.png)
 
 ## Contributors✨
 * illustrate
