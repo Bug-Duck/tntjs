@@ -11,22 +11,22 @@
 
 The JavaScript framework for modern web.
 
-## Notice🔖
+## Notice
 
 We're currently rebuilding our project. We will separate TNT.js into two parts, one part is tnt, which is responsible for the low-level hot update interaction, the other part is TNTscript, which is used for actual development.
 
-## Roadmap 🗺
+## Roadmap
 
 Please refer to [TNT.js Roadmap](https://github.com/Bug-Duck/tntjs/blob/master/roadmap.md).
 
-## Introduction💡
+## Introduction
 
 TNTjs was separated into two parts:
 
 - TNT is a lightweight hot update language framework
 - TNTScript is a script language based on JavaScript. Its main goal is to create a lightweight, easy-to-learn but still powerful language like Python. TNTScript solved the issue that TypeScript can't be ran directly in the browsers. The topmost feature of TNTScript is dynamic, meaning that the values on the webpage will change regarding to the actual values stored inside TNT!
 
-## Demo🎈
+## Demo
 
 ```html
 <!DOCTYPE html>
@@ -57,60 +57,42 @@ You are using the: Chrome
 
 And the variable defined inside the `v` tag will be rendered as its actual value.
 
-## Documentation📖
+## Documentation
 
 Please refer to <https://tntjs.bugduck.cn/doc.html> for more information.
 
-## File structure📑
+## File structure
 
 Below is the basic structure of TNTjs (might not be up-to-date):
 
-> tntjs
->
-> > LICENSE 开源许可证
-> >
-> > src 主文件
-> >
-> > > runtime tntjs的底层实现
-> > >
-> > > > TNT.ts
-> > > >
-> > > > TypeInfo.ts
-> > > >
-> > > > SymbolTable.ts
-> > > >
-> > > > GlobalEnvironment.ts
-> > > >
-> > > > Pliggable.ts
-> > > >
-> > > > VTagRenderer.ts
-> > > >
-> > > plugins
-> > > > tntscript TNTscript 轻量编程语言开发目录
-> > > > >
-> > > > > ScriptExecutor.ts 主文件
-> > > > >
-> > > > > PluginMain.ts
-> > > > >
-> > > > > TagRenderer.ts
-> > > > >
-> > > > > lexicalAnalysis.ts 词法分析
-> > > > >
-> > > > debug
-> > > > > DebugRenderTracer.ts
-> > > > >
-> > > > > PluginMain.ts
-> > > > >
-> > dist 编译产物
-> > > tnt.d.ts
-> > >
-> > > tnt.js 代码
-> > >
-> > > tnt.js.map
-> > >
-> > > tnt.min.js 发布版混淆文件
-> > >
-> > > tnt.fuck.js ♂♂♂ 哲学文件 ♂♂♂
+<details>
+
+- LICENSE 开源许可证
+- src 主文件
+  - runtime tntjs的底层实现
+    - TNT.ts
+    - TypeInfo.ts
+    - SymbolTable.ts
+    - GlobalEnvironment.ts
+    - Pliggable.ts
+    - VTagRenderer.ts
+  - plugins
+    - tntscript TNTscript 轻量编程语言开发目录
+      - ScriptExecutor.ts 主文件
+      - PluginMain.ts
+      - TagRenderer.ts
+      - lexicalAnalysis.ts 词法分析
+    - debug
+      - DebugRenderTracer.ts
+      - PluginMain.ts
+  - dist 编译产物
+    - tnt.d.ts
+    - tnt.js 代码
+    - tnt.js.map
+    - tnt.min.js 发布版混淆文件
+    - tnt.fuck.js ♂♂♂ 哲学文件 ♂♂♂
+
+</details>
 
 ## Sponsoring🧧
 
@@ -119,17 +101,17 @@ We're all middle school students and we don't have that much money. So sponsorin
 ![Sponsor us on ZhiFuBao](https://img1.imgtp.com/2022/06/13/19puVIav.jpg)
 ![Sponsor us on WeChat](https://image.bugduck.cn/other/skm-weixin.png)
 
-## Contributors✨
-* illustrate
-  + ⭐:Community Administrator
-  + 🖊:Major contributors
-  + 👨‍🎓:Student
+## Contributors
+- Emoji guidelines:
+  - :star: : Community administrator
+  - :pen: : Major contributor
+  - :student: : Student
 
 |![Acbox](https://github.com/sheepbox8646.png)|![samzhangjy](https://github.com/samzhangjy.png)|![mono](http://q1.qlogo.cn/g?b=qq&nk=3151435932&s=640)|![27Onion](https://github.com/onion108.png)|![鸭](http://q1.qlogo.cn/g?b=qq&nk=3593809064&s=640)|![Rotten-LKZ](https://github.com/Rotten-LKZ.png)|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|箱子Acbox<br />⭐🖊👨‍🎓|SamZhang<br />⭐🖊👨‍🎓|mono <br />⭐🖊|27Onion<br />🖊👨‍🎓|leonfyr <br />🖊👨‍🎓|Rotten-LKZ <br />👨‍🎓|
+|箱子Acbox<br /> :star: :pen: :student:|samzhangjy<br /> :star: :pen: :student:|mono <br /> :star: :pen:|27Onion<br /> :pen: :student:|leonfyr <br /> :pen: :student:|Rotten-LKZ <br /> :student:|
 
-## CHANGELOG⏰
+## Changelog
 
 ### Development Stage
 
