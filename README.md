@@ -94,7 +94,7 @@ Below is the basic structure of TNTjs (might not be up-to-date):
 
 </details>
 
-## Sponsoring🧧
+## Sponsoring
 
 We're all middle school students and we don't have that much money. So sponsoring TNTjs will give us an extra reward to let us keep updating!😉
 
