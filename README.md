@@ -4,7 +4,8 @@
 ![watch](https://img.shields.io/github/watchers/Bug-Duck/tntjs?color=blue&logo=github&style=flat-square)
 ![Star](https://img.shields.io/github/stars/Bug-Duck/tntjs?color=yellow&logo=github&style=flat-square)
 ![Fork](https://img.shields.io/github/forks/Bug-Duck/tntjs?color=green&logo=github&style=flat-square)
-[![website](https://img.shields.io/badge/website-bugduck.cn-yellowgreen)](https://www.bugduck.cn)
+[![website](https://img.shields.io/badge/website-bugduck.cn-yellowgreen)](https://bugduck.cn)
+[![ProjectWebsite](https://img.shields.io/badge/ProjectWebsite-tntjs.bugduck.cn-red)](https://tntjs.bugduck.cn)
 [![BiliBili](https://img.shields.io/static/v1?label=bilibili&message=BugDuck开源团队&color=ff69b4&logo=bilibili)](https://space.bilibili.com/1959824394?spm_id_from=333.337.0.0)
 
 # TNT.js
