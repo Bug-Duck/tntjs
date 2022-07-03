@@ -1,6 +1,7 @@
 // FIXME: implement everything and check the unused variables
 
 import { VariableValueType } from "runtime/SymbolTable";
+import  TypeInfo  from "runtime/TypeInfo";
 
 export class Template {
   // TODO: implement this
@@ -29,4 +30,5 @@ export class Component {
     this.#name = value;
   }
 }
-
+// TODO: tntem Component in Symbol table.
+// const TNTemComponentType = new TypeInfo("tnt","component",undefined);

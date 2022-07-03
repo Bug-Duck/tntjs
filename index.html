@@ -8,37 +8,7 @@
   </head>
   <body>
     <tnt-debug></tnt-debug>
-    <v>testValue</v>
-    <v>websiteName</v>
-    <v>i</v>
-    <v>websites</v>
-
-    <get>http://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=850625057</get>
-    <p>5555</p>
-    <p>666666</p>
-    <tnt>
-        websites = {
-            Baidu: {
-                href: "baidu.com",
-                color: 'blue'
-            },
-            Google: {
-                href: "google.com",
-                color: 'green'
-            },
-            Bing: {
-                href: "bing.com",
-                color: "yellow"
-            }
-        };
-        websites.ner(i);
-        when dom('lan') be clicked {
-            websiteName = i;
-            lin = websites[i].href;
-            lanColor = website[i].color;
-            i.next()
-        }
-    </tnt>
+    <v>x</v>
     <script type="module">
       import TNT from "./dist/src/runtime/TNT.js";
       import { Value } from "./dist/src/plugins/tntjsapi-simp/ValueState.js";
@@ -52,7 +22,7 @@
         // Globals.plug(new TemplatePlugin());
         console.log(Globals.getAllPlugins())
         const t = new TNT();
-        new Value("testValue", NumberType).setValue(23333)
+        new Value("x", NumberType).setValue(23333)
         console.log(Globals.symbolTable);
       };
     </script>
