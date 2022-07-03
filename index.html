@@ -1,15 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="dist/tnt.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <t-get>http://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=850625057</t-get>
-    <p>55555</p>
+  </head>
+  <body>
+    <tnt-debug></tnt-debug>
+    <v>testValue</v>
+    <v>websiteName</v>
+    <v>i</v>
+    <v>websites</v>
+
+    <get>http://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=850625057</get>
+    <p>5555</p>
     <p>666666</p>
-</body>
+    <tnt>
+        websites = {
+            Baidu: {
+                href: "baidu.com",
+                color: 'blue'
+            },
+            Google: {
+                href: "google.com",
+                color: 'green'
+            },
+            Bing: {
+                href: "bing.com",
+                color: "yellow"
+            }
+        };
+        websites.ner(i);
+        when dom('lan') be clicked {
+            websiteName = i;
+            lin = websites[i].href;
+            lanColor = website[i].color;
+            i.next()
+        }
+    </tnt>
+    <script type="module">
+      import TNT from "./dist/src/runtime/TNT.js";
+      import { Value } from "./dist/src/plugins/tntjsapi-simp/ValueState.js";
+      import { Globals } from "./dist/src/runtime/GlobalEnvironment.js";
+      import { NumberType } from "./dist/src/runtime/SymbolTable.js";
+      import { PluginMain as TemplatePlugin } from "./dist/src/plugins/TemplateLanguage/PluginMain.js";
+      import { PluginMain as DebugPlugin } from "./dist/src/plugins/debug/PluginMain.js";
+
+      window.onload = () => {
+        // console.log(TemplatePlugin);
+        // Globals.plug(new TemplatePlugin());
+        console.log(Globals.getAllPlugins())
+        const t = new TNT();
+        new Value("testValue", NumberType).setValue(23333)
+        console.log(Globals.symbolTable);
+      };
+    </script>
+  </body>
 </html>

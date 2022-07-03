@@ -5,67 +5,63 @@
  * description: The global environment of the tntjs.
  */
 
-/// <reference path="SymbolTable.ts"/>
+import { SymbolTable, StringType, VariableValueType } from "./SymbolTable";
+import TNT from "./TNT";
+import { Plugin } from "./Pluggable";
 
-namespace TNT {
-    export namespace Globals {
-        export const symbolTable: SymbolTable = new SymbolTable();
-        export const instances: Array<TNT> = [];
-        let valueEvaluator: (expr: string) => any = (expr: string) => {
-          const value = symbolTable.getValue(expr.trim());
-          if (value.type === StringType) {
-            return value.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-          }
-          return value.value;
-        };
+export class Globals {
+  static symbolTable: SymbolTable = new SymbolTable();
+  static instances: TNT[] = [];
+  static valueEvaluator: (expr: string) => VariableValueType;
+  static pluginList: Plugin[] = [];
 
-        export function setValueEvaluator(fn: (expr: string) => any) {
-          valueEvaluator = fn;
-        }
+  static #escapeString(str: string): string {
+    return str
+      .replace(/[\n\r]/g, "\\n")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
 
-        export function evaluate(expr: string): any {
-          return valueEvaluator(expr);
-        }
-
-        let prv_pluginList: Array<Plugin> = [];
-
-        // Add the plugin to the registry list.
-        export function addPlugin(plugin: Plugin): void {
-          prv_pluginList.push(plugin);
-        }
-
-        export function plug(plugin: Plugin): void {
-          addPlugin(plugin);
-        }
-
-        export function getAllPlugins(): Array<Plugin> {
-          return prv_pluginList;
-        }
-
-        export function hasPlugin(pluginId: string): boolean {
-          for(const plugin of prv_pluginList) {
-            if (plugin.id === pluginId) {
-              return true;
-            }
-          }
-          return false;
-        }
-
-        export function removePlugin(pluginId: string): void {
-          let counter = 0;
-          let found = false;
-          for(const plugin of prv_pluginList) {
-            if (plugin.id === pluginId) {
-              found = true;
-              break;
-            }
-            counter++;
-          }
-          if (!found) {
-            return;
-          }
-          prv_pluginList = prv_pluginList.slice(0, counter).concat(prv_pluginList.slice(counter + 1));
-        }
-
+  static defaultValueEvaluator(expr: string): VariableValueType {
+    const value = Globals.symbolTable.getValue(expr.trim());
+    if (value.type === StringType && typeof value.value === "string") {
+      return Globals.#escapeString(value.value);
     }
+    return value.value;
+  }
+
+  set valueEvaluator(fn: (expr: string) => VariableValueType) {
+    this.valueEvaluator = fn;
+  }
+
+  static evaluate(expr: string): VariableValueType {
+    return (this.valueEvaluator ?? this.defaultValueEvaluator)(expr);
+  }
+
+  // Add the plugin to the registry list.
+  static addPlugin(plugin: Plugin) {
+    this.pluginList.push(plugin);
+  }
+
+  static plug(plugin: Plugin) {
+    this.addPlugin(plugin);
+  }
+
+  static getAllPlugins() {
+    return this.pluginList;
+  }
+
+  static hasPlugin(pluginId: string) {
+    const pluginsFound = this.pluginList.filter((plugin) => {
+      return plugin.id === pluginId;
+    });
+    return pluginsFound.length > 0;
+  }
+
+  static removePlugin(pluginId: string) {
+    this.pluginList = this.pluginList.filter((plugin) => {
+      return plugin.id !== pluginId;
+    });
+  }
 }

@@ -1,33 +1,38 @@
-/* eslint-disable @typescript-eslint/triple-slash-reference */
-/* eslint-disable @typescript-eslint/no-namespace */
 /**
- * file: PluginMain.ts
- * creator: 27Onion
- * create time: May 10th, 2022, 20:25
- * description: The main class of the debugger plugin.
+ * The main class of the debugger plugin.
  */
 
-/// <reference path="../../runtime/GlobalEnvironment.ts" />
+import { Globals } from "runtime/GlobalEnvironment";
+import { Plugin, Renderable } from "runtime/Pluggable";
+import { DebugRenderTracer } from "./DebugRenderTracer";
+import { Logger } from "utils/logger";
 
-namespace TNTDebug {
-    export class PluginMain implements TNT.Plugin {
-      get id(): string {
-        return "tntdebug";
-      }
-      get rendererList(): TNT.Renderable[] {
-        return [new DebugRenderTracer()];
-      }
-      get tags(): string[] {
-        return [];
-      }
-      get version(): string {
-        return "1.0.0-integrated";
-      }
-      onInit(): void {
-        console.log("[Debugger] Debug mode enabled. ");
-      }
-        
-    }
+export class PluginMain implements Plugin {
+  #logger = new Logger("TNT Plugin Debugger");
+
+  get id(): string {
+    return "tntdebug";
+  }
+
+  get rendererList(): Renderable[] {
+    return [new DebugRenderTracer()];
+  }
+
+  get tags(): string[] {
+    return [];
+  }
+
+  get version(): string {
+    return "1.0.0-integrated";
+  }
+
+  get dependencies(): string[] {
+    return [];
+  }
+
+  onInit(): void {
+    this.#logger.debug("[Debugger] Debug mode enabled. ");
+  }
 }
 
-TNT.Globals.plug(new TNTDebug.PluginMain());
+Globals.plug(new PluginMain());

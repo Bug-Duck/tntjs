@@ -1,413 +1,413 @@
 var TNTDebug;
 (function (TNTDebug) {
-    class DebugRenderTracer {
-        render() {
-            console.log("[Debugger] Renderer called to perform a render.");
-        }
+  class DebugRenderTracer {
+    render() {
+      console.log("[Debugger] Renderer called to perform a render.");
     }
-    TNTDebug.DebugRenderTracer = DebugRenderTracer;
+  }
+  TNTDebug.DebugRenderTracer = DebugRenderTracer;
 })(TNTDebug || (TNTDebug = {}));
 var TNT;
 (function (TNT) {
-    class TypeInfo {
-        constructor(namespaceName, typeName, defaultValue) {
-            this.prv_namespaceName = namespaceName;
-            this.prv_typeName = typeName;
-            this.prv_defaultValue = defaultValue;
-        }
-        toString() {
-            return `${this.prv_namespaceName}:type.${this.prv_typeName}`;
-        }
-        get name() {
-            return this.prv_typeName;
-        }
-        get owner() {
-            return this.prv_typeName;
-        }
-        get defaultValue() {
-            return this.prv_defaultValue;
-        }
+  class TypeInfo {
+    constructor(namespaceName, typeName, defaultValue) {
+      this.prv_namespaceName = namespaceName;
+      this.prv_typeName = typeName;
+      this.prv_defaultValue = defaultValue;
     }
-    TNT.TypeInfo = TypeInfo;
+    toString() {
+      return `${this.prv_namespaceName}:type.${this.prv_typeName}`;
+    }
+    get name() {
+      return this.prv_typeName;
+    }
+    get owner() {
+      return this.prv_typeName;
+    }
+    get defaultValue() {
+      return this.prv_defaultValue;
+    }
+  }
+  TNT.TypeInfo = TypeInfo;
 })(TNT || (TNT = {}));
 var TNT;
 (function (TNT) {
-    TNT.StringType = new TNT.TypeInfo("tnt", "string", "");
-    TNT.NumberType = new TNT.TypeInfo("tnt", "number", 0);
-    TNT.ObjectType = new TNT.TypeInfo("tnt", "object", null);
-    TNT.TNTFunctionType = new TNT.TypeInfo("tnt", "function", null);
-    TNT.JSFunctionType = new TNT.TypeInfo("js", "function", () => { });
-    TNT.HTMLStringType = new TNT.TypeInfo("tnt", "html_string", "<div></div>");
-    TNT.jsTypeToTNT = {
-        "string": TNT.StringType,
-        "number": TNT.NumberType,
-        "object": TNT.ObjectType,
-        "function": TNT.JSFunctionType,
+  TNT.StringType = new TNT.TypeInfo("tnt", "string", "");
+  TNT.NumberType = new TNT.TypeInfo("tnt", "number", 0);
+  TNT.ObjectType = new TNT.TypeInfo("tnt", "object", null);
+  TNT.TNTFunctionType = new TNT.TypeInfo("tnt", "function", null);
+  TNT.JSFunctionType = new TNT.TypeInfo("js", "function", () => { });
+  TNT.HTMLStringType = new TNT.TypeInfo("tnt", "html_string", "<div></div>");
+  TNT.jsTypeToTNT = {
+    "string": TNT.StringType,
+    "number": TNT.NumberType,
+    "object": TNT.ObjectType,
+    "function": TNT.JSFunctionType,
+  };
+  class Variable {
+    constructor(value, type) {
+      this.prv_validate(value, type);
+      this.prv_value = value;
+      this.prv_type = type;
+    }
+    prv_validate(value, type) {
+      if (type === TNT.StringType && typeof (value) !== "string") {
+        throw new TypeError("value should ba a string.");
+      }
+      if (type === TNT.HTMLStringType && typeof (value) !== "string") {
+        throw new TypeError("value should ba a string.");
+      }
+      if (type === TNT.NumberType && typeof (value) !== "number") {
+        throw new TypeError("value should ba a number.");
+      }
+      if (type === TNT.JSFunctionType && typeof (value) !== "function") {
+        throw new TypeError("value should ba a javascript function.");
+      }
+    }
+    get value() {
+      return this.prv_value;
+    }
+    set value(value) {
+      this.prv_validate(value, this.prv_type);
+      this.prv_value = value;
+    }
+    get type() {
+      return this.prv_type;
+    }
+  }
+  TNT.Variable = Variable;
+  class SymbolTable {
+    constructor() {
+      this.prv_onsetvalue_event_handler = [];
+      this.prv_content = {};
+    }
+    getValue(key) {
+      return this.prv_content[key];
+    }
+    setValue(key, v) {
+      this.prv_content[key] = v;
+      for (const i of this.prv_onsetvalue_event_handler) {
+        i();
+      }
+    }
+    onSetValue(handler) {
+      this.prv_onsetvalue_event_handler.push(handler);
+    }
+    get variableNames() {
+      return Object.keys(this.prv_content);
+    }
+    containsVariable(variableName) {
+      return -1 !== this.variableNames.indexOf(variableName);
+    }
+    merge(anotherTable, ifExists) {
+      for (const i of anotherTable.variableNames) {
+        this.setValue(i, this.containsVariable(i) ? ifExists(this.getValue(i), anotherTable.getValue(i)) : anotherTable.getValue(i));
+      }
+    }
+  }
+  TNT.SymbolTable = SymbolTable;
+  function jsType2TNT(jsType) {
+    for (const i in TNT.jsTypeToTNT) {
+      if (i === jsType) {
+        return TNT.jsTypeToTNT[i];
+      }
+    }
+    return TNT.ObjectType;
+  }
+  TNT.jsType2TNT = jsType2TNT;
+})(TNT || (TNT = {}));
+var TNT;
+(function (TNT) {
+  let Globals;
+  (function (Globals) {
+    Globals.symbolTable = new TNT.SymbolTable();
+    Globals.instances = [];
+    let valueEvaluator = (expr) => {
+      const value = Globals.symbolTable.getValue(expr.trim());
+      if (value.type === TNT.StringType) {
+        return value.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+      return value.value;
     };
-    class Variable {
-        constructor(value, type) {
-            this.prv_validate(value, type);
-            this.prv_value = value;
-            this.prv_type = type;
-        }
-        prv_validate(value, type) {
-            if (type === TNT.StringType && typeof (value) !== "string") {
-                throw new TypeError("value should ba a string.");
-            }
-            if (type === TNT.HTMLStringType && typeof (value) !== "string") {
-                throw new TypeError("value should ba a string.");
-            }
-            if (type === TNT.NumberType && typeof (value) !== "number") {
-                throw new TypeError("value should ba a number.");
-            }
-            if (type === TNT.JSFunctionType && typeof (value) !== "function") {
-                throw new TypeError("value should ba a javascript function.");
-            }
-        }
-        get value() {
-            return this.prv_value;
-        }
-        set value(value) {
-            this.prv_validate(value, this.prv_type);
-            this.prv_value = value;
-        }
-        get type() {
-            return this.prv_type;
-        }
+    function setValueEvaluator(fn) {
+      valueEvaluator = fn;
     }
-    TNT.Variable = Variable;
-    class SymbolTable {
-        constructor() {
-            this.prv_onsetvalue_event_handler = [];
-            this.prv_content = {};
-        }
-        getValue(key) {
-            return this.prv_content[key];
-        }
-        setValue(key, v) {
-            this.prv_content[key] = v;
-            for (const i of this.prv_onsetvalue_event_handler) {
-                i();
-            }
-        }
-        onSetValue(handler) {
-            this.prv_onsetvalue_event_handler.push(handler);
-        }
-        get variableNames() {
-            return Object.keys(this.prv_content);
-        }
-        containsVariable(variableName) {
-            return -1 !== this.variableNames.indexOf(variableName);
-        }
-        merge(anotherTable, ifExists) {
-            for (const i of anotherTable.variableNames) {
-                this.setValue(i, this.containsVariable(i) ? ifExists(this.getValue(i), anotherTable.getValue(i)) : anotherTable.getValue(i));
-            }
-        }
+    Globals.setValueEvaluator = setValueEvaluator;
+    function evaluate(expr) {
+      return valueEvaluator(expr);
     }
-    TNT.SymbolTable = SymbolTable;
-    function jsType2TNT(jsType) {
-        for (const i in TNT.jsTypeToTNT) {
-            if (i === jsType) {
-                return TNT.jsTypeToTNT[i];
-            }
-        }
-        return TNT.ObjectType;
+    Globals.evaluate = evaluate;
+    let prv_pluginList = [];
+    function addPlugin(plugin) {
+      prv_pluginList.push(plugin);
     }
-    TNT.jsType2TNT = jsType2TNT;
-})(TNT || (TNT = {}));
-var TNT;
-(function (TNT) {
-    let Globals;
-    (function (Globals) {
-        Globals.symbolTable = new TNT.SymbolTable();
-        Globals.instances = [];
-        let valueEvaluator = (expr) => {
-            const value = Globals.symbolTable.getValue(expr.trim());
-            if (value.type === TNT.StringType) {
-                return value.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            }
-            return value.value;
-        };
-        function setValueEvaluator(fn) {
-            valueEvaluator = fn;
+    Globals.addPlugin = addPlugin;
+    function plug(plugin) {
+      addPlugin(plugin);
+    }
+    Globals.plug = plug;
+    function getAllPlugins() {
+      return prv_pluginList;
+    }
+    Globals.getAllPlugins = getAllPlugins;
+    function hasPlugin(pluginId) {
+      for (const plugin of prv_pluginList) {
+        if (plugin.id === pluginId) {
+          return true;
         }
-        Globals.setValueEvaluator = setValueEvaluator;
-        function evaluate(expr) {
-            return valueEvaluator(expr);
+      }
+      return false;
+    }
+    Globals.hasPlugin = hasPlugin;
+    function removePlugin(pluginId) {
+      let counter = 0;
+      let found = false;
+      for (const plugin of prv_pluginList) {
+        if (plugin.id === pluginId) {
+          found = true;
+          break;
         }
-        Globals.evaluate = evaluate;
-        let prv_pluginList = [];
-        function addPlugin(plugin) {
-            prv_pluginList.push(plugin);
-        }
-        Globals.addPlugin = addPlugin;
-        function plug(plugin) {
-            addPlugin(plugin);
-        }
-        Globals.plug = plug;
-        function getAllPlugins() {
-            return prv_pluginList;
-        }
-        Globals.getAllPlugins = getAllPlugins;
-        function hasPlugin(pluginId) {
-            for (const plugin of prv_pluginList) {
-                if (plugin.id === pluginId) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        Globals.hasPlugin = hasPlugin;
-        function removePlugin(pluginId) {
-            let counter = 0;
-            let found = false;
-            for (const plugin of prv_pluginList) {
-                if (plugin.id === pluginId) {
-                    found = true;
-                    break;
-                }
-                counter++;
-            }
-            if (!found) {
-                return;
-            }
-            prv_pluginList = prv_pluginList.slice(0, counter).concat(prv_pluginList.slice(counter + 1));
-        }
-        Globals.removePlugin = removePlugin;
-    })(Globals = TNT.Globals || (TNT.Globals = {}));
+        counter++;
+      }
+      if (!found) {
+        return;
+      }
+      prv_pluginList = prv_pluginList.slice(0, counter).concat(prv_pluginList.slice(counter + 1));
+    }
+    Globals.removePlugin = removePlugin;
+  })(Globals = TNT.Globals || (TNT.Globals = {}));
 })(TNT || (TNT = {}));
 var TNTDebug;
 (function (TNTDebug) {
-    class PluginMain {
-        get id() {
-            return "tntdebug";
-        }
-        get rendererList() {
-            return [new TNTDebug.DebugRenderTracer()];
-        }
-        get tags() {
-            return [];
-        }
-        get version() {
-            return "1.0.0-integrated";
-        }
-        onInit() {
-            console.log("[Debugger] Debug mode enabled. ");
-        }
+  class PluginMain {
+    get id() {
+      return "tntdebug";
     }
-    TNTDebug.PluginMain = PluginMain;
+    get rendererList() {
+      return [new TNTDebug.DebugRenderTracer()];
+    }
+    get tags() {
+      return [];
+    }
+    get version() {
+      return "1.0.0-integrated";
+    }
+    onInit() {
+      console.log("[Debugger] Debug mode enabled. ");
+    }
+  }
+  TNTDebug.PluginMain = PluginMain;
 })(TNTDebug || (TNTDebug = {}));
 TNT.Globals.plug(new TNTDebug.PluginMain());
 var TemplateLanguage;
 (function (TemplateLanguage) {
-    class run {
-        constructor(dom) {
-        }
+  class run {
+    constructor(dom) {
     }
+  }
 })(TemplateLanguage || (TemplateLanguage = {}));
 var TemplateLanguage;
 (function (TemplateLanguage) {
-    function tpfor(dom) {
-        const HTMLCodes = dom.innerHTML;
-    }
-    TemplateLanguage.tpfor = tpfor;
+  function tpfor(dom) {
+    const HTMLCodes = dom.innerHTML;
+  }
+  TemplateLanguage.tpfor = tpfor;
 })(TemplateLanguage || (TemplateLanguage = {}));
 var TNTSimpApi;
 (function (TNTSimpApi) {
-    class PluginMain {
-        get id() {
-            return "tntjsapi-simp";
-        }
-        get rendererList() {
-            return [];
-        }
-        get tags() {
-            return [];
-        }
-        get version() {
-            return "1.0.0-integrated";
-        }
-        onInit() { }
+  class PluginMain {
+    get id() {
+      return "tntjsapi-simp";
     }
-    TNTSimpApi.PluginMain = PluginMain;
-    class Value {
-        constructor(name, type) {
-            this.name = name;
-            this.valueObject = new TNT.Variable(type.defaultValue, type);
-        }
-        setValue(value) {
-            if (TNT.Globals.hasPlugin("tntdebug")) {
-                console.log(`[tntjsapi-simp] Setting value ${value} for variable ${this.name}...`);
-            }
-            this.valueObject.value = value;
-            TNT.Globals.symbolTable.setValue(this.name, this.valueObject);
-            if (TNT.Globals.hasPlugin("tntdebug")) {
-                console.log(`[tntjsapi-simp] Set value ${value} for variable ${this.name}.`);
-            }
-            return this;
-        }
-        get value() {
-            return this.valueObject.value;
-        }
-        get type() {
-            return this.valueObject.type;
-        }
+    get rendererList() {
+      return [];
     }
-    TNTSimpApi.Value = Value;
+    get tags() {
+      return [];
+    }
+    get version() {
+      return "1.0.0-integrated";
+    }
+    onInit() { }
+  }
+  TNTSimpApi.PluginMain = PluginMain;
+  class Value {
+    constructor(name, type) {
+      this.name = name;
+      this.valueObject = new TNT.Variable(type.defaultValue, type);
+    }
+    setValue(value) {
+      if (TNT.Globals.hasPlugin("tntdebug")) {
+        console.log(`[tntjsapi-simp] Setting value ${value} for variable ${this.name}...`);
+      }
+      this.valueObject.value = value;
+      TNT.Globals.symbolTable.setValue(this.name, this.valueObject);
+      if (TNT.Globals.hasPlugin("tntdebug")) {
+        console.log(`[tntjsapi-simp] Set value ${value} for variable ${this.name}.`);
+      }
+      return this;
+    }
+    get value() {
+      return this.valueObject.value;
+    }
+    get type() {
+      return this.valueObject.type;
+    }
+  }
+  TNTSimpApi.Value = Value;
 })(TNTSimpApi || (TNTSimpApi = {}));
 TNT.Globals.plug(new TNTSimpApi.PluginMain());
 var TNTScript;
 (function (TNTScript) {
-    class ScriptExecutor {
-        exec(scriptContent, data = new TNT.SymbolTable()) {
-            this.SymbolTableOWN = data;
-            ScriptRun.RunScriptCode(scriptContent, this);
-        }
-        ValueProcess(reg) {
-            const isString = /(\"|\').+(\"|\')/;
-            const isNumber = /[0-9]+/;
-            const isBool = /(true|false)/;
-            const isVar = /[_A-z0-9]/;
-            const isMathGex = /(.+ ?(\+|-|\*|\/)+ ?.+)+/;
-            const isXML = /<.+>/;
-            const iscodes = /\{.+\}/;
-            if (/.+\(.+\)/.test(reg)) {
-                const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
-                if (TNT.Globals.symbolTable.getValue(name).value === 'function') {
-                    let buffer = "";
-                    let __parameters__ = /\(.+\)/.exec(reg);
-                    let __parameter__ = __parameters__[0];
-                    __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
-                    const parameters = TNTScript.functionSplit(__parameter__);
-                    for (const i of parameters['agv']) {
-                        buffer = buffer + i;
-                        buffer = buffer + ',';
-                    }
-                    for (const i in parameters['functioncanvalue']) {
-                        buffer = buffer + i + '=' + ',';
-                    }
-                    const results = Function(`TNT.TNTSymbolTable.${name}.value(${buffer})`)();
-                    const result = {
-                        type: TNTScript.jsTypeToTNTType(typeof (results)),
-                        value: results,
-                    };
-                    return result;
-                }
-                else if (TNT.Globals.symbolTable.getValue(name).value === 'tnt') {
-                    let __parameters__ = /\(.+\)/.exec(reg);
-                    let __parameter__ = __parameters__[0];
-                    __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
-                    const parameters = TNTScript.functionSplit(__parameter__);
-                    let par = {};
-                }
-            }
-            else if (iscodes.test(reg)) {
-                return {
-                    type: 'code',
-                    value: TNTScript.codeSplit(reg.substring(1, reg.length - 1)),
-                };
-            }
-            else if (isNumber.test(reg)) {
-                return {
-                    type: 'number',
-                    value: Number(reg)
-                };
-            }
-            else if (isString.test(reg)) {
-            }
-            else if (isBool.test(reg)) {
-                return {
-                    type: 'bool',
-                    value: Boolean(reg),
-                };
-            }
-            else if (isVar.test(reg)) {
-                const results = TNT.Globals.symbolTable.getValue(reg).value;
-                const result = {
-                    type: TNTScript.jsTypeToTNTType(typeof (results)),
-                    value: results,
-                };
-                return result;
-            }
-            else if (isMathGex.test(reg)) {
-            }
-            else if (isXML.test(reg)) {
-                return {
-                    type: 'XML',
-                    value: reg,
-                };
-            }
-        }
-        renderDOM(HTML, DOM) {
-            DOM.innerHTML = HTML;
-        }
-        evaluate(expression) {
-            const value = TNT.Globals.symbolTable.getValue(expression.trim());
-            if (value.type === TNT.StringType) {
-                return value.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            }
-            return value.value;
-        }
+  class ScriptExecutor {
+    exec(scriptContent, data = new TNT.SymbolTable()) {
+      this.SymbolTableOWN = data;
+      ScriptRun.RunScriptCode(scriptContent, this);
     }
-    TNTScript.ScriptExecutor = ScriptExecutor;
+    ValueProcess(reg) {
+      const isString = /(\"|\").+(\"|\")/;
+      const isNumber = /[0-9]+/;
+      const isBool = /(true|false)/;
+      const isVar = /[_A-z0-9]/;
+      const isMathGex = /(.+ ?(\+|-|\*|\/)+ ?.+)+/;
+      const isXML = /<.+>/;
+      const iscodes = /\{.+\}/;
+      if (/.+\(.+\)/.test(reg)) {
+        const name = /[^\(.+\)]+/.exec(reg)[0].replace(/\s*/g, "");
+        if (TNT.Globals.symbolTable.getValue(name).value === "function") {
+          let buffer = "";
+          let __parameters__ = /\(.+\)/.exec(reg);
+          let __parameter__ = __parameters__[0];
+          __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
+          const parameters = TNTScript.functionSplit(__parameter__);
+          for (const i of parameters["agv"]) {
+            buffer = buffer + i;
+            buffer = buffer + ",";
+      }
+         for (const i in parameters["functioncanvalue"]) {
+            buffer = buffer + i + "=" + ",";
+          }
+          const results = Function(`TNT.TNTSymbolTable.${name}.value(${buffer})`)();
+          const result = {
+            type: TNTScript.jsTypeToTNTType(typeof (results)),
+            value: results,
+          };
+          return result;
+        }
+        else if (TNT.Globals.symbolTable.getValue(name).value === "tnt") {
+          let __parameters__ = /\(.+\)/.exec(reg);
+          let __parameter__ = __parameters__[0];
+          __parameter__ = __parameter__.substring(1, __parameter__.length - 1);
+          const parameters = TNTScript.functionSplit(__parameter__);
+          let par = {};
+        }
+      }
+      else if (iscodes.test(reg)) {
+        return {
+          type: "code",
+          value: TNTScript.codeSplit(reg.substring(1, reg.length - 1)),
+        };
+      }
+      else if (isNumber.test(reg)) {
+        return {
+          type: "number",
+          value: Number(reg)
+        };
+      }
+      else if (isString.test(reg)) {
+      }
+      else if (isBool.test(reg)) {
+        return {
+          type: "bool",
+          value: Boolean(reg),
+        };
+      }
+      else if (isVar.test(reg)) {
+        const results = TNT.Globals.symbolTable.getValue(reg).value;
+        const result = {
+          type: TNTScript.jsTypeToTNTType(typeof (results)),
+          value: results,
+        };
+        return result;
+      }
+      else if (isMathGex.test(reg)) {
+      }
+      else if (isXML.test(reg)) {
+        return {
+          type: "XML",
+          value: reg,
+        };
+      }
+    }
+    renderDOM(HTML, DOM) {
+      DOM.innerHTML = HTML;
+    }
+    evaluate(expression) {
+      const value = TNT.Globals.symbolTable.getValue(expression.trim());
+      if (value.type === TNT.StringType) {
+        return value.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+      return value.value;
+    }
+  }
+  TNTScript.ScriptExecutor = ScriptExecutor;
 })(TNTScript || (TNTScript = {}));
 var TNTScript;
 (function (TNTScript) {
-    class PluginMain {
-        constructor() {
-            this.prv_executor = new TNTScript.ScriptExecutor();
-        }
-        get id() {
-            return "tntscript";
-        }
-        get rendererList() {
-            return [new TNTScript.TagRenderer()];
-        }
-        get tags() {
-            return ["tnt"];
-        }
-        get version() {
-            return "v1.0.0-integrated";
-        }
-        onInit() {
-            console.log("Here");
-            for (const tntTag of document.querySelectorAll('tnt')) {
-                this.prv_executor.exec(tntTag.innerHTML);
-            }
-            TNT.Globals.setValueEvaluator((e) => {
-                return this.prv_executor.evaluate(e);
-            });
-        }
+  class PluginMain {
+    constructor() {
+      this.prv_executor = new TNTScript.ScriptExecutor();
     }
-    TNTScript.PluginMain = PluginMain;
+    get id() {
+      return "tntscript";
+    }
+    get rendererList() {
+      return [new TNTScript.TagRenderer()];
+    }
+    get tags() {
+      return ["tnt"];
+    }
+    get version() {
+      return "v1.0.0-integrated";
+    }
+    onInit() {
+      console.log("Here");
+      for (const tntTag of document.querySelectorAll("tnt")) {
+        this.prv_executor.exec(tntTag.innerHTML);
+      }
+      TNT.Globals.setValueEvaluator((e) => {
+        return this.prv_executor.evaluate(e);
+      });
+    }
+  }
+  TNTScript.PluginMain = PluginMain;
 })(TNTScript || (TNTScript = {}));
 TNT.Globals.plug(new TNTScript.PluginMain());
 var ScriptRun;
 (function (ScriptRun) {
-    function RunScriptCode(codes, dataobj) {
-        const codeList = init(codes);
-        let index = 1;
-        for (const code of codeList) {
-            lineRun(code);
-            index += 1;
-        }
-        return dataobj.SymbolTableOWN;
+  function RunScriptCode(codes, dataobj) {
+    const codeList = init(codes);
+    let index = 1;
+    for (const code of codeList) {
+      lineRun(code);
+      index += 1;
     }
-    ScriptRun.RunScriptCode = RunScriptCode;
-    function init(codes) {
-        const list = TNTScript.codeSplit(codes);
-        return list;
+    return dataobj.SymbolTableOWN;
+  }
+  ScriptRun.RunScriptCode = RunScriptCode;
+  function init(codes) {
+    const list = TNTScript.codeSplit(codes);
+    return list;
+  }
+  ScriptRun.init = init;
+  function lineRun(code) {
+    if (/([A-z0-9])+ ?= ?.+/.test(code)) {
+      ScriptRun.VariableCode(code, this);
     }
-    ScriptRun.init = init;
-    function lineRun(code) {
-        if (/([A-z0-9])+ ?= ?.+/.test(code)) {
-            ScriptRun.VariableCode(code, this);
-        }
-        else if (/(for|while|def|render|when) .+/.test(code)) {
-            if (/render/.test(code)) {
-                ScriptRun.RenderCode(code, this);
-            }
+    else if (/(for|while|def|render|when) .+/.test(code)) {
+      if (/render/.test(code)) {
+        ScriptRun.RenderCode(code, this);
+      }
             else if (/while/.test(code)) {
                 ScriptRun.WhileCode(code);
             }
@@ -416,7 +416,7 @@ var ScriptRun;
             else if (/for/.test(code)) {
             }
         }
-        else if (code === 'break') {
+        else if (code === "break") {
             return "break";
         }
         else {
@@ -425,8 +425,8 @@ var ScriptRun;
     }
     ScriptRun.lineRun = lineRun;
     ScriptRun.VariableCode = (code, dataobj) => {
-        const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(' '));
-        const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(' '));
+        const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(" "));
+        const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(" "));
         const process = dataobj.ValueProcess(v[0]);
         if (/let /.test(code)) {
         }
@@ -435,18 +435,18 @@ var ScriptRun;
         }
     };
     ScriptRun.RenderCode = (code, dataobj) => {
-        const html = TNTScript.keySearch('render', code);
+        const html = TNTScript.keySearch("render", code);
     };
     ScriptRun.WhileCode = (code) => {
-        const i = TNTScript.codeBlock(TNTScript.keySearch('while', code));
+        const i = TNTScript.codeBlock(TNTScript.keySearch("while", code));
         const condition = i[0];
         const codes = i[1];
     };
     ScriptRun.ImportCode = (code, dataobj) => {
-        const pake = TNTScript.keySearch('import', code);
+        const pake = TNTScript.keySearch("import", code);
         const pakege = dataobj.ValueProcess(pake);
         const http = new XMLHttpRequest();
-        const filecode = http.open('GET', pakege, false);
+        const filecode = http.open("GET", pakege, false);
         const Variable = RunScriptCode(filecode, dataobj);
         TNT.Globals.symbolTable.merge(Variable, (TNT.Globals.symbolTable.getValue("w").value));
     };
@@ -484,11 +484,11 @@ var TNTScript;
 (function (TNTScript) {
     class TagRenderer {
         render() {
-            let tags = document.querySelectorAll('tnt');
+            let tags = document.querySelectorAll("tnt");
             for (const tag of tags) {
                 const tagInnerHTML = tag.getAttribute("data-tnt-plugin-value-backup");
-                if (tag.style.getPropertyValue('display') !== "none") {
-                    tag.style.setProperty('display', 'none');
+                if (tag.style.getPropertyValue("display") !== "none") {
+                    tag.style.setProperty("display", "none");
                 }
             }
         }
@@ -505,11 +505,11 @@ var TNTScript;
         for (const i of code) {
             if (ignoreNext) {
                 currentString += i;
-                if (i === '\\') {
+                if (i === "\\") {
                     stringIgnoreNext = true;
                     continue;
                 }
-                if (i === '"' && !stringIgnoreNext) {
+                if (i === "'" && !stringIgnoreNext) {
                     ignoreNext = false;
                 }
                 if (stringIgnoreNext) {
@@ -518,11 +518,11 @@ var TNTScript;
                 continue;
             }
             else {
-                if (i === ';') {
+                if (i === ";") {
                     buffer.push(currentString);
                     currentString = "";
                 }
-                else if (i === '"') {
+                else if (i === "'") {
                     currentString += i;
                     ignoreNext = true;
                 }
@@ -539,13 +539,13 @@ var TNTScript;
     }
     TNTScript.codeSplit = codeSplit;
     function codeBlock(code) {
-        const v = code.replace(/\{.+\}/, '');
+        const v = code.replace(/\{.+\}/, "");
         const codes = /\{.+\}/.exec(code)[0];
         return [v, codeSplit(codes.substring(1, codes.length - 1))];
     }
     TNTScript.codeBlock = codeBlock;
     function keySearch(key, code) {
-        return code.replace(new RegExp(`${key} `), '');
+        return code.replace(new RegExp(`${key} `), "");
     }
     TNTScript.keySearch = keySearch;
     function functionSplit(code, original = false) {
@@ -558,7 +558,7 @@ var TNTScript;
         for (const i of code) {
             if (bracketMatchingMode) {
                 currentString += i;
-                if (i === '}') {
+                if (i === "}") {
                     bracketMatchingStack.pop();
                     if (bracketMatchingStack.length === 0) {
                         buffer.push(currentString + "}");
@@ -566,18 +566,18 @@ var TNTScript;
                         continue;
                     }
                 }
-                else if (i === '{') {
+                else if (i === "{") {
                     bracketMatchingStack.push(null);
                 }
                 continue;
             }
             if (ignoreNext) {
                 currentString += i;
-                if (i === '\\') {
+                if (i === "\\") {
                     stringIgnoreNext = true;
                     continue;
                 }
-                if (i === '"' && !stringIgnoreNext) {
+                if (i === "'" && !stringIgnoreNext) {
                     ignoreNext = false;
                 }
                 if (stringIgnoreNext) {
@@ -586,15 +586,15 @@ var TNTScript;
                 continue;
             }
             else {
-                if (i === ',') {
+                if (i === ",") {
                     buffer.push(currentString.trim());
                     currentString = "";
                 }
-                else if (i === '"') {
+                else if (i === "'") {
                     currentString += i;
                     ignoreNext = true;
                 }
-                else if (i === '{') {
+                else if (i === "{") {
                     bracketMatchingMode = true;
                     bracketMatchingStack = [null];
                     currentString += i;
@@ -611,8 +611,8 @@ var TNTScript;
         const values = { agv: [], functioncanvalue: {} };
         for (const value of buffer) {
             if (/.+ ?= ?.+/.test(value)) {
-                const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(' '));
-                const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(' '));
+                const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(" "));
+                const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(" "));
                 values.functioncanvalue[name[0]] = new TNTScript.ScriptExecutor().ValueProcess(v[0]);
             }
             else {
@@ -638,7 +638,7 @@ var TNT;
             this.TagDataAttributes = document.querySelectorAll("[tnt-td]");
             const domData = [];
             for (const i of this.TagDataAttributes) {
-                const text = i.getAttribute('tnt-td');
+                const text = i.getAttribute("tnt-td");
                 const data = this.Analysis(text);
                 domData.push([i, data]);
             }
@@ -654,7 +654,7 @@ var TNT;
             this.TagDataAttributes = document.querySelectorAll("[tnt-sd]");
             const domData = [];
             for (const i of this.TagDataAttributes) {
-                const text = i.getAttribute('tnt-sd');
+                const text = i.getAttribute("tnt-sd");
                 const data = this.Analysis(text);
                 domData.push([i, data]);
             }
@@ -673,7 +673,7 @@ var TNT;
             let KeyValue;
             let whenKeyWord = false;
             for (const i of t) {
-                if (i === ',') {
+                if (i === ",") {
                     words.push(word);
                     word = "";
                 }
@@ -683,8 +683,8 @@ var TNT;
             }
             word = "";
             for (const i of words) {
-                if (i === '>') {
-                    KeyValue[keyword.replace(' ', '')] = word.replace(' ', '');
+                if (i === ">") {
+                    KeyValue[keyword.replace(" ", "")] = word.replace(" ", "");
                     keyword = "";
                     word = "";
                     whenKeyWord = false;
@@ -721,7 +721,7 @@ var TNT;
         render() {
             var _a, _b;
             if (this.prv_firstRendering) {
-                const svTags = document.querySelectorAll('sv');
+                const svTags = document.querySelectorAll("sv");
                 for (const i of svTags) {
                     i.innerHTML = (_b = (_a = this.customRenderer) === null || _a === void 0 ? void 0 : _a.call(this, i.innerHTML)) !== null && _b !== void 0 ? _b : this.defaultRenderer(i.innerHTML);
                 }
@@ -792,29 +792,29 @@ var TNT;
             let debugModeOptionTags = document.querySelectorAll("tnt-debug");
             if (debugModeOptionTags.length === 0) {
                 if (window.location.href.startsWith("file:")) {
-                    console.warn("Warning: It seems that you are developing the webpage but you don't enable the debug mode.\nIt's better for you to enable the debug mode by the html tag <tnt-debug></tnt-debug> to enable more debugging features.");
+                    console.warn("Warning: It seems that you are developing the webpage but you don't enable the debug mode.\nIt"s better for you to enable the debug mode by the html tag <tnt-debug></tnt-debug> to enable more debugging features.");
                     console.warn("If your application is designed to run on file:/// protocal, please ignore this warning.");
                 }
-                TNT_1.Globals.removePlugin('tntdebug');
+                TNT_1.Globals.removePlugin("tntdebug");
                 this.prv_isDebug = false;
             }
             let noTNTScriptTags = document.querySelectorAll("tnt-no-script");
             if (noTNTScriptTags.length !== 0) {
-                console.warn("Warning: Disabling TNT script may cause some unexpected results. If you're sure you want to disabl the TNT Script feature, please ignore this warning.");
-                TNT_1.Globals.removePlugin('tntscript');
+                console.warn("Warning: Disabling TNT script may cause some unexpected results. If you"re sure you want to disabl the TNT Script feature, please ignore this warning.");
+                TNT_1.Globals.removePlugin("tntscript");
             }
-            let disablePluginTags = document.querySelectorAll('tnt-disable-plugin');
+            let disablePluginTags = document.querySelectorAll("tnt-disable-plugin");
             for (const tag of disablePluginTags) {
-                const pluginId = tag.getAttribute('plugin');
+                const pluginId = tag.getAttribute("plugin");
                 if (pluginId !== null) {
                     TNT_1.Globals.removePlugin(pluginId);
                 }
             }
-            let pureModeTags = document.querySelectorAll('tnt-pure-mode');
-            let noPluginModeTags = document.querySelectorAll('tnt-no-plugin');
+            let pureModeTags = document.querySelectorAll("tnt-pure-mode");
+            let noPluginModeTags = document.querySelectorAll("tnt-no-plugin");
             if (pureModeTags.length !== 0 || noPluginModeTags.length !== 0) {
-                console.warn('Warning: You disabled all the plugins, including the TNT Script plugin and TNT Debugger plugin! Are you sure that\'s what you want? If not, please turn off the Pure Mode option. ');
-                console.log('Hint: Use <tnt-disable-plugin plugin="plugin_id_to_delete"></tnt-disable-plugin> to disable a single plugin. \nUse <tnt-no-script></tnt-disable-plugin> to disable the TNT Script integrated plugin (equal to <tnt-disable-plugin plugin="tntscript"></tnt-disable-plugin>). Remove the <tnt-debug></tnt-debug> tag to disable the debugger plugin.');
+                console.warn("Warning: You disabled all the plugins, including the TNT Script plugin and TNT Debugger plugin! Are you sure that\"s what you want? If not, please turn off the Pure Mode option. ");
+                console.log("Hint: Use <tnt-disable-plugin plugin='plugin_id_to_delete'></tnt-disable-plugin> to disable a single plugin. \nUse <tnt-no-script></tnt-disable-plugin> to disable the TNT Script integrated plugin (equal to <tnt-disable-plugin plugin="tntscript"></tnt-disable-plugin>). Remove the <tnt-debug></tnt-debug> tag to disable the debugger plugin.");
                 let pluginNames = [];
                 for (const plugin of TNT_1.Globals.getAllPlugins()) {
                     pluginNames.push(plugin.id);
@@ -823,10 +823,10 @@ var TNT;
                     TNT_1.Globals.removePlugin(pluginId);
                 }
             }
-            let flipModeTags = document.querySelectorAll('tnt-flip');
+            let flipModeTags = document.querySelectorAll("tnt-flip");
             if (flipModeTags.length !== 0) {
-                window.addEventListener('load', () => {
-                    document.querySelector('html').style.setProperty('transform', 'scaleX(-1)');
+                window.addEventListener("load", () => {
+                    document.querySelector("html").style.setProperty("transform", "scaleX(-1)");
                 });
             }
         }
@@ -887,7 +887,7 @@ var TNT;
         }
         render() {
             var _a, _b, _c, _d;
-            const vTags = document.querySelectorAll('v');
+            const vTags = document.querySelectorAll("v");
             for (const i of vTags) {
                 const rendered = i.getAttribute("data-rendered");
                 if (rendered === null) {

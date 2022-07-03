@@ -1,31 +1,37 @@
 /**
- * file: TypeInfo.ts
- * creator: 27Onion
- * create time: May 8th, 2022, 18:00
- * description: The type class.
+ * The type class.
  */
 
-namespace TNT {
-    export class TypeInfo {
-      private prv_namespaceName: string;
-      private prv_typeName: string;
-      private prv_defaultValue: any;
-      constructor(namespaceName: string, typeName: string, defaultValue: any) {
-        this.prv_namespaceName = namespaceName;
-        this.prv_typeName = typeName;
-        this.prv_defaultValue = defaultValue;
-      }
-      toString(): string {
-        return `${this.prv_namespaceName}:type.${this.prv_typeName}`;
-      }
-      get name(): string {
-        return this.prv_typeName;
-      }
-      get owner(): string {
-        return this.prv_typeName;
-      }
-      get defaultValue(): any {
-        return this.prv_defaultValue;
-      }
-    }
+import { VariableValueType } from "./SymbolTable";
+
+export default class TypeInfo {
+  #namespaceName: string;
+  #typeName: string;
+  #defaultValue: VariableValueType;
+
+  constructor(namespaceName: string, typeName: string, defaultValue: VariableValueType) {
+    this.#namespaceName = namespaceName;
+    this.#typeName = typeName;
+    this.#defaultValue = defaultValue;
+  }
+
+  toString(): string {
+    return `${this.#namespaceName}:type.${this.#typeName}`;
+  }
+
+  get name(): string {
+    return this.#typeName;
+  }
+
+  get owner(): string {
+    return this.#typeName;
+  }
+
+  get defaultValue(): VariableValueType {
+    return this.#defaultValue;
+  }
+
+  set defaultValue(value: VariableValueType) {
+    this.#defaultValue = value;
+  }
 }
