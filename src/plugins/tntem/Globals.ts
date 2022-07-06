@@ -20,6 +20,7 @@ export class Globals {
     this.addComponents(new Component("post", (dom) => {
       const http = new XMLHttpRequest();
       http.open("POST", dom.innerHTML, true);
+      http.send();
       http.onreadystatechange = () => {
         if (http.readyState === XMLHttpRequest.DONE && http.status === 200) {
           dom.innerHTML = http.responseText;

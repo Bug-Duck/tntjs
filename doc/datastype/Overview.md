@@ -1,4 +1,4 @@
-# TNT.js Datatype Documentation
+# TNTScript Datatype Documentation
 ## Overview
 ...
 ## Conversion Table

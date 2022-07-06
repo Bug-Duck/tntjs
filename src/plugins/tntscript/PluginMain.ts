@@ -26,7 +26,7 @@ export class PluginMain implements Plugin {
   }
 
   get version(): string {
-    return "v1.0.0-integrated";
+    return "v0.0.1-integrated";
   }
 
   get dependencies(): string[] {

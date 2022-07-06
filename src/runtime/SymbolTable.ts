@@ -77,6 +77,11 @@ export class SymbolTable {
     this.#onSetValueHandlers.forEach((eventHandler) => eventHandler());
   }
 
+  // Delete variable
+  del(key: string): void {
+    delete this.#content[key];
+  }
+
   // Register a new event handler that will be called when the value changes (to automatically update the state).
   onSetValue(handler: () => void) {
     this.#onSetValueHandlers.push(handler);

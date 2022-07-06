@@ -125,5 +125,7 @@ We're all middle school students and we don't have that much money. So sponsorin
 - 2022.5.22 项目重构完成
 - 2022.5.29 发布 0.1.0 版本
 - 2022.5.29 取消发布 0.1.0 版本
+- 2022.6.9 ES6重构完成
+- 2022.7.1 开发者们都放暑假啦!恢复开发
 
 Enjoy!

@@ -2,7 +2,7 @@
 
 import { Globals } from "runtime/GlobalEnvironment";
 import { StringType, SymbolTable } from "runtime/SymbolTable";
-import { codeSplit, jsTypeToTNTType, keySearch } from "./LexicalAnalysis";
+import { codeSplit, keySearch } from "./LexicalAnalysis";
 import { ScriptExecutor } from "./ScriptExecutor";
 import { Variable } from "runtime/SymbolTable";
 
