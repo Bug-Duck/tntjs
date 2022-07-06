@@ -5,7 +5,7 @@ import { Globals as GlobalEnvironment } from "runtime/GlobalEnvironment";
 
 export class Globals {
   #templateSymbol = new Template();
-
+  // 他妈的哪个傻逼不写注释
   constructor() {
     this.addComponents(new Component("get", (dom) => {
       const http = new XMLHttpRequest();

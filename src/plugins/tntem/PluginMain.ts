@@ -12,7 +12,7 @@ export class PluginMain implements Plugin {
   }
 
   get id(): string {
-    return "temlang";
+    return "tntem";
   }
 
   get rendererList(): Renderable[] {
