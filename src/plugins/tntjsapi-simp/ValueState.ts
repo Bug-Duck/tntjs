@@ -46,9 +46,9 @@ export class Value {
     return this;  // to enable chain-calls
   }
 
-  Delete(): void {
+  remove(): void {
     this.#logger.debug(`Deletting variable ${this.name}...`);
-    Globals.symbolTable.del(this.name);
+    Globals.symbolTable.remove(this.name);
     this.#logger.debug(`Delete variable ${this.name}.`);
   }
 
