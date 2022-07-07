@@ -1,9 +1,12 @@
 ![TNT.js](https://img1.imgtp.com/2022/06/13/lPea2J3u.png)
-![GitHub](https://img.shields.io/github/license/Bug-Duck/tntjs?style=flat-square)
+
+![License](https://img.shields.io/github/license/Bug-Duck/tntjs?style=flat-square)
 ![version](https://img.shields.io/npm/v/tntjs?style=flat-square)
-![watch](https://img.shields.io/github/watchers/Bug-Duck/tntjs?color=blue&logo=github&style=flat-square)
 ![Star](https://img.shields.io/github/stars/Bug-Duck/tntjs?color=yellow&logo=github&style=flat-square)
 ![Fork](https://img.shields.io/github/forks/Bug-Duck/tntjs?color=green&logo=github&style=flat-square)
+![watch](https://img.shields.io/github/watchers/Bug-Duck/tntjs?color=blue&logo=github&style=flat-square)
+[![OSCS Status](https://www.oscs1024.com/platform/badge/Bug-Duck/tntjs.svg?size=small)](https://www.oscs1024.com/project/Bug-Duck/tntjs?ref=badge_small)
+
 [![website](https://img.shields.io/badge/website-bugduck.cn-yellowgreen?style=flat-square)](https://bugduck.cn)
 [![ProjectWebsite](https://img.shields.io/badge/ProjectWebsite-tntjs.bugduck.cn-red?style=flat-square)](https://tntjs.bugduck.cn)
 [![BiliBili](https://img.shields.io/static/v1?label=bilibili&message=BugDuck开源团队&color=ff69b4&logo=bilibili&style=flat-square)](https://space.bilibili.com/1959824394?spm_id_from=333.337.0.0)
@@ -116,6 +119,7 @@ We're all middle school students and we don't have that much money. So sponsorin
 ![Sponsor us on WeChat](https://image.bugduck.cn/other/skm-weixin.png)
 
 ## Contributors
+
 - Emoji guidelines:
   - :star: : Community administrator
   - :pen: : Major contributor
