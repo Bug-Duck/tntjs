@@ -4,10 +4,8 @@
   "description": "TNT.js is a Javascript-based programming language. It's our goal to make it as simple as Python, and at the same time make it looks like a front-end programming language. The language avoid the cons of TypeScript that can't run directly on the browser.",
   "main": "dist/src/index.js",
   "scripts": {
-    "build": "webpack",
+    "build": "rollup -c",
     "build-old": "tsc  && javascript-obfuscator dist/tnt.js --output dist/tnt.min.js --string-array-encoding 'rc4' && rm dist/tnt.js",
-    "develop": "tsc --watch",
-    "precommit": "rm dist/tnt.js && rm dist/tnt.d.ts && rm dist/tnt.js.map",
     "dev": "rollup -c"
   },
   "repository": {

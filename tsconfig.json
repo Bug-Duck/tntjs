@@ -12,7 +12,9 @@
       "plugins/*": [
         "src/plugins/*"
       ]
-    }
+    },
+    "declaration": true,
+    "outDir": "./dist/src"
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["./tnt.d.ts"],
