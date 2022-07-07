@@ -1,12 +1,12 @@
 ![TNT.js](https://img1.imgtp.com/2022/06/13/lPea2J3u.png)
-![GitHub](https://img.shields.io/github/license/Bug-Duck/tntjs)
-![version](https://img.shields.io/badge/version-0.0.3-green)
+![GitHub](https://img.shields.io/github/license/Bug-Duck/tntjs?style=flat-square)
+![version](https://img.shields.io/npm/v/tntjs?style=flat-square)
 ![watch](https://img.shields.io/github/watchers/Bug-Duck/tntjs?color=blue&logo=github&style=flat-square)
 ![Star](https://img.shields.io/github/stars/Bug-Duck/tntjs?color=yellow&logo=github&style=flat-square)
 ![Fork](https://img.shields.io/github/forks/Bug-Duck/tntjs?color=green&logo=github&style=flat-square)
-[![website](https://img.shields.io/badge/website-bugduck.cn-yellowgreen)](https://bugduck.cn)
-[![ProjectWebsite](https://img.shields.io/badge/ProjectWebsite-tntjs.bugduck.cn-red)](https://tntjs.bugduck.cn)
-[![BiliBili](https://img.shields.io/static/v1?label=bilibili&message=BugDuck开源团队&color=ff69b4&logo=bilibili)](https://space.bilibili.com/1959824394?spm_id_from=333.337.0.0)
+[![website](https://img.shields.io/badge/website-bugduck.cn-yellowgreen?style=flat-square)](https://bugduck.cn)
+[![ProjectWebsite](https://img.shields.io/badge/ProjectWebsite-tntjs.bugduck.cn-red?style=flat-square)](https://tntjs.bugduck.cn)
+[![BiliBili](https://img.shields.io/static/v1?label=bilibili&message=BugDuck开源团队&color=ff69b4&logo=bilibili&style=flat-square)](https://space.bilibili.com/1959824394?spm_id_from=333.337.0.0)
 
 # TNT.js
 
@@ -29,32 +29,45 @@ TNTjs was separated into two parts:
 
 ## Demo
 
+### Install
+
+`$ npm install tntjs`
+or
+`$yarn add tntjs`
+
+add two files `App.js` and `index.html`:
+
+```javascript
+// App.js
+import { Value } from "tntjs";
+
+window.onload = () => {
+  var x = new Value("x","Number"); //add a variable
+  for (var i = 0; i < 60; i++) {
+    x.setValue(i);
+  };
+}
+```
+
 ```html
+<!--index.html-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Test Page</title>
-    <script src="tnt.js"></script>
+    <script src="./App.js">
+    <title>Document</title>
   </head>
   <body>
-    <tnt> x = 2333; </tnt>
-    <div id="content">
-      <v>x</v> <br />
-      You are using the: <v>explorerType</v>
-    </div>
+    <v>x</v>
   </body>
 </html>
-```
-
-Outputs:
 
 ```
-2333
-You are using the: Chrome
-```
+
+Than,you can get a timer counting from one to sixty.
 
 And the variable defined inside the `v` tag will be rendered as its actual value.
 

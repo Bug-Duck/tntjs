@@ -18,7 +18,7 @@ class PluginMain {
         return ["tnt"];
     }
     get version() {
-        return "v1.0.0-integrated";
+        return "v0.0.1-integrated";
     }
     get dependencies() {
         return [];

@@ -35,6 +35,11 @@ class Value {
         __classPrivateFieldGet(this, _Value_logger, "f").debug(`Set value ${value} for variable ${this.name}.`);
         return this;
     }
+    Delete() {
+        __classPrivateFieldGet(this, _Value_logger, "f").debug(`Deletting variable ${this.name}...`);
+        Globals.symbolTable.del(this.name);
+        __classPrivateFieldGet(this, _Value_logger, "f").debug(`Delete variable ${this.name}.`);
+    }
     get value() {
         return this.valueObject.value;
     }
