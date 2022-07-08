@@ -1,67 +1,60 @@
 /**
- * file: GlobalEnvironment.ts
- * creator: 27Onion
- * create time: May 4th, 2022, 9:10
- * description: The global environment of the tntjs.
+ * The global environment of the tntjs.
  */
 
 import { SymbolTable, StringType, VariableValueType } from "./SymbolTable";
 import TNT from "./TNT";
 import { Plugin } from "./Pluggable";
 
-export class Globals {
-  static symbolTable: SymbolTable = new SymbolTable();
-  static instances: TNT[] = [];
-  static valueEvaluator: (expr: string) => VariableValueType;
-  static pluginList: Plugin[] = [];
+export const TNTInstances: TNT[] = [];
+export let valueEvaluator: (symbolTable: SymbolTable, expr: string) => VariableValueType;
+export let pluginList: Plugin[] = [];
 
-  static #escapeString(str: string): string {
-    return str
-      .replace(/[\n\r]/g, "\\n")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
-  }
+const escapeString = (str: string): string => {
+  return str
+    .replace(/[\n\r]/g, "\\n")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+};
 
-  static defaultValueEvaluator(expr: string): VariableValueType {
-    const value = Globals.symbolTable.getValue(expr.trim());
-    if (value.type === StringType && typeof value.value === "string") {
-      return Globals.#escapeString(value.value);
-    }
-    return value.value;
+export const defaultValueEvaluator = (symbolTable: SymbolTable, expr: string): VariableValueType => {
+  const value = symbolTable.getValue(expr.trim());
+  if (value === undefined) {
+    throw TypeError(`Cannot find variable ${expr}.`);
   }
+  if (value.type === StringType && typeof value.value === "string") {
+    return escapeString(value.value);
+  }
+  return value.value;
+};
 
-  set valueEvaluator(fn: (expr: string) => VariableValueType) {
-    this.valueEvaluator = fn;
-  }
+export const setValueEvaluator = (newEvaluator: (symbolTable: SymbolTable, expr: string) => VariableValueType) => {
+  valueEvaluator = newEvaluator;
+};
 
-  static evaluate(expr: string): VariableValueType {
-    return (this.valueEvaluator ?? this.defaultValueEvaluator)(expr);
-  }
+export const evaluate = (symbolTable: SymbolTable, expr: string): VariableValueType => {
+  return (valueEvaluator ?? defaultValueEvaluator)(symbolTable, expr);
+};
 
-  // Add the plugin to the registry list.
-  static addPlugin(plugin: Plugin) {
-    this.pluginList.push(plugin);
-  }
+export const addPlugin = (root: HTMLElement, plugin: Plugin) => {
+  plugin.root = root;
+  pluginList.push(plugin);
+};
 
-  static plug(plugin: Plugin) {
-    this.addPlugin(plugin);
-  }
+export const getAllPlugins = () => {
+  return pluginList;
+};
 
-  static getAllPlugins() {
-    return this.pluginList;
-  }
+export const hasPlugin = (pluginId: string) => {
+  const pluginsFound = pluginList.filter((plugin) => {
+    return plugin.id === pluginId;
+  });
+  return pluginsFound.length > 0;
+};
 
-  static hasPlugin(pluginId: string) {
-    const pluginsFound = this.pluginList.filter((plugin) => {
-      return plugin.id === pluginId;
-    });
-    return pluginsFound.length > 0;
-  }
-
-  static removePlugin(pluginId: string) {
-    this.pluginList = this.pluginList.filter((plugin) => {
-      return plugin.id !== pluginId;
-    });
-  }
-}
+export const removePlugin = (pluginId: string) => {
+  pluginList = pluginList.filter((plugin) => {
+    return plugin.id !== pluginId;
+  });
+};

@@ -1,5 +1,4 @@
 import { __classPrivateFieldGet } from '../../../node_modules/tslib/tslib.es6.js';
-import { Globals } from '../../runtime/GlobalEnvironment.js';
 import { DebugRenderTracer } from './DebugRenderTracer.js';
 import { Logger } from '../../utils/logger.js';
 
@@ -28,7 +27,6 @@ class PluginMain {
     }
 }
 _PluginMain_logger = new WeakMap();
-Globals.plug(new PluginMain());
 
 export { PluginMain };
 //# sourceMappingURL=PluginMain.js.map

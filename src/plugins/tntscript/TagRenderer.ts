@@ -8,8 +8,14 @@
 import { Renderable } from "runtime/Pluggable";
 
 export class TagRenderer implements Renderable {
+  root: HTMLElement;
+
+  constructor(root: HTMLElement) {
+    this.root = root;
+  }
+
   render() {
-    const tags = document.querySelectorAll("tnt");
+    const tags = this.root.querySelectorAll("tnt");
 
     tags.forEach((tag) => {
       // since the tag content has been protected, we need to use data-tnt-plugin-value-backup instead of innerHTML.

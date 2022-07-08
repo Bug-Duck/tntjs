@@ -1,12 +1,17 @@
 import { ObjectType, Variable, VariableValueType } from "runtime/SymbolTable";
 import { Template } from "./Template";
 import { Component } from "./Template";
-import { Globals as GlobalEnvironment } from "runtime/GlobalEnvironment";
+import { SymbolTable } from "runtime/SymbolTable";
 
 export class Globals {
-  #templateSymbol = new Template();
-  // 他妈的哪个傻逼不写注释
-  constructor() {
+  templateSymbol = new Template();
+  #root: HTMLElement;
+  #symbolTable: SymbolTable;
+
+  constructor(symbolTable: SymbolTable, root: HTMLElement) {
+    this.#root = root;
+    this.#symbolTable = symbolTable;
+
     this.addComponents(new Component("get", (dom) => {
       const http = new XMLHttpRequest();
       http.open("GET", dom.innerHTML, true);
@@ -54,28 +59,20 @@ export class Globals {
     ) => {
       const HTMLCodes = dom.innerHTML;
       [...iterateOverObject as unknown as VariableValueType[]].forEach((iter, key) => {
-        GlobalEnvironment.symbolTable.setValue(traversalBody as string, new Variable(iter, ObjectType));
+        this.#symbolTable.setValue(traversalBody as string, new Variable(iter, ObjectType));
         // TODO: 渲染列表
       });
     }));
     // addComponents(new Component());
   }
 
-  get templateSymbol() {
-    return this.#templateSymbol;
-  }
-
-  set templateSymbol(value: Template) {
-    this.#templateSymbol = value;
-  }
-
   addComponents(component: Component) {
-    this.#templateSymbol[component.name] = component.exec;
+    this.templateSymbol[component.name] = component.exec;
   }
 
   render(dom) {
-    for (const component in this.#templateSymbol) {
-      const componentDocument = document.getElementsByTagName(component);
+    for (const component in this.templateSymbol) {
+      const componentDocument = this.#root.getElementsByTagName(component);
     }
   }
 }

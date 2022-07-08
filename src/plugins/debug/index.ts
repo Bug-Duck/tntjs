@@ -2,13 +2,12 @@
  * The main class of the debugger plugin.
  */
 
-import { Globals } from "runtime/GlobalEnvironment";
 import { Plugin, Renderable } from "runtime/Pluggable";
 import { DebugRenderTracer } from "./DebugRenderTracer";
-import { Logger } from "utils/logger";
+import { Logger } from "src/lib/logger";
 
-export class PluginMain implements Plugin {
-  #logger = new Logger("TNT Plugin Debugger");
+export default class DebugPlugin implements Plugin {
+  #logger = new Logger("TNT Debugger");
 
   get id(): string {
     return "tntdebug";
@@ -34,5 +33,3 @@ export class PluginMain implements Plugin {
     this.#logger.debug("[Debugger] Debug mode enabled. ");
   }
 }
-
-Globals.plug(new PluginMain());

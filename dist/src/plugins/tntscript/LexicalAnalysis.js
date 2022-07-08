@@ -57,7 +57,7 @@ function codeBlock(code) {
 function keySearch(key, code) {
     return code.replace(key, "");
 }
-function functionSplit(code, original = false) {
+function functionSplit(symbolTable, code, original = false) {
     let isInString = false;
     let isStringEscape = false;
     let isBracketMatchingMode = false;
@@ -121,10 +121,10 @@ function functionSplit(code, original = false) {
         if (/.+ ?= ?.+/.test(value)) {
             const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(" "));
             const name = /[^? =]/.exec(/([A-z0-9])+ ?=/.exec(code).join(" "));
-            values.optionalArgs[name[0]] = new ScriptExecutor().processValue(v[0]);
+            values.optionalArgs[name[0]] = new ScriptExecutor().processValue(symbolTable, v[0]);
             return;
         }
-        values.args.push(original ? new ScriptExecutor().processValue(value) : value);
+        values.args.push(original ? new ScriptExecutor().processValue(symbolTable, value) : value);
     });
     return values;
 }

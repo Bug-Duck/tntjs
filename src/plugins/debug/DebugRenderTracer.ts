@@ -1,5 +1,5 @@
 import { Renderable } from "runtime/Pluggable";
-import { Logger } from "src/utils/logger";
+import { Logger } from "src/lib/logger";
 
 export class DebugRenderTracer implements Renderable {
   #logger = new Logger("TNT Plugin Debugger");

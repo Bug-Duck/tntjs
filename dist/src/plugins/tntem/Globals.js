@@ -1,12 +1,14 @@
-import { __classPrivateFieldGet, __classPrivateFieldSet } from '../../../node_modules/tslib/tslib.es6.js';
+import { __classPrivateFieldSet, __classPrivateFieldGet } from '../../../node_modules/tslib/tslib.es6.js';
 import { Variable, ObjectType } from '../../runtime/SymbolTable.js';
 import { Template, Component } from './Template.js';
-import { Globals as Globals$1 } from '../../runtime/GlobalEnvironment.js';
+import { symbolTable } from '../../runtime/GlobalEnvironment.js';
 
-var _Globals_templateSymbol;
+var _Globals_root;
 class Globals {
-    constructor() {
-        _Globals_templateSymbol.set(this, new Template());
+    constructor(root) {
+        this.templateSymbol = new Template();
+        _Globals_root.set(this, void 0);
+        __classPrivateFieldSet(this, _Globals_root, root, "f");
         this.addComponents(new Component("get", (dom) => {
             const http = new XMLHttpRequest();
             http.open("GET", dom.innerHTML, true);
@@ -41,26 +43,20 @@ class Globals {
         this.addComponents(new Component("for", (dom, traversalBody, way, iterateOverObject) => {
             const HTMLCodes = dom.innerHTML;
             [...iterateOverObject].forEach((iter, key) => {
-                Globals$1.symbolTable.setValue(traversalBody, new Variable(iter, ObjectType));
+                symbolTable.setValue(traversalBody, new Variable(iter, ObjectType));
             });
         }));
     }
-    get templateSymbol() {
-        return __classPrivateFieldGet(this, _Globals_templateSymbol, "f");
-    }
-    set templateSymbol(value) {
-        __classPrivateFieldSet(this, _Globals_templateSymbol, value, "f");
-    }
     addComponents(component) {
-        __classPrivateFieldGet(this, _Globals_templateSymbol, "f")[component.name] = component.exec;
+        this.templateSymbol[component.name] = component.exec;
     }
     render(dom) {
-        for (const component in __classPrivateFieldGet(this, _Globals_templateSymbol, "f")) {
-            const componentDocument = document.getElementsByTagName(component);
+        for (const component in this.templateSymbol) {
+            const componentDocument = __classPrivateFieldGet(this, _Globals_root, "f").getElementsByTagName(component);
         }
     }
 }
-_Globals_templateSymbol = new WeakMap();
+_Globals_root = new WeakMap();
 
 export { Globals };
 //# sourceMappingURL=Globals.js.map

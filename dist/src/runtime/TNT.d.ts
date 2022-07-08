@@ -1,19 +1,11 @@
 import VTagRenderer from "./VTagRenderer";
+import { Plugin } from "./Pluggable";
+import { SymbolTable } from "./SymbolTable";
 export default class TNT {
     #private;
-    constructor();
-    checkOptionTags(): {
-        isDebugModeOn: boolean;
-        isTNTScriptOn: boolean;
-        isPureModeOn: boolean;
-        isFlipModeOn: boolean;
-        pluginsToBeDisabled: string[];
-    };
-    onDebugModeDisabled(): void;
-    onTNTScriptDisabled(): void;
-    disablePlugins(plugins: any): void;
-    onPureModeOn(): void;
-    onFlipModeOn(): void;
+    constructor(root: HTMLElement, symbolTable: SymbolTable);
+    disablePlugins(pluginIds: string[]): void;
+    addPlugins(plugins: Plugin[]): void;
     render(): void;
     onRender(): void;
     get vTagRenderer(): VTagRenderer;

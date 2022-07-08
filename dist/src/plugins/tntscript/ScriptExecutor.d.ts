@@ -10,14 +10,14 @@ export interface ProcessValueType {
 }
 export declare class ScriptExecutor {
     #private;
-    exec(scriptContent: string, data?: SymbolTable): void;
-    getFunctionParameter(reg: string, expression?: RegExp): FunctionParameterType;
-    onFunction(reg: string): {
+    exec(symbolTable: SymbolTable, scriptContent: string, data?: SymbolTable): void;
+    getFunctionParameter(symbolTable: SymbolTable, reg: string, expression?: RegExp): FunctionParameterType;
+    onFunction(symbolTable: SymbolTable, reg: string): {
         type: string;
         value: any;
     };
-    processValue(reg: string): ValueType;
+    processValue(symbolTable: SymbolTable, reg: string): ValueType;
     renderDOM(HTML: string, DOM: HTMLElement): void;
-    evaluate(expression: string): VariableValueType;
+    evaluate(symbolTable: SymbolTable, expression: string): VariableValueType;
     get innerSymbolTable(): SymbolTable;
 }

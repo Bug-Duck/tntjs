@@ -1,3 +1,4 @@
+import { SymbolTable } from "runtime/SymbolTable";
 import { ProcessValueType } from "./ScriptExecutor";
 export declare enum Tokens {
     STRING_ESCAPE = "\\",
@@ -15,5 +16,5 @@ export interface FunctionParameterType {
 export declare function codeSplit(code: string): string[];
 export declare function codeBlock(code: string): any[];
 export declare function keySearch(key: string, code: string): string;
-export declare function functionSplit(code: string, original?: boolean): FunctionParameterType;
+export declare function functionSplit(symbolTable: SymbolTable, code: string, original?: boolean): FunctionParameterType;
 export declare function jsTypeToTNTType(TypeName: string): string;

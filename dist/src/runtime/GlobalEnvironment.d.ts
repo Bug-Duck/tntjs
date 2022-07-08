@@ -1,18 +1,13 @@
 import { SymbolTable, VariableValueType } from "./SymbolTable";
 import TNT from "./TNT";
 import { Plugin } from "./Pluggable";
-export declare class Globals {
-    #private;
-    static symbolTable: SymbolTable;
-    static instances: TNT[];
-    static valueEvaluator: (expr: string) => VariableValueType;
-    static pluginList: Plugin[];
-    static defaultValueEvaluator(expr: string): VariableValueType;
-    set valueEvaluator(fn: (expr: string) => VariableValueType);
-    static evaluate(expr: string): VariableValueType;
-    static addPlugin(plugin: Plugin): void;
-    static plug(plugin: Plugin): void;
-    static getAllPlugins(): Plugin[];
-    static hasPlugin(pluginId: string): boolean;
-    static removePlugin(pluginId: string): void;
-}
+export declare const TNTInstances: TNT[];
+export declare let valueEvaluator: (symbolTable: SymbolTable, expr: string) => VariableValueType;
+export declare let pluginList: Plugin[];
+export declare const defaultValueEvaluator: (symbolTable: SymbolTable, expr: string) => VariableValueType;
+export declare const setValueEvaluator: (newEvaluator: (symbolTable: SymbolTable, expr: string) => VariableValueType) => void;
+export declare const evaluate: (symbolTable: SymbolTable, expr: string) => VariableValueType;
+export declare const addPlugin: (root: HTMLElement, plugin: Plugin) => void;
+export declare const getAllPlugins: () => Plugin[];
+export declare const hasPlugin: (pluginId: string) => boolean;
+export declare const removePlugin: (pluginId: string) => void;

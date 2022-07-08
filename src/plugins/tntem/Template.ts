@@ -1,7 +1,6 @@
 // FIXME: implement everything and check the unused variables
 
 import { VariableValueType } from "runtime/SymbolTable";
-import  TypeInfo  from "runtime/TypeInfo";
 
 export class Template {
   // TODO: implement this

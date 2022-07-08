@@ -1,11 +1,12 @@
 import { Plugin } from "runtime/Pluggable";
-import { Globals } from "runtime/GlobalEnvironment";
 import { Renderable } from "runtime/Pluggable";
 import { TemplateRenderer } from "./TemplateRender";
 
-export class PluginMain implements Plugin {
+export default class TemplateLanguagePlugin implements Plugin {
+  root: HTMLElement;
+
   onInit(): void {
-    const paragraphs = document.getElementsByTagName("p");
+    const paragraphs = this.root.getElementsByTagName("p");
     [...paragraphs].forEach((p) => {
       p.innerHTML = "testst";
     });
@@ -31,5 +32,3 @@ export class PluginMain implements Plugin {
     return [];
   }
 }
-
-Globals.plug(new PluginMain());

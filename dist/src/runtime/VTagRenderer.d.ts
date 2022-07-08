@@ -1,6 +1,7 @@
+import { SymbolTable } from "./SymbolTable";
 export default class VTagRenderer {
     #private;
-    constructor(customRenderer?: (vTagContent: string) => string);
+    constructor(root: HTMLElement, symbolTable: SymbolTable, customRenderer?: (vTagContent: string) => string);
     defaultRenderer(s: string): string;
     render(): void;
 }

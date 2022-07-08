@@ -1,10 +1,10 @@
 import { Template } from "./Template";
 import { Component } from "./Template";
+import { SymbolTable } from "runtime/SymbolTable";
 export declare class Globals {
     #private;
-    constructor();
-    get templateSymbol(): Template;
-    set templateSymbol(value: Template);
+    templateSymbol: Template;
+    constructor(symbolTable: SymbolTable, root: HTMLElement);
     addComponents(component: Component): void;
     render(dom: any): void;
 }

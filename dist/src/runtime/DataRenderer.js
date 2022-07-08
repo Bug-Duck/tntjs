@@ -1,12 +1,14 @@
 import { __classPrivateFieldSet, __classPrivateFieldGet } from '../../node_modules/tslib/tslib.es6.js';
 
-var _DataRenderer_tagDataAttributes;
+var _DataRenderer_tagDataAttributes, _DataRenderer_root;
 class DataRenderer {
-    constructor() {
+    constructor(root) {
         _DataRenderer_tagDataAttributes.set(this, void 0);
+        _DataRenderer_root.set(this, void 0);
+        __classPrivateFieldSet(this, _DataRenderer_root, root, "f");
     }
     tagDataRender() {
-        __classPrivateFieldSet(this, _DataRenderer_tagDataAttributes, document.querySelectorAll("[tnt-td]"), "f");
+        __classPrivateFieldSet(this, _DataRenderer_tagDataAttributes, __classPrivateFieldGet(this, _DataRenderer_root, "f").querySelectorAll("[tnt-td]"), "f");
         const domData = [];
         __classPrivateFieldGet(this, _DataRenderer_tagDataAttributes, "f").forEach((tag) => {
             const text = tag.getAttribute("tnt-td");
@@ -15,7 +17,7 @@ class DataRenderer {
         });
     }
     tagStyleRender() {
-        __classPrivateFieldSet(this, _DataRenderer_tagDataAttributes, document.querySelectorAll("[tnt-sd]"), "f");
+        __classPrivateFieldSet(this, _DataRenderer_tagDataAttributes, __classPrivateFieldGet(this, _DataRenderer_root, "f").querySelectorAll("[tnt-sd]"), "f");
         const domData = [];
         for (const i of __classPrivateFieldGet(this, _DataRenderer_tagDataAttributes, "f")) {
             const text = i.getAttribute("tnt-sd");
@@ -56,7 +58,7 @@ class DataRenderer {
         return keyValue;
     }
 }
-_DataRenderer_tagDataAttributes = new WeakMap();
+_DataRenderer_tagDataAttributes = new WeakMap(), _DataRenderer_root = new WeakMap();
 
 export { DataRenderer };
 //# sourceMappingURL=DataRenderer.js.map

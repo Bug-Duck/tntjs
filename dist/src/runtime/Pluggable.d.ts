@@ -1,4 +1,5 @@
 export interface Renderable {
+    root?: HTMLElement;
     render(): void;
 }
 export interface Plugin {
@@ -6,6 +7,7 @@ export interface Plugin {
     get rendererList(): Renderable[];
     get tags(): string[];
     get version(): string;
+    root?: HTMLElement;
     dependencies: string[];
     onInit(): void;
 }

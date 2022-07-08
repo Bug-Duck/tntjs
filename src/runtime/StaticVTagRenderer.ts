@@ -4,29 +4,34 @@
  * create time: May 4th, 2022, 8:15
  * description: Renderer for the V tag.
  */
-import { Globals } from "./GlobalEnvironment";
+import { evaluate } from "./GlobalEnvironment";
+import { SymbolTable } from "./SymbolTable";
 
 export default class StaticVTagRenderer {
   #customRenderer?: (vTagContent: string) => string;
   #renderer: (vTagContent: string) => string;
+  #root: HTMLElement;
+  #symbolTable: SymbolTable;
 
-  constructor(customRenderer: (vTagContent: string) => string = undefined) {
+  constructor(root: HTMLElement, symbolTable: SymbolTable, customRenderer: (vTagContent: string) => string = undefined) {
     this.#customRenderer = customRenderer;
     this.#renderer = this.#customRenderer ?? this.#defaultRenderer;
+    this.#root = root;
+    this.#symbolTable = symbolTable;
   }
 
   #defaultRenderer(s: string): string {
     try {
-      return `${Globals.evaluate(s)}`;
+      return `${evaluate(this.#symbolTable, s)}`;
     } catch (e) {
       return `Error while rendering element: ${e}`;
     }
   }
 
   render() {
-    const svTags = document.querySelectorAll("sv");
+    const svTags = this.#root.querySelectorAll("sv");
     svTags.forEach((tag) => {
-      tag.innerHTML = this.#renderer(tag.innerHTML);
+      tag.innerHTML = this.#renderer(tag.getAttribute("data-original"));
     });
   }
 }

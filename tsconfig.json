@@ -11,6 +11,9 @@
       ],
       "plugins/*": [
         "src/plugins/*"
+      ],
+      "lib/*": [
+        "src/lib/*"
       ]
     },
     "declaration": true,

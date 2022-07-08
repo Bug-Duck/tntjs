@@ -3,6 +3,7 @@
  */
 
 import TypeInfo from "./TypeInfo";
+import { Logger } from "src/lib/logger";
 
 // TNT types
 export const StringType = new TypeInfo("tnt", "string", "");
@@ -24,11 +25,13 @@ export type VariableValueType = string | number | object | boolean | (() => unkn
 export class Variable {
   #value: VariableValueType;
   #type: TypeInfo;
+  #logger: Logger;
 
   constructor(value: VariableValueType, type: TypeInfo) {
     this.#validate(value, type);
     this.#value = value;
     this.#type = type;
+    this.#logger = new Logger("tnt-variable");
   }
 
   #validate(value: VariableValueType, type: TypeInfo) {
@@ -45,7 +48,10 @@ export class Variable {
     if (type === JSFunctionType && typeof value !== "function") {
       expectedType = "JavaScript function";
     }
-    if (expectedType) throw new TypeError(`Expected ${expectedType} but got ${typeof value}`);
+    if (type === BoolType && typeof value !== "boolean") {
+      expectedType = "boolean";
+    }
+    if (expectedType) throw new TypeError(`Expected ${expectedType} but got ${typeof value}.`);
   }
 
   get value() {
@@ -53,7 +59,12 @@ export class Variable {
   }
 
   set value(value: VariableValueType) {
-    this.#validate(value, this.#type);
+    try {
+      this.#validate(value, this.#type);
+    } catch (e) {
+      this.#logger.error(e);
+      return;
+    }
     this.#value = value;
   }
 

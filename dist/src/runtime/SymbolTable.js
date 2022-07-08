@@ -1,7 +1,8 @@
 import { __classPrivateFieldGet, __classPrivateFieldSet } from '../../node_modules/tslib/tslib.es6.js';
 import TypeInfo from './TypeInfo.js';
+import { Logger } from '../lib/logger.js';
 
-var _Variable_instances, _Variable_value, _Variable_type, _Variable_validate, _SymbolTable_onSetValueHandlers, _SymbolTable_content;
+var _Variable_instances, _Variable_value, _Variable_type, _Variable_logger, _Variable_validate, _SymbolTable_onSetValueHandlers, _SymbolTable_content;
 const StringType = new TypeInfo("tnt", "string", "");
 const NumberType = new TypeInfo("tnt", "number", 0);
 const ObjectType = new TypeInfo("tnt", "object", null);
@@ -21,22 +22,30 @@ class Variable {
         _Variable_instances.add(this);
         _Variable_value.set(this, void 0);
         _Variable_type.set(this, void 0);
+        _Variable_logger.set(this, void 0);
         __classPrivateFieldGet(this, _Variable_instances, "m", _Variable_validate).call(this, value, type);
         __classPrivateFieldSet(this, _Variable_value, value, "f");
         __classPrivateFieldSet(this, _Variable_type, type, "f");
+        __classPrivateFieldSet(this, _Variable_logger, new Logger("tnt-variable"), "f");
     }
     get value() {
         return __classPrivateFieldGet(this, _Variable_value, "f");
     }
     set value(value) {
-        __classPrivateFieldGet(this, _Variable_instances, "m", _Variable_validate).call(this, value, __classPrivateFieldGet(this, _Variable_type, "f"));
+        try {
+            __classPrivateFieldGet(this, _Variable_instances, "m", _Variable_validate).call(this, value, __classPrivateFieldGet(this, _Variable_type, "f"));
+        }
+        catch (e) {
+            __classPrivateFieldGet(this, _Variable_logger, "f").error(e);
+            return;
+        }
         __classPrivateFieldSet(this, _Variable_value, value, "f");
     }
     get type() {
         return __classPrivateFieldGet(this, _Variable_type, "f");
     }
 }
-_Variable_value = new WeakMap(), _Variable_type = new WeakMap(), _Variable_instances = new WeakSet(), _Variable_validate = function _Variable_validate(value, type) {
+_Variable_value = new WeakMap(), _Variable_type = new WeakMap(), _Variable_logger = new WeakMap(), _Variable_instances = new WeakSet(), _Variable_validate = function _Variable_validate(value, type) {
     let expectedType = null;
     if (type === StringType && typeof value !== "string") {
         expectedType = "string";
@@ -50,8 +59,11 @@ _Variable_value = new WeakMap(), _Variable_type = new WeakMap(), _Variable_insta
     if (type === JSFunctionType && typeof value !== "function") {
         expectedType = "JavaScript function";
     }
+    if (type === BoolType && typeof value !== "boolean") {
+        expectedType = "boolean";
+    }
     if (expectedType)
-        throw new TypeError(`Expected ${expectedType} but got ${typeof value}`);
+        throw new TypeError(`Expected ${expectedType} but got ${typeof value}.`);
 };
 class SymbolTable {
     constructor() {

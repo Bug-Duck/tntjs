@@ -4,8 +4,14 @@
 
 export class DataRenderer {
   #tagDataAttributes: NodeListOf<Element>;
+  #root: HTMLElement;
+
+  constructor(root: HTMLElement) {
+    this.#root = root;
+  }
+
   tagDataRender() {
-    this.#tagDataAttributes = document.querySelectorAll("[tnt-td]");
+    this.#tagDataAttributes = this.#root.querySelectorAll("[tnt-td]");
     const domData = [];
     this.#tagDataAttributes.forEach((tag) => {
       const text = tag.getAttribute("tnt-td");
@@ -23,7 +29,7 @@ export class DataRenderer {
   }
 
   tagStyleRender() {
-    this.#tagDataAttributes = document.querySelectorAll("[tnt-sd]");
+    this.#tagDataAttributes = this.#root.querySelectorAll("[tnt-sd]");
     const domData = [];
     for (const i of this.#tagDataAttributes) {
       const text = i.getAttribute("tnt-sd");

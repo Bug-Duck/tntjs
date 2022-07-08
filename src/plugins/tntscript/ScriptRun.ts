@@ -1,15 +1,14 @@
 // FIXME: implement everything and check unused variables
 
-import { Globals } from "runtime/GlobalEnvironment";
 import { StringType, SymbolTable } from "runtime/SymbolTable";
 import { codeSplit, keySearch } from "./LexicalAnalysis";
 import { ScriptExecutor } from "./ScriptExecutor";
 import { Variable } from "runtime/SymbolTable";
 
-export function runScriptCode(codes, dataObj: ScriptExecutor): SymbolTable {
+export function runScriptCode(symbolTable: SymbolTable, codes, dataObj: ScriptExecutor): SymbolTable {
   const codeList = init(codes);
   codeList.forEach((code) => {
-    lineRun(code, dataObj);
+    lineRun(symbolTable, code, dataObj);
   });
   return dataObj.innerSymbolTable;
 }
@@ -19,7 +18,7 @@ export function init(codes: string) {
   return list;
 }
 
-export function lineRun(code: string, dataObj: ScriptExecutor) {
+export function lineRun(symbolTable: SymbolTable, code: string, dataObj: ScriptExecutor) {
   // TODO: refactor those keywords into an array
   const keywords = ["for", "while", "def", "render", "when"];
   let keywordConstructor = "";
@@ -29,7 +28,7 @@ export function lineRun(code: string, dataObj: ScriptExecutor) {
   keywordConstructor = keywordConstructor.substring(0, keywordConstructor.length - 1) + " .+";
   const isKeyword = RegExp(keywordConstructor);
   if (/([A-z0-9])+ ?= ?.+/.test(code)) { // Variable assignment statement
-    variableStatement(code, dataObj);
+    variableStatement(symbolTable, code, dataObj);
     return;
   }
   if (isKeyword.test(code)) {
@@ -48,13 +47,13 @@ export function lineRun(code: string, dataObj: ScriptExecutor) {
     // 如果检测到跳出循环语句 则返回"break"
     return "break";
   } else {
-    dataObj.processValue(code);
+    dataObj.processValue(symbolTable, code);
   }
 }
     
-export function variableStatement (code: string, dataObj: ScriptExecutor) {
+export function variableStatement (symbolTable: SymbolTable, code: string, dataObj: ScriptExecutor) {
   const v = /[^= ]+/.exec(/= ?.+/.exec(code).join(" "));
-  const process = dataObj.processValue(v[0]);
+  const process = dataObj.processValue(symbolTable, v[0]);
   // TODO: 变量赋值的值重构后存储
   if (/let /.test(code)) {
     // TODO: 局部变量赋值
@@ -66,7 +65,7 @@ export function variableStatement (code: string, dataObj: ScriptExecutor) {
     //     TNTSymbolTableOWN,
     // );
   } else {
-    Globals.symbolTable.setValue(process.type, new Variable(process.value, StringType));
+    symbolTable.setValue(process.type, new Variable(process.value, StringType));
   }
   // Refresh the page.
   // TNTValueTagProcessing();
@@ -91,11 +90,11 @@ export function whileStatement (code: string) {
   // }
 }
 
-export const importCode = (code: string, dataObj) => {
+export const importCode = (symbolTable: SymbolTable, code: string, dataObj) => {
   const importedPackage = dataObj.processValue(keySearch("import", code));
   const http = new XMLHttpRequest();
   const fileCode = http.open("GET", importedPackage, false);
-  const newTable = runScriptCode(fileCode, dataObj);
+  const newTable = runScriptCode(symbolTable, fileCode, dataObj);
   // FIXME: fix this merge
-  Globals.symbolTable.merge(newTable, (oldValue, _newValue) => oldValue);
+  symbolTable.merge(newTable, (oldValue, _newValue) => oldValue);
 };

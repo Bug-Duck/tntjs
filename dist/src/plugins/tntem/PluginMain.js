@@ -1,9 +1,8 @@
-import { Globals } from '../../runtime/GlobalEnvironment.js';
 import { TemplateRenderer } from './TemplateRender.js';
 
 class PluginMain {
     onInit() {
-        const paragraphs = document.getElementsByTagName("p");
+        const paragraphs = this.root.getElementsByTagName("p");
         [...paragraphs].forEach((p) => {
             p.innerHTML = "testst";
         });
@@ -24,7 +23,6 @@ class PluginMain {
         return [];
     }
 }
-Globals.plug(new PluginMain());
 
 export { PluginMain };
 //# sourceMappingURL=PluginMain.js.map

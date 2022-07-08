@@ -1,35 +1,44 @@
-import { __classPrivateFieldGet, __classPrivateFieldSet } from '../../node_modules/tslib/tslib.es6.js';
+import { __classPrivateFieldSet, __classPrivateFieldGet } from '../../node_modules/tslib/tslib.es6.js';
 import VTagRenderer from './VTagRenderer.js';
 import StaticVTagRenderer from './StaticVTagRenderer.js';
-import { Globals } from './GlobalEnvironment.js';
-import { Logger } from '../utils/logger.js';
+import { TNTInstances, getAllPlugins, removePlugin, addPlugin } from './GlobalEnvironment.js';
+import { Logger } from '../lib/logger.js';
 
-var _TNT_vTagRenderer, _TNT_svTagRenderer, _TNT_refreshLock, _TNT_logger;
+var _TNT_instances, _TNT_vTagRenderer, _TNT_svTagRenderer, _TNT_refreshLock, _TNT_logger, _TNT_root, _TNT_symbolTable, _TNT_checkOptionTags, _TNT_onDebugModeDisabled, _TNT_onTNTScriptDisabled, _TNT_onPureModeOn, _TNT_onFlipModeOn;
 class TNT {
-    constructor() {
+    constructor(root, symbolTable) {
+        _TNT_instances.add(this);
         _TNT_vTagRenderer.set(this, void 0);
         _TNT_svTagRenderer.set(this, void 0);
         _TNT_refreshLock.set(this, true);
         _TNT_logger.set(this, new Logger("TNT Runtime"));
-        Globals.instances.push(this);
-        Globals.symbolTable.onSetValue(() => {
+        _TNT_root.set(this, void 0);
+        _TNT_symbolTable.set(this, void 0);
+        if (!root) {
+            throw TypeError("TNT root element cannot be undefined.");
+        }
+        if (!symbolTable) {
+            throw TypeError("SymbolTable object cannot be undefined.");
+        }
+        __classPrivateFieldSet(this, _TNT_root, root, "f");
+        __classPrivateFieldSet(this, _TNT_symbolTable, symbolTable, "f");
+        TNTInstances.push(this);
+        symbolTable.onSetValue(() => {
             if (!__classPrivateFieldGet(this, _TNT_refreshLock, "f")) {
                 this.render();
             }
         });
-        __classPrivateFieldSet(this, _TNT_vTagRenderer, new VTagRenderer(), "f");
-        __classPrivateFieldSet(this, _TNT_svTagRenderer, new StaticVTagRenderer(), "f");
-        const { isDebugModeOn, isFlipModeOn, isPureModeOn, isTNTScriptOn, pluginsToBeDisabled } = this.checkOptionTags();
+        const { isDebugModeOn, isFlipModeOn, isPureModeOn, isTNTScriptOn, pluginsToBeDisabled } = __classPrivateFieldGet(this, _TNT_instances, "m", _TNT_checkOptionTags).call(this);
         if (!isDebugModeOn)
-            this.onDebugModeDisabled();
+            __classPrivateFieldGet(this, _TNT_instances, "m", _TNT_onDebugModeDisabled).call(this);
         if (isFlipModeOn)
-            this.onFlipModeOn();
+            __classPrivateFieldGet(this, _TNT_instances, "m", _TNT_onFlipModeOn).call(this);
         if (isPureModeOn)
-            this.onPureModeOn();
+            __classPrivateFieldGet(this, _TNT_instances, "m", _TNT_onPureModeOn).call(this);
         if (!isTNTScriptOn)
-            this.onTNTScriptDisabled();
+            __classPrivateFieldGet(this, _TNT_instances, "m", _TNT_onTNTScriptDisabled).call(this);
         this.disablePlugins(pluginsToBeDisabled);
-        const plugins = Globals.getAllPlugins();
+        const plugins = getAllPlugins();
         plugins.forEach((plugin) => {
             __classPrivateFieldGet(this, _TNT_logger, "f").debug(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
             try {
@@ -53,65 +62,36 @@ class TNT {
             }
             catch (e) {
                 __classPrivateFieldGet(this, _TNT_logger, "f").error(`Error while loading plugin ${plugin.id}:\n${e}`, true);
-                Globals.removePlugin(plugin.id);
+                removePlugin(plugin.id);
                 return;
             }
             __classPrivateFieldGet(this, _TNT_logger, "f").debug(`Successfully loaded plugin ${plugin.id}`);
         });
+        __classPrivateFieldSet(this, _TNT_vTagRenderer, new VTagRenderer(__classPrivateFieldGet(this, _TNT_root, "f"), __classPrivateFieldGet(this, _TNT_symbolTable, "f")), "f");
+        __classPrivateFieldSet(this, _TNT_svTagRenderer, new StaticVTagRenderer(__classPrivateFieldGet(this, _TNT_root, "f"), __classPrivateFieldGet(this, _TNT_symbolTable, "f")), "f");
         this.render();
         this.onRender();
         __classPrivateFieldSet(this, _TNT_refreshLock, false, "f");
     }
-    checkOptionTags() {
-        const isDebugModeOn = document.querySelectorAll("tnt-debug").length === 0;
-        const isTNTScriptOn = document.querySelectorAll("tnt-no-script").length === 0;
-        const pluginsToBeDisabled = [...document.querySelectorAll("tnt-disable-plugin")].map((tag) => (tag.getAttribute("plugin")));
-        const pureModeTags = document.querySelectorAll("tnt-pure-mode");
-        const noPluginModeTags = document.querySelectorAll("tnt-no-plugin");
-        const isPureModeOn = pureModeTags.length !== 0 || noPluginModeTags.length !== 0;
-        const isFlipModeOn = document.querySelectorAll("tnt-flip").length !== 0;
-        return { isDebugModeOn, isTNTScriptOn, isPureModeOn, isFlipModeOn, pluginsToBeDisabled };
-    }
-    onDebugModeDisabled() {
-        if (window.location.href.startsWith("file:")) {
-            __classPrivateFieldGet(this, _TNT_logger, "f").warn("It seems that you are developing the webpage but you don't enable the debug mode.\n" +
-                "It's better for you to enable the debug mode by the html tag <tnt-debug></tnt-debug> to enable more debugging features.\n" +
-                "If your application is designed to run on file:/// protocol, please ignore this warning.", true);
-        }
-        Globals.removePlugin("tntdebug");
-    }
-    onTNTScriptDisabled() {
-        __classPrivateFieldGet(this, _TNT_logger, "f").warn("Disabling TNT script may cause some unexpected results. If you're sure you want to disable the TNT Script feature, please ignore this warning.", true);
-        Globals.removePlugin("tntscript");
-    }
-    disablePlugins(plugins) {
-        plugins.forEach((pluginId) => {
+    disablePlugins(pluginIds) {
+        pluginIds.forEach((pluginId) => {
             if (pluginId !== null) {
-                Globals.removePlugin(pluginId);
+                removePlugin(pluginId);
             }
         });
     }
-    onPureModeOn() {
-        __classPrivateFieldGet(this, _TNT_logger, "f").warn("You disabled all the plugins, including the TNT Script plugin and TNT Debugger plugin! Are you sure that's what you want? If not, please turn off the Pure Mode option.\n\n" +
-            "Hint:\n- Use <tnt-disable-plugin plugin=\"plugin_id_to_delete\"></tnt-disable-plugin> to disable a single plugin. \n" +
-            "- Use <tnt-no-script></tnt-no-script> to disable the TNT Script integrated plugin (equal to <tnt-disable-plugin plugin=\"tntscript\"></tnt-disable-plugin>).\n" +
-            "- Remove the <tnt-debug></tnt-debug> tag to disable the debugger plugin.\n", true);
-        Globals.getAllPlugins().forEach((plugin) => {
-            Globals.removePlugin(plugin.id);
-        });
-    }
-    onFlipModeOn() {
-        window.addEventListener("load", () => {
-            document.querySelector("html").style.setProperty("transform", "scaleX(-1)");
+    addPlugins(plugins) {
+        plugins.forEach((plugin) => {
+            addPlugin(__classPrivateFieldGet(this, _TNT_root, "f"), plugin);
         });
     }
     render() {
-        const plugins = Globals.getAllPlugins();
+        const plugins = getAllPlugins();
         __classPrivateFieldSet(this, _TNT_refreshLock, true, "f");
         __classPrivateFieldGet(this, _TNT_vTagRenderer, "f").render();
         plugins.forEach((plugin) => {
             plugin.tags.forEach((tag) => {
-                const tagDOM = document.querySelectorAll(tag);
+                const tagDOM = __classPrivateFieldGet(this, _TNT_root, "f").querySelectorAll(tag);
                 tagDOM.forEach((el) => {
                     try {
                         el.setAttribute("data-tnt-plugin-value-backup", el.innerHTML);
@@ -125,7 +105,7 @@ class TNT {
                 renderer.render();
             });
             plugin.tags.forEach((tag) => {
-                const tagDOM = document.querySelectorAll(tag);
+                const tagDOM = __classPrivateFieldGet(this, _TNT_root, "f").querySelectorAll(tag);
                 tagDOM.forEach((el) => {
                     el.innerHTML = el.getAttribute("data-tnt-plugin-value-backup");
                     el.removeAttribute("data-tnt-plugin-value-backup");
@@ -141,7 +121,38 @@ class TNT {
         return __classPrivateFieldGet(this, _TNT_vTagRenderer, "f");
     }
 }
-_TNT_vTagRenderer = new WeakMap(), _TNT_svTagRenderer = new WeakMap(), _TNT_refreshLock = new WeakMap(), _TNT_logger = new WeakMap();
+_TNT_vTagRenderer = new WeakMap(), _TNT_svTagRenderer = new WeakMap(), _TNT_refreshLock = new WeakMap(), _TNT_logger = new WeakMap(), _TNT_root = new WeakMap(), _TNT_symbolTable = new WeakMap(), _TNT_instances = new WeakSet(), _TNT_checkOptionTags = function _TNT_checkOptionTags() {
+    const isDebugModeOn = __classPrivateFieldGet(this, _TNT_root, "f").querySelectorAll("tnt-debug").length === 0;
+    const isTNTScriptOn = __classPrivateFieldGet(this, _TNT_root, "f").querySelectorAll("tnt-no-script").length === 0;
+    const pluginsToBeDisabled = [...__classPrivateFieldGet(this, _TNT_root, "f").querySelectorAll("tnt-disable-plugin")].map((tag) => (tag.getAttribute("plugin")));
+    const pureModeTags = __classPrivateFieldGet(this, _TNT_root, "f").querySelectorAll("tnt-pure-mode");
+    const noPluginModeTags = __classPrivateFieldGet(this, _TNT_root, "f").querySelectorAll("tnt-no-plugin");
+    const isPureModeOn = pureModeTags.length !== 0 || noPluginModeTags.length !== 0;
+    const isFlipModeOn = __classPrivateFieldGet(this, _TNT_root, "f").querySelectorAll("tnt-flip").length !== 0;
+    return { isDebugModeOn, isTNTScriptOn, isPureModeOn, isFlipModeOn, pluginsToBeDisabled };
+}, _TNT_onDebugModeDisabled = function _TNT_onDebugModeDisabled() {
+    if (window.location.href.startsWith("file:")) {
+        __classPrivateFieldGet(this, _TNT_logger, "f").warn("It seems that you are developing the webpage but you don't enable the debug mode.\n" +
+            "It's better for you to enable the debug mode by the html tag <tnt-debug></tnt-debug> to enable more debugging features.\n" +
+            "If your application is designed to run on file:/// protocol, please ignore this warning.", true);
+    }
+    removePlugin("tntdebug");
+}, _TNT_onTNTScriptDisabled = function _TNT_onTNTScriptDisabled() {
+    __classPrivateFieldGet(this, _TNT_logger, "f").warn("Disabling TNT script may cause some unexpected results. If you're sure you want to disable the TNT Script feature, please ignore this warning.", true);
+    removePlugin("tntscript");
+}, _TNT_onPureModeOn = function _TNT_onPureModeOn() {
+    __classPrivateFieldGet(this, _TNT_logger, "f").warn("You disabled all the plugins, including the TNT Script plugin and TNT Debugger plugin! Are you sure that's what you want? If not, please turn off the Pure Mode option.\n\n" +
+        "Hint:\n- Use <tnt-disable-plugin plugin=\"plugin_id_to_delete\"></tnt-disable-plugin> to disable a single plugin. \n" +
+        "- Use <tnt-no-script></tnt-no-script> to disable the TNT Script integrated plugin (equal to <tnt-disable-plugin plugin=\"tntscript\"></tnt-disable-plugin>).\n" +
+        "- Remove the <tnt-debug></tnt-debug> tag to disable the debugger plugin.\n", true);
+    getAllPlugins().forEach((plugin) => {
+        removePlugin(plugin.id);
+    });
+}, _TNT_onFlipModeOn = function _TNT_onFlipModeOn() {
+    window.addEventListener("load", () => {
+        __classPrivateFieldGet(this, _TNT_root, "f").style.setProperty("transform", "scaleX(-1)");
+    });
+};
 
 export { TNT as default };
 //# sourceMappingURL=TNT.js.map

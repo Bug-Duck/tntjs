@@ -1,5 +1,5 @@
 import { __classPrivateFieldGet } from '../../../node_modules/tslib/tslib.es6.js';
-import { Globals } from '../../runtime/GlobalEnvironment.js';
+import { setValueEvaluator } from '../../runtime/GlobalEnvironment.js';
 import { ScriptExecutor } from './ScriptExecutor.js';
 import { TagRenderer } from './TagRenderer.js';
 
@@ -12,7 +12,7 @@ class PluginMain {
         return "tntscript";
     }
     get rendererList() {
-        return [new TagRenderer()];
+        return [new TagRenderer(this.root)];
     }
     get tags() {
         return ["tnt"];
@@ -24,16 +24,15 @@ class PluginMain {
         return [];
     }
     onInit() {
-        document.querySelectorAll("tnt").forEach((tntTag) => {
+        this.root.querySelectorAll("tnt").forEach((tntTag) => {
             __classPrivateFieldGet(this, _PluginMain_executor, "f").exec(tntTag.innerHTML);
         });
-        Globals.valueEvaluator = ((e) => {
+        setValueEvaluator((e) => {
             return __classPrivateFieldGet(this, _PluginMain_executor, "f").evaluate(e);
         });
     }
 }
 _PluginMain_executor = new WeakMap();
-Globals.plug(new PluginMain());
 
 export { PluginMain };
 //# sourceMappingURL=PluginMain.js.map

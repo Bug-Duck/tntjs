@@ -7,24 +7,10 @@
     <title>Document</title>
   </head>
   <body>
-    <tnt-debug></tnt-debug>
-    <v>x</v>
-    <script type="module">
-      import TNT from "./dist/src/runtime/TNT.js";
-      import { Value } from "./dist/src/plugins/tntjsapi-simp/ValueState.js";
-      import { Globals } from "./dist/src/runtime/GlobalEnvironment.js";
-      import { NumberType } from "./dist/src/runtime/SymbolTable.js";
-      import { PluginMain as TemplatePlugin } from "./dist/src/plugins/TemplateLanguage/PluginMain.js";
-      import { PluginMain as DebugPlugin } from "./dist/src/plugins/debug/PluginMain.js";
-
-      window.onload = () => {
-        // console.log(TemplatePlugin);
-        // Globals.plug(new TemplatePlugin());
-        console.log(Globals.getAllPlugins())
-        const t = new TNT();
-        new Value("x", NumberType).setValue(23333)
-        console.log(Globals.symbolTable);
-      };
-    </script>
+    <div id="root">
+      <tnt-debug></tnt-debug>
+      <v name="xxx">Loading variable xxx...</v>
+    </div>
+    <script type="module" src="./demo.js"></script>
   </body>
 </html>

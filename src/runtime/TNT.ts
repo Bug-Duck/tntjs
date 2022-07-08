@@ -4,42 +4,51 @@
 
 import VTagRenderer from "./VTagRenderer";
 import StaticVTagRenderer from "./StaticVTagRenderer";
-import { Globals } from "./GlobalEnvironment";
-import { Logger } from "src/utils/logger";
+import { addPlugin, removePlugin, getAllPlugins, TNTInstances } from "./GlobalEnvironment";
+import { Logger } from "src/lib/logger";
+import { Plugin } from "./Pluggable";
+import { SymbolTable } from "./SymbolTable";
 
 export default class TNT {
   #vTagRenderer: VTagRenderer;
   #svTagRenderer: StaticVTagRenderer;
   #refreshLock = true;
   #logger = new Logger("TNT Runtime");
+  #root: HTMLElement;
+  #symbolTable: SymbolTable;
 
-  constructor() {
+  constructor(root: HTMLElement, symbolTable: SymbolTable) {
+    if (!root) {
+      throw TypeError("TNT root element cannot be undefined.");
+    }
+    if (!symbolTable) {
+      throw TypeError("SymbolTable object cannot be undefined.");
+    }
+
+    this.#root = root;
+    this.#symbolTable = symbolTable;
     // Entry point of a TNT page.
     // Register itself to the global object pool so that plugins can operate on it.
-    Globals.instances.push(this);
+    TNTInstances.push(this);
 
-    Globals.symbolTable.onSetValue(() => {
-    // Render on update (Auto setState)
+    symbolTable.onSetValue(() => {
+      // Render on update (Auto setState)
       if (!this.#refreshLock) {
         this.render();
       }
     });
 
-    // Initialize renderers
-    this.#vTagRenderer = new VTagRenderer();
-    this.#svTagRenderer = new StaticVTagRenderer();
-
     // Check option tags
-    const { isDebugModeOn, isFlipModeOn, isPureModeOn, isTNTScriptOn, pluginsToBeDisabled } = this.checkOptionTags();
+    const { isDebugModeOn, isFlipModeOn, isPureModeOn, isTNTScriptOn, pluginsToBeDisabled } = this.#checkOptionTags();
   
-    if (!isDebugModeOn) this.onDebugModeDisabled();
-    if (isFlipModeOn) this.onFlipModeOn();
-    if (isPureModeOn) this.onPureModeOn();
-    if (!isTNTScriptOn) this.onTNTScriptDisabled();
+    if (!isDebugModeOn) this.#onDebugModeDisabled();
+    if (isFlipModeOn) this.#onFlipModeOn();
+    if (isPureModeOn) this.#onPureModeOn();
+    if (!isTNTScriptOn) this.#onTNTScriptDisabled();
     this.disablePlugins(pluginsToBeDisabled);
 
     // Initialize plugins
-    const plugins = Globals.getAllPlugins();
+    const plugins = getAllPlugins();
     plugins.forEach((plugin) => {
       this.#logger.debug(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
       try {
@@ -68,11 +77,15 @@ export default class TNT {
       } catch (e) {
         // If any error occurred, the plugin will NOT be loaded.
         this.#logger.error(`Error while loading plugin ${plugin.id}:\n${e}`, true);
-        Globals.removePlugin(plugin.id);
+        removePlugin(plugin.id);
         return;
       }
       this.#logger.debug(`Successfully loaded plugin ${plugin.id}`);
     });
+
+    // Initialize renderers
+    this.#vTagRenderer = new VTagRenderer(this.#root, this.#symbolTable);
+    this.#svTagRenderer = new StaticVTagRenderer(this.#root, this.#symbolTable);
 
     // Do the first rendering.
     this.render();
@@ -83,31 +96,31 @@ export default class TNT {
   }
 
   // This function will check the option tags.
-  checkOptionTags () {
+  #checkOptionTags () {
     // Debug mode
-    const isDebugModeOn = document.querySelectorAll("tnt-debug").length === 0;
+    const isDebugModeOn = this.#root.querySelectorAll("tnt-debug").length === 0;
 
     // TNT Script
-    const isTNTScriptOn = document.querySelectorAll("tnt-no-script").length === 0;
+    const isTNTScriptOn = this.#root.querySelectorAll("tnt-no-script").length === 0;
 
     // Plugins to be disabled
-    const pluginsToBeDisabled = [...document.querySelectorAll("tnt-disable-plugin")].map((tag) => (
+    const pluginsToBeDisabled = [...this.#root.querySelectorAll("tnt-disable-plugin")].map((tag) => (
       tag.getAttribute("plugin")
     ));
 
     // Pure mode.
-    const pureModeTags = document.querySelectorAll("tnt-pure-mode");
-    const noPluginModeTags = document.querySelectorAll("tnt-no-plugin");
+    const pureModeTags = this.#root.querySelectorAll("tnt-pure-mode");
+    const noPluginModeTags = this.#root.querySelectorAll("tnt-no-plugin");
     const isPureModeOn = pureModeTags.length !== 0 || noPluginModeTags.length !== 0;
 
     // Flip mode options
     // Easter egg!
-    const isFlipModeOn = document.querySelectorAll("tnt-flip").length !== 0;
+    const isFlipModeOn = this.#root.querySelectorAll("tnt-flip").length !== 0;
 
     return { isDebugModeOn, isTNTScriptOn, isPureModeOn, isFlipModeOn, pluginsToBeDisabled };
   }
 
-  onDebugModeDisabled() {
+  #onDebugModeDisabled() {
     if (window.location.href.startsWith("file:")) {
       this.#logger.warn(
         "It seems that you are developing the webpage but you don't enable the debug mode.\n" +
@@ -116,23 +129,15 @@ export default class TNT {
         true
       );
     }
-    Globals.removePlugin("tntdebug");
+    removePlugin("tntdebug");
   }
 
-  onTNTScriptDisabled() {
+  #onTNTScriptDisabled() {
     this.#logger.warn("Disabling TNT script may cause some unexpected results. If you're sure you want to disable the TNT Script feature, please ignore this warning.", true);
-    Globals.removePlugin("tntscript");
+    removePlugin("tntscript");
   }
 
-  disablePlugins(plugins) {
-    plugins.forEach((pluginId) => {
-      if (pluginId !== null) {
-        Globals.removePlugin(pluginId);
-      }
-    });
-  }
-
-  onPureModeOn() {
+  #onPureModeOn() {
     this.#logger.warn(
       "You disabled all the plugins, including the TNT Script plugin and TNT Debugger plugin! Are you sure that's what you want? If not, please turn off the Pure Mode option.\n\n" +
       "Hint:\n- Use <tnt-disable-plugin plugin=\"plugin_id_to_delete\"></tnt-disable-plugin> to disable a single plugin. \n" +
@@ -141,19 +146,33 @@ export default class TNT {
       true
     );
     // disable all plugins
-    Globals.getAllPlugins().forEach((plugin) => {
-      Globals.removePlugin(plugin.id);
+    getAllPlugins().forEach((plugin) => {
+      removePlugin(plugin.id);
     });
   }
 
-  onFlipModeOn() {
+  #onFlipModeOn() {
     window.addEventListener("load", () => {
-      document.querySelector("html").style.setProperty("transform", "scaleX(-1)");
+      this.#root.style.setProperty("transform", "scaleX(-1)");
+    });
+  }
+
+  disablePlugins(pluginIds: string[]) {
+    pluginIds.forEach((pluginId) => {
+      if (pluginId !== null) {
+        removePlugin(pluginId);
+      }
+    });
+  }
+
+  addPlugins(plugins: Plugin[]) {
+    plugins.forEach((plugin) => {
+      addPlugin(this.#root, plugin);
     });
   }
 
   render() {
-    const plugins = Globals.getAllPlugins();
+    const plugins = getAllPlugins();
     // lock the refreshing function to avoid infinity recursion
     this.#refreshLock = true;
 
@@ -163,7 +182,7 @@ export default class TNT {
     // protect tags
     plugins.forEach((plugin) => {
       plugin.tags.forEach((tag) =>  {
-        const tagDOM = document.querySelectorAll(tag);
+        const tagDOM = this.#root.querySelectorAll(tag);
         tagDOM.forEach((el) => {
           // each element
           try {
@@ -180,7 +199,7 @@ export default class TNT {
       });
       // take off the protection
       plugin.tags.forEach((tag) => {
-        const tagDOM = document.querySelectorAll(tag);
+        const tagDOM = this.#root.querySelectorAll(tag);
         tagDOM.forEach((el) => {
           el.innerHTML = el.getAttribute("data-tnt-plugin-value-backup");
           el.removeAttribute("data-tnt-plugin-value-backup");
