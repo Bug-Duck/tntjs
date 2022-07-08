@@ -89,7 +89,7 @@ export class SymbolTable {
   }
 
   // Delete variable
-  del(key: string): void {
+  remove(key: string): void {
     delete this.#content[key];
   }
 

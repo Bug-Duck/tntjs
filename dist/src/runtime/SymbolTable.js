@@ -77,7 +77,7 @@ class SymbolTable {
         __classPrivateFieldGet(this, _SymbolTable_content, "f")[key] = v;
         __classPrivateFieldGet(this, _SymbolTable_onSetValueHandlers, "f").forEach((eventHandler) => eventHandler());
     }
-    del(key) {
+    remove(key) {
         delete __classPrivateFieldGet(this, _SymbolTable_content, "f")[key];
     }
     onSetValue(handler) {

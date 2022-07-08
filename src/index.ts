@@ -42,7 +42,7 @@ class Variable {
 
   delete(): void {
     this.#logger.debug(`Deleting variable ${this.name}...`);
-    this.#symbolTable.del(this.name);
+    this.#symbolTable.remove(this.name);
     this.#logger.debug(`Deleted variable ${this.name}.`);
   }
 

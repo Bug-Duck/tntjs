@@ -25,7 +25,7 @@ class Variable {
     }
     delete() {
         __classPrivateFieldGet(this, _Variable_logger, "f").debug(`Deleting variable ${this.name}...`);
-        __classPrivateFieldGet(this, _Variable_symbolTable, "f").del(this.name);
+        __classPrivateFieldGet(this, _Variable_symbolTable, "f").remove(this.name);
         __classPrivateFieldGet(this, _Variable_logger, "f").debug(`Deleted variable ${this.name}.`);
     }
     get value() {

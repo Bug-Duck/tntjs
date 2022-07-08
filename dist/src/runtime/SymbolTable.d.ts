@@ -25,7 +25,7 @@ export declare class SymbolTable {
     #private;
     getValue(key: string): Variable;
     setValue(key: string, v: Variable): void;
-    del(key: string): void;
+    remove(key: string): void;
     onSetValue(handler: () => void): void;
     containsVariable(variableName: string): boolean;
     merge(anotherTable: SymbolTable, ifExists: (oldValue: Variable, newValue: Variable) => Variable): void;
