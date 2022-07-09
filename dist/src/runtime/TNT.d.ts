@@ -1,4 +1,3 @@
-import VTagRenderer from "./VTagRenderer";
 import { Plugin } from "./Pluggable";
 import { SymbolTable } from "./SymbolTable";
 export default class TNT {
@@ -7,6 +6,4 @@ export default class TNT {
     disablePlugins(pluginIds: string[]): void;
     addPlugins(plugins: Plugin[]): void;
     render(): void;
-    onRender(): void;
-    get vTagRenderer(): VTagRenderer;
 }

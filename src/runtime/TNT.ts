@@ -2,16 +2,15 @@
  * The main file of TNTJs renderer.
  */
 
-import VTagRenderer from "./VTagRenderer";
-import StaticVTagRenderer from "./StaticVTagRenderer";
+
 import { addPlugin, removePlugin, getAllPlugins, TNTInstances } from "./GlobalEnvironment";
 import { Logger } from "src/lib/logger";
 import { Plugin } from "./Pluggable";
 import { SymbolTable } from "./SymbolTable";
+import renderers, { RendererType } from "src/renderers/index";
 
 export default class TNT {
-  #vTagRenderer: VTagRenderer;
-  #svTagRenderer: StaticVTagRenderer;
+  #renderers: RendererType[];
   #refreshLock = true;
   #logger = new Logger("TNT Runtime");
   #root: HTMLElement;
@@ -84,12 +83,10 @@ export default class TNT {
     });
 
     // Initialize renderers
-    this.#vTagRenderer = new VTagRenderer(this.#root, this.#symbolTable);
-    this.#svTagRenderer = new StaticVTagRenderer(this.#root, this.#symbolTable);
+    this.#renderers = renderers.map((renderer) => new renderer(this.#root, this.#symbolTable));
 
     // Do the first rendering.
     this.render();
-    this.onRender();
 
     // Unlock the refreshing
     this.#refreshLock = false;
@@ -177,7 +174,7 @@ export default class TNT {
     this.#refreshLock = true;
 
     // render the content (calls on updating and initializing)
-    this.#vTagRenderer.render();
+    this.#renderers.forEach((renderer) => renderer.render());
 
     // protect tags
     plugins.forEach((plugin) => {
@@ -209,13 +206,5 @@ export default class TNT {
 
     // unlock the refresh function
     this.#refreshLock = false;
-  }
-
-  onRender () {
-    this.#svTagRenderer.render();
-  }
-
-  get vTagRenderer() {
-    return this.#vTagRenderer;
   }
 }

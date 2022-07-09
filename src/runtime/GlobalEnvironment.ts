@@ -2,7 +2,7 @@
  * The global environment of the tntjs.
  */
 
-import { SymbolTable, StringType, VariableValueType } from "./SymbolTable";
+import { SymbolTable, VariableValueType } from "./SymbolTable";
 import TNT from "./TNT";
 import { Plugin } from "./Pluggable";
 
@@ -10,23 +10,13 @@ export const TNTInstances: TNT[] = [];
 export let valueEvaluator: (symbolTable: SymbolTable, expr: string) => VariableValueType;
 export let pluginList: Plugin[] = [];
 
-const escapeString = (str: string): string => {
-  return str
-    .replace(/[\n\r]/g, "\\n")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-};
-
 export const defaultValueEvaluator = (symbolTable: SymbolTable, expr: string): VariableValueType => {
-  const value = symbolTable.getValue(expr.trim());
-  if (value === undefined) {
-    throw TypeError(`Cannot find variable ${expr}.`);
-  }
-  if (value.type === StringType && typeof value.value === "string") {
-    return escapeString(value.value);
-  }
-  return value.value;
+  let toEval = "";
+  symbolTable.variableNames.forEach((variableName) => {
+    toEval += `const ${variableName} = ${JSON.stringify(symbolTable.getValue(variableName).value)}; `;
+  });
+  toEval += expr;
+  return eval(toEval);
 };
 
 export const setValueEvaluator = (newEvaluator: (symbolTable: SymbolTable, expr: string) => VariableValueType) => {

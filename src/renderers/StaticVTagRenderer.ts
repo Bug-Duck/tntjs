@@ -1,13 +1,11 @@
 /**
- * file: VTagRenderer.ts
- * creator: 27Onion
- * create time: May 4th, 2022, 8:15
- * description: Renderer for the V tag.
+ * Renderer for the sv tag.
  */
-import { evaluate } from "./GlobalEnvironment";
-import { SymbolTable } from "./SymbolTable";
+import { evaluate } from "runtime/GlobalEnvironment";
+import { SymbolTable } from "runtime/SymbolTable";
+import { Renderer } from "./index";
 
-export default class StaticVTagRenderer {
+export default class StaticVTagRenderer implements Renderer {
   #customRenderer?: (vTagContent: string) => string;
   #renderer: (vTagContent: string) => string;
   #root: HTMLElement;
@@ -35,4 +33,3 @@ export default class StaticVTagRenderer {
     });
   }
 }
-

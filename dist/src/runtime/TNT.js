@@ -1,15 +1,13 @@
 import { __classPrivateFieldSet, __classPrivateFieldGet } from '../../node_modules/tslib/tslib.es6.js';
-import VTagRenderer from './VTagRenderer.js';
-import StaticVTagRenderer from './StaticVTagRenderer.js';
 import { TNTInstances, getAllPlugins, removePlugin, addPlugin } from './GlobalEnvironment.js';
 import { Logger } from '../lib/logger.js';
+import renderers from '../renderers/index.js';
 
-var _TNT_instances, _TNT_vTagRenderer, _TNT_svTagRenderer, _TNT_refreshLock, _TNT_logger, _TNT_root, _TNT_symbolTable, _TNT_checkOptionTags, _TNT_onDebugModeDisabled, _TNT_onTNTScriptDisabled, _TNT_onPureModeOn, _TNT_onFlipModeOn;
+var _TNT_instances, _TNT_renderers, _TNT_refreshLock, _TNT_logger, _TNT_root, _TNT_symbolTable, _TNT_checkOptionTags, _TNT_onDebugModeDisabled, _TNT_onTNTScriptDisabled, _TNT_onPureModeOn, _TNT_onFlipModeOn;
 class TNT {
     constructor(root, symbolTable) {
         _TNT_instances.add(this);
-        _TNT_vTagRenderer.set(this, void 0);
-        _TNT_svTagRenderer.set(this, void 0);
+        _TNT_renderers.set(this, void 0);
         _TNT_refreshLock.set(this, true);
         _TNT_logger.set(this, new Logger("TNT Runtime"));
         _TNT_root.set(this, void 0);
@@ -67,10 +65,8 @@ class TNT {
             }
             __classPrivateFieldGet(this, _TNT_logger, "f").debug(`Successfully loaded plugin ${plugin.id}`);
         });
-        __classPrivateFieldSet(this, _TNT_vTagRenderer, new VTagRenderer(__classPrivateFieldGet(this, _TNT_root, "f"), __classPrivateFieldGet(this, _TNT_symbolTable, "f")), "f");
-        __classPrivateFieldSet(this, _TNT_svTagRenderer, new StaticVTagRenderer(__classPrivateFieldGet(this, _TNT_root, "f"), __classPrivateFieldGet(this, _TNT_symbolTable, "f")), "f");
+        __classPrivateFieldSet(this, _TNT_renderers, renderers.map((renderer) => new renderer(__classPrivateFieldGet(this, _TNT_root, "f"), __classPrivateFieldGet(this, _TNT_symbolTable, "f"))), "f");
         this.render();
-        this.onRender();
         __classPrivateFieldSet(this, _TNT_refreshLock, false, "f");
     }
     disablePlugins(pluginIds) {
@@ -88,7 +84,7 @@ class TNT {
     render() {
         const plugins = getAllPlugins();
         __classPrivateFieldSet(this, _TNT_refreshLock, true, "f");
-        __classPrivateFieldGet(this, _TNT_vTagRenderer, "f").render();
+        __classPrivateFieldGet(this, _TNT_renderers, "f").forEach((renderer) => renderer.render());
         plugins.forEach((plugin) => {
             plugin.tags.forEach((tag) => {
                 const tagDOM = __classPrivateFieldGet(this, _TNT_root, "f").querySelectorAll(tag);
@@ -114,14 +110,8 @@ class TNT {
         });
         __classPrivateFieldSet(this, _TNT_refreshLock, false, "f");
     }
-    onRender() {
-        __classPrivateFieldGet(this, _TNT_svTagRenderer, "f").render();
-    }
-    get vTagRenderer() {
-        return __classPrivateFieldGet(this, _TNT_vTagRenderer, "f");
-    }
 }
-_TNT_vTagRenderer = new WeakMap(), _TNT_svTagRenderer = new WeakMap(), _TNT_refreshLock = new WeakMap(), _TNT_logger = new WeakMap(), _TNT_root = new WeakMap(), _TNT_symbolTable = new WeakMap(), _TNT_instances = new WeakSet(), _TNT_checkOptionTags = function _TNT_checkOptionTags() {
+_TNT_renderers = new WeakMap(), _TNT_refreshLock = new WeakMap(), _TNT_logger = new WeakMap(), _TNT_root = new WeakMap(), _TNT_symbolTable = new WeakMap(), _TNT_instances = new WeakSet(), _TNT_checkOptionTags = function _TNT_checkOptionTags() {
     const isDebugModeOn = __classPrivateFieldGet(this, _TNT_root, "f").querySelectorAll("tnt-debug").length === 0;
     const isTNTScriptOn = __classPrivateFieldGet(this, _TNT_root, "f").querySelectorAll("tnt-no-script").length === 0;
     const pluginsToBeDisabled = [...__classPrivateFieldGet(this, _TNT_root, "f").querySelectorAll("tnt-disable-plugin")].map((tag) => (tag.getAttribute("plugin")));

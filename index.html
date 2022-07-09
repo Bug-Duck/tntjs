@@ -9,8 +9,24 @@
   <body>
     <div id="root">
       <tnt-debug></tnt-debug>
-      <v name="xxx">Loading variable xxx...</v>
+      <v data="testValue + 233">Loading variable testValue...</v>
+      <a
+        tnt-td="href -> link.link + '/example'; target -> link.target"
+        tnt-sd="font-size -> `${style.fontSize}px`"
+      >
+        Click me
+      </a>
+      <v data="testValue - testValue2" />
     </div>
     <script type="module" src="./demo.js"></script>
+    <style>
+      #root, #root * {
+        display: block;
+      }
+
+      v {
+        font-size: 20px;
+      }
+    </style>
   </body>
 </html>

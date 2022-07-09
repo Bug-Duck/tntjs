@@ -1,24 +1,13 @@
-import { StringType } from './SymbolTable.js';
-
 const TNTInstances = [];
 let valueEvaluator;
 let pluginList = [];
-const escapeString = (str) => {
-    return str
-        .replace(/[\n\r]/g, "\\n")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-};
 const defaultValueEvaluator = (symbolTable, expr) => {
-    const value = symbolTable.getValue(expr.trim());
-    if (value === undefined) {
-        throw TypeError(`Cannot find variable ${expr}.`);
-    }
-    if (value.type === StringType && typeof value.value === "string") {
-        return escapeString(value.value);
-    }
-    return value.value;
+    let toEval = "";
+    symbolTable.variableNames.forEach((variableName) => {
+        toEval += `const ${variableName} = ${JSON.stringify(symbolTable.getValue(variableName).value)}; `;
+    });
+    toEval += expr;
+    return eval(toEval);
 };
 const setValueEvaluator = (newEvaluator) => {
     valueEvaluator = newEvaluator;

@@ -2,15 +2,16 @@
  * Renderer for the V tag.
  */
 
-import { evaluate } from "./GlobalEnvironment";
-import { SymbolTable } from "./SymbolTable";
+import { evaluate } from "runtime/GlobalEnvironment";
+import { SymbolTable } from "runtime/SymbolTable";
+import { Renderer } from "./index";
 
-export default class VTagRenderer {
+export default class VTagRenderer implements Renderer {
   #customRenderer: (vTagContent: string) => string;
   #root: HTMLElement;
   #symbolTable: SymbolTable;
 
-  constructor (root: HTMLElement, symbolTable: SymbolTable, customRenderer: (vTagContent: string) => string = undefined) {
+  constructor (root: HTMLElement, symbolTable: SymbolTable, customRenderer?: (vTagContent: string) => string) {
     this.#customRenderer = customRenderer;
     this.#root = root;
     this.#symbolTable = symbolTable;
@@ -33,8 +34,8 @@ export default class VTagRenderer {
       if (rendered === null) {
         // tags should always be rendered
         tag.setAttribute("data-rendered", "YES");
-        tag.setAttribute("data-original", tag.getAttribute("name"));
-        tag.removeAttribute("name");
+        tag.setAttribute("data-original", tag.getAttribute("data"));
+        tag.removeAttribute("data");
         tag.innerHTML = renderer(tag.getAttribute("data-original"));
         return;
       }

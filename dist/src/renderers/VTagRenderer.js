@@ -1,5 +1,5 @@
 import { __classPrivateFieldSet, __classPrivateFieldGet } from '../../node_modules/tslib/tslib.es6.js';
-import { evaluate } from './GlobalEnvironment.js';
+import { evaluate } from '../runtime/GlobalEnvironment.js';
 
 var _VTagRenderer_customRenderer, _VTagRenderer_root, _VTagRenderer_symbolTable;
 class VTagRenderer {
@@ -28,8 +28,8 @@ class VTagRenderer {
             const rendered = tag.getAttribute("data-rendered");
             if (rendered === null) {
                 tag.setAttribute("data-rendered", "YES");
-                tag.setAttribute("data-original", tag.getAttribute("name"));
-                tag.removeAttribute("name");
+                tag.setAttribute("data-original", tag.getAttribute("data"));
+                tag.removeAttribute("data");
                 tag.innerHTML = renderer(tag.getAttribute("data-original"));
                 return;
             }

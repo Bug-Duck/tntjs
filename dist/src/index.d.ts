@@ -1,6 +1,5 @@
 import "plugins/debug";
 import "plugins/tntem";
-import "plugins/tntscript";
 import { Variable as VariableBase, VariableValueType } from "runtime/SymbolTable";
 import TypeInfo from "runtime/TypeInfo";
 import { SymbolTable } from "runtime/SymbolTable";
@@ -26,8 +25,9 @@ export default class TNTApp {
     symbolTable: SymbolTable;
     TNT: TNT;
     variables: Record<string, Variable>;
-    constructor(root: HTMLElement);
-    data(variables: Record<string, TNTData>): void;
+    onload: () => unknown;
+    constructor(root: HTMLElement, onload?: () => unknown);
+    data(variables: Record<string, TNTData | VariableValueType>): void;
     addPlugins(plugins: Plugin[]): void;
     removePlugins(pluginIds: string[]): void;
 }

@@ -1,8 +1,8 @@
 import "plugins/debug";
 import "plugins/tntem";
-import "plugins/tntscript";
 import { Logger } from "lib/logger";
 import {
+  jsType2TNT,
   Variable as VariableBase,
   VariableValueType,
 } from "runtime/SymbolTable";
@@ -71,24 +71,50 @@ export default class TNTApp {
   symbolTable: SymbolTable;
   TNT: TNT;
   variables: Record<string, Variable>;
+  onload: () => unknown;
   #root: HTMLElement;
+  #initialized: boolean;
 
-  constructor(root: HTMLElement) {
+  constructor(root: HTMLElement, onload?: () => unknown) {
     this.#root = root;
     this.symbolTable = new SymbolTable();
-    this.TNT = new TNT(this.#root, this.symbolTable);
     this.variables = {};
+    this.#initialized = false;
+    this.onload =
+      onload ??
+      (() => {
+        /* */
+      });
   }
 
-  data(variables: Record<string, TNTData>) {
+  #isTNTData(object: any): object is TNTData {
+    try {
+      return "type" in object;
+    } catch {
+      return false;
+    }
+  }
+
+  data(variables: Record<string, TNTData | VariableValueType>) {
     for (const variableName in variables) {
-      const variable = variables[variableName];
+      const variablePre = variables[variableName];
+      const variable: TNTData = this.#isTNTData(variablePre)
+        ? variablePre
+        : {
+          value: variablePre,
+          type: jsType2TNT(typeof variablePre),
+        };
       this.variables[variableName] = new Variable(
         this.symbolTable,
         variableName,
         variable.type
       );
       this.variables[variableName].setValue(variable.value);
+    }
+    if (!this.#initialized) {
+      this.#initialized = true;
+      this.TNT = new TNT(this.#root, this.symbolTable);
+      this.onload();
     }
   }
 
