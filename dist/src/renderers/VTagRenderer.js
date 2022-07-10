@@ -10,7 +10,6 @@ class VTagRenderer {
         __classPrivateFieldSet(this, _VTagRenderer_customRenderer, customRenderer, "f");
         __classPrivateFieldSet(this, _VTagRenderer_root, root, "f");
         __classPrivateFieldSet(this, _VTagRenderer_symbolTable, symbolTable, "f");
-        console.log(__classPrivateFieldGet(this, _VTagRenderer_symbolTable, "f"));
         this.defaultRenderer = this.defaultRenderer.bind(this);
     }
     defaultRenderer(s) {

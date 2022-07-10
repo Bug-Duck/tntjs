@@ -18,7 +18,7 @@ const renderers = [
   ForTagRenderer,
 ];
 
-export type RendererType = VTagRenderer | StaticVTagRenderer | AttributeDataRenderer | StyleDataRenderer;
+export type RendererType = VTagRenderer | StaticVTagRenderer | AttributeDataRenderer | StyleDataRenderer | ForTagRenderer;
 
 export interface Renderer {
   render: () => void;

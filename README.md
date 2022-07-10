@@ -15,10 +15,6 @@
 
 The JavaScript framework for modern web.
 
-## Notice
-
-This is the **development branch** of TNT.js. Everything is under heavy development is may be unstable.
-
 ## Roadmap
 
 Please refer to [TNT.js Roadmap](https://github.com/Bug-Duck/tntjs/blob/master/roadmap.md).
@@ -32,47 +28,104 @@ TNTjs was separated into two parts:
 
 ## Demo
 
-### Install
+### Installation
 
-`$ npm install tntjs`
-or
-`$yarn add tntjs`
+Simply use package managers to install TNT.js:
 
-add two files `App.js` and `index.html`:
+```bash
+$ npm i tntjs
+$ # or
+$ yarn add tntjs
+```
 
-```javascript
-// App.js
-import { Value } from "tntjs";
+Then add two files `App.js` and `index.html`:
+
+```js
+import TNTApp from "tntjs/src/index.js";
+import DebugPlugin from "tntjs/src/plugins/debug/index.js";
 
 window.onload = () => {
-  var x = new Value("x","Number"); //add a variable
-  for (var i = 0; i < 60; i++) {
-    x.setValue(i);
-  };
-}
+  const app = new TNTApp(
+    document.getElementById("root"),  // TNTjs root element
+    () => {  // the onload event
+      console.log(app.variables);
+      setTimeout(() => {  // testValue will be set to `456` in one second
+        app.variables.testValue.setValue(456);
+      }, 1000);
+      // add a plugin
+      app.addPlugins([new DebugPlugin()]);
+      console.log(app.variables);
+    }
+  );
+  app.data({  // custom data
+    testValue: 233,
+    testValue2: 456,
+    link: {
+      link: "https://example.com",
+      target: "_blank",
+    },
+    style: {
+      fontSize: 200,
+    },
+    links: [
+      {
+        link: "https://example.org",
+        target: "_blank",
+      },
+      {
+        link: "https://example.com",
+        target: "_blank",
+      },
+      {
+        link: "https://example.com",
+        target: "_blank",
+      },
+    ],
+    test: {
+      a: [
+        "a", "b", "c"
+      ]
+    }
+  });
+};
 ```
 
 ```html
-<!--index.html-->
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="./App.js">
     <title>Document</title>
   </head>
   <body>
-    <v>x</v>
+    <div id="root">
+      <tnt-debug></tnt-debug>
+      <v data="testValue + 233">Loading variable testValue...</v>  <!-- variable display -->
+      <!-- Tag data rendering: tnt-td stands for `tnt-tag-data` and tnt-sd stands for `tnt-stylesheet-data` -->
+      <!-- Both will change according to the variable values -->
+      <a
+        tnt-td="href -> links[0].link + '/example'; target -> link.target"
+        tnt-sd="font-size -> `${style.fontSize}px`"
+      >
+        Click me
+      </a>
+      <v data="testValue - testValue2">a</v>  <!-- operations between variables are allowed! -->
+      <t-for data="i in test.a">  <!-- for loops -->
+        <p>
+          <v data="i + testValue">Loading link...</v>  <!-- value display inside a for loop! -->
+          LOL
+        </p>
+      </t-for>
+    </div>
+    <script type="module" src="./App.js"></script>  <!-- ES Modules! -->
   </body>
 </html>
-
 ```
 
-Than,you can get a timer counting from one to sixty.
-
-And the variable defined inside the `v` tag will be rendered as its actual value.
+This is a kitchen-sink example of the current version of TNTjs. Might not be up-to-date though.
 
 ## Documentation
 
