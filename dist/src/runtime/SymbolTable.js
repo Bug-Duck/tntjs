@@ -10,12 +10,14 @@ const BoolType = new TypeInfo("tnt", "bool", false);
 const TNTFunctionType = new TypeInfo("tnt", "function", null);
 const JSFunctionType = new TypeInfo("js", "function", () => { });
 const HTMLStringType = new TypeInfo("tnt", "html_string", "<div></div>");
+const ArrayType = new TypeInfo("tnt", "array", []);
 const TNTTypeMap = {
     string: StringType,
     number: NumberType,
     object: ObjectType,
     function: JSFunctionType,
     boolean: BoolType,
+    array: ArrayType,
 };
 class Variable {
     constructor(value, type) {
@@ -105,5 +107,5 @@ function jsType2TNT(jsType) {
     return ObjectType;
 }
 
-export { BoolType, HTMLStringType, JSFunctionType, NumberType, ObjectType, StringType, SymbolTable, TNTFunctionType, TNTTypeMap, Variable, jsType2TNT };
+export { ArrayType, BoolType, HTMLStringType, JSFunctionType, NumberType, ObjectType, StringType, SymbolTable, TNTFunctionType, TNTTypeMap, Variable, jsType2TNT };
 //# sourceMappingURL=SymbolTable.js.map

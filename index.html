@@ -11,16 +11,23 @@
       <tnt-debug></tnt-debug>
       <v data="testValue + 233">Loading variable testValue...</v>
       <a
-        tnt-td="href -> link.link + '/example'; target -> link.target"
+        tnt-td="href -> links[0].link + '/example'; target -> link.target"
         tnt-sd="font-size -> `${style.fontSize}px`"
       >
         Click me
       </a>
-      <v data="testValue - testValue2" />
+      <v data="testValue - testValue2">a</v>
+      <t-for data="i in test.a">
+        <p>
+          <v data="i + testValue">Loading link...</v>
+          LOL
+        </p>
+      </t-for>
     </div>
     <script type="module" src="./demo.js"></script>
     <style>
-      #root, #root * {
+      #root,
+      #root * {
         display: block;
       }
 

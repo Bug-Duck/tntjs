@@ -6,7 +6,7 @@ import { SymbolTable } from "runtime/SymbolTable";
 import TNT from "runtime/TNT";
 import { NumberType, BoolType, HTMLStringType, JSFunctionType, ObjectType, StringType, TNTFunctionType } from "runtime/SymbolTable";
 import { Plugin } from "runtime/Pluggable";
-declare class Variable {
+export declare class Variable {
     #private;
     name: string;
     variableBase: VariableBase;

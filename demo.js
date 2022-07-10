@@ -9,7 +9,7 @@ window.onload = () => {
       app.variables.testValue.setValue(456);
     }, 1000);
     app.addPlugins([new DebugPlugin()]);
-    app.removePlugins(["tntdebug"]);
+    console.log(app.variables);
   });
   app.data({
     testValue: 233,
@@ -21,5 +21,24 @@ window.onload = () => {
     style: {
       fontSize: 200,
     },
+    links: [
+      {
+        link: "https://example.org",
+        target: "_blank",
+      },
+      {
+        link: "https://example.com",
+        target: "_blank",
+      },
+      {
+        link: "https://example.com",
+        target: "_blank",
+      },
+    ],
+    test: {
+      a: [
+        "a", "b", "c"
+      ]
+    }
   });
 };

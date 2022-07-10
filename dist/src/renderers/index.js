@@ -1,4 +1,5 @@
 import AttributeDataRenderer from './AttributeDataRenderer.js';
+import ForTagRenderer from './ForTagRenderer.js';
 import StaticVTagRenderer from './StaticVTagRenderer.js';
 import StyleDataRenderer from './StyleDataRenderer.js';
 import VTagRenderer from './VTagRenderer.js';
@@ -8,6 +9,7 @@ const renderers = [
     StaticVTagRenderer,
     AttributeDataRenderer,
     StyleDataRenderer,
+    ForTagRenderer,
 ];
 
 export { renderers as default };

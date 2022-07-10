@@ -6,7 +6,7 @@ import { Variable as Variable$1, SymbolTable, jsType2TNT } from './runtime/Symbo
 export { BoolType, HTMLStringType, JSFunctionType, NumberType, ObjectType, StringType, TNTFunctionType } from './runtime/SymbolTable.js';
 import TNT from './runtime/TNT.js';
 
-var _Variable_logger, _Variable_symbolTable, _TNTApp_instances, _TNTApp_root, _TNTApp_initialized, _TNTApp_isTNTData;
+var _Variable_logger, _Variable_symbolTable, _TNTApp_instances, _TNTApp_root, _TNTApp_initialized, _TNTApp_isTNTData, _TNTApp_getObjectType;
 class Variable {
     constructor(symbolTable, name, type) {
         _Variable_logger.set(this, new Logger("tntjs"));
@@ -55,7 +55,7 @@ class TNTApp {
                 ? variablePre
                 : {
                     value: variablePre,
-                    type: jsType2TNT(typeof variablePre),
+                    type: jsType2TNT(__classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_getObjectType).call(this, variablePre)),
                 };
             this.variables[variableName] = new Variable(this.symbolTable, variableName, variable.type);
             this.variables[variableName].setValue(variable.value);
@@ -80,7 +80,11 @@ _TNTApp_root = new WeakMap(), _TNTApp_initialized = new WeakMap(), _TNTApp_insta
     catch (_a) {
         return false;
     }
+}, _TNTApp_getObjectType = function _TNTApp_getObjectType(object) {
+    if (Array.isArray(object))
+        return "array";
+    return typeof object;
 };
 
-export { TNTApp as default };
+export { Variable, TNTApp as default };
 //# sourceMappingURL=index.js.map

@@ -6,12 +6,14 @@ export declare const BoolType: TypeInfo;
 export declare const TNTFunctionType: TypeInfo;
 export declare const JSFunctionType: TypeInfo;
 export declare const HTMLStringType: TypeInfo;
+export declare const ArrayType: TypeInfo;
 export declare const TNTTypeMap: {
     string: TypeInfo;
     number: TypeInfo;
     object: TypeInfo;
     function: TypeInfo;
     boolean: TypeInfo;
+    array: TypeInfo;
 };
 export declare type VariableValueType = string | number | object | boolean | (() => unknown);
 export declare class Variable {

@@ -13,12 +13,14 @@ export const BoolType = new TypeInfo("tnt", "bool", false);
 export const TNTFunctionType = new TypeInfo("tnt", "function", null);
 export const JSFunctionType = new TypeInfo("js", "function", () => { /**/ });
 export const HTMLStringType = new TypeInfo("tnt", "html_string", "<div></div>");
+export const ArrayType = new TypeInfo("tnt", "array", []);
 export const TNTTypeMap = {
   string: StringType,
   number: NumberType,
   object: ObjectType,
   function: JSFunctionType,
   boolean: BoolType,
+  array: ArrayType,
 };
 export type VariableValueType = string | number | object | boolean | (() => unknown);
 

@@ -20,7 +20,7 @@ import {
 } from "runtime/SymbolTable";
 import { Plugin } from "runtime/Pluggable";
 
-class Variable {
+export class Variable {
   name: string;
   variableBase: VariableBase;
   #logger = new Logger("tntjs");
@@ -95,6 +95,11 @@ export default class TNTApp {
     }
   }
 
+  #getObjectType(object: VariableValueType) {
+    if (Array.isArray(object)) return "array";
+    return typeof object;
+  }
+
   data(variables: Record<string, TNTData | VariableValueType>) {
     for (const variableName in variables) {
       const variablePre = variables[variableName];
@@ -102,7 +107,7 @@ export default class TNTApp {
         ? variablePre
         : {
           value: variablePre,
-          type: jsType2TNT(typeof variablePre),
+          type: jsType2TNT(this.#getObjectType(variablePre)),
         };
       this.variables[variableName] = new Variable(
         this.symbolTable,
