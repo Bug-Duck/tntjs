@@ -8,10 +8,10 @@ import VTagRenderer from './VTagRenderer.js';
 const renderers = [
     VTagRenderer,
     StaticVTagRenderer,
-    AttributeDataRenderer,
-    StyleDataRenderer,
     ForTagRenderer,
     ConditionTagRenderer,
+    AttributeDataRenderer,
+    StyleDataRenderer,
 ];
 const ignoreRender = ["t-for"];
 var renderers$1 = renderers;

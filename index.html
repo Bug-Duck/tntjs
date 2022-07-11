@@ -19,11 +19,17 @@
       <v data="testValue - testValue2">a</v>
       <t-for data="i in links">
         <div>
-          <t-for data="j in test.a">
+          <t-for data="j in others.links">
             <div>
               <t-if cond="i">
-                <p><v data="j">Loading variable j...</v></p>
-                <p>Demo!</p>
+                <p>
+                  <a tnt-td="href -> i.link" tnt-sd="color -> 'orange'">
+                    <v data="j">Loading variable j...</v>
+                  </a>
+                </p>
+                <p>
+                  Demo!
+                </p>
               </t-if>
               <t-elif cond="!testValue">
                 <p>elif</p>

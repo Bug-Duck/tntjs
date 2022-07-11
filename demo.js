@@ -39,8 +39,11 @@ window.onload = () => {
         target: "_blank",
       },
     ],
-    test: {
-      a: ["a", "b", "c"],
+    others: {
+      links: [
+        "Link A",
+        "Link B"
+      ],
     },
   });
 };

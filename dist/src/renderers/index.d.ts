@@ -5,7 +5,7 @@ import ForTagRenderer from "./ForTagRenderer";
 import StaticVTagRenderer from "./StaticVTagRenderer";
 import StyleDataRenderer from "./StyleDataRenderer";
 import VTagRenderer from "./VTagRenderer";
-declare const renderers: (typeof ForTagRenderer | typeof VTagRenderer | typeof StaticVTagRenderer | typeof AttributeDataRenderer | typeof StyleDataRenderer | typeof ConditionTagRenderer)[];
+declare const renderers: (typeof VTagRenderer | typeof StaticVTagRenderer | typeof ForTagRenderer | typeof ConditionTagRenderer | typeof AttributeDataRenderer | typeof StyleDataRenderer)[];
 export declare const ignoreRender: string[];
 export declare type RendererType = VTagRenderer | StaticVTagRenderer | AttributeDataRenderer | StyleDataRenderer | ForTagRenderer | ConditionTagRenderer;
 export interface Renderer {

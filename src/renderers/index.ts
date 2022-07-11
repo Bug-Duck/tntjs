@@ -14,10 +14,10 @@ import VTagRenderer from "./VTagRenderer";
 const renderers = [
   VTagRenderer,
   StaticVTagRenderer,
-  AttributeDataRenderer,
-  StyleDataRenderer,
   ForTagRenderer,
   ConditionTagRenderer,
+  AttributeDataRenderer,
+  StyleDataRenderer,
 ];
 
 export const ignoreRender = ["t-for"];
