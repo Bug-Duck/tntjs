@@ -7,7 +7,11 @@ window.onload = () => {
     console.log(app.variables);
     setTimeout(() => {
       app.variables.testValue.setValue(456);
-    }, 1000);
+      app.variables.links.setValue([
+        ...app.variables.links.value,
+        { link: "https://new.org", target: "_blank" },
+      ]);
+    }, 5000);
     app.addPlugins([new DebugPlugin()]);
     console.log(app.variables);
   });
@@ -36,9 +40,7 @@ window.onload = () => {
       },
     ],
     test: {
-      a: [
-        "a", "b", "c"
-      ]
-    }
+      a: ["a", "b", "c"],
+    },
   });
 };

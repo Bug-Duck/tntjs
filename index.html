@@ -12,17 +12,55 @@
       <v data="testValue + 233">Loading variable testValue...</v>
       <a
         tnt-td="href -> links[0].link + '/example'; target -> link.target"
-        tnt-sd="font-size -> `${style.fontSize}px`"
+        tnt-sd="font-size -> `${style.fontSize - 190}px`"
       >
         Click me
       </a>
       <v data="testValue - testValue2">a</v>
-      <t-for data="i in test.a">
-        <p>
-          <v data="i + testValue">Loading link...</v>
-          LOL
-        </p>
+      <t-for data="i in links">
+        <div>
+          <t-for data="j in test.a">
+            <div>
+              <t-if cond="i">
+                <p><v data="j">Loading variable j...</v></p>
+                <p>Demo!</p>
+              </t-if>
+              <t-elif cond="!testValue">
+                <p>elif</p>
+              </t-elif>
+              <t-elif cond="!testValue">
+                <p>elif2</p>
+              </t-elif>
+              <t-elif cond="!testValue">
+                <p>elif3</p>
+              </t-elif>
+              <t-else>
+                <p>else!</p>
+              </t-else>
+              <v data="i.link + '; ' + j">Loading variables...</v>
+            </div>
+          </t-for>
+          <p>
+            <v data="`Link: ${i.link}`">Loading link...</v>
+          </p>
+        </div>
       </t-for>
+
+      <t-if cond="i">
+        <p>trlllue</p>
+      </t-if>
+      <t-elif cond="!testValue">
+        <p>elif</p>
+      </t-elif>
+      <t-elif cond="!testValue">
+        <p>elif2</p>
+      </t-elif>
+      <t-elif cond="!testValue">
+        <p>elif3</p>
+      </t-elif>
+      <t-else>
+        <p>else!</p>
+      </t-else>
     </div>
     <script type="module" src="./demo.js"></script>
   </body>

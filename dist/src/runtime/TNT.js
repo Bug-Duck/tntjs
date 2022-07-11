@@ -1,5 +1,5 @@
 import { __classPrivateFieldSet, __classPrivateFieldGet } from '../../node_modules/tslib/tslib.es6.js';
-import { TNTInstances, getAllPlugins, removePlugin, addPlugin } from './GlobalEnvironment.js';
+import { TNTInstances, removePlugin, addPlugin, getAllPlugins } from './GlobalEnvironment.js';
 import { Logger } from '../lib/logger.js';
 import renderers from '../renderers/index.js';
 
@@ -93,7 +93,7 @@ class TNT {
                         el.setAttribute("data-tnt-plugin-value-backup", el.innerHTML);
                         el.innerHTML = "";
                     }
-                    catch (e) {
+                    catch (_a) {
                     }
                 });
             });

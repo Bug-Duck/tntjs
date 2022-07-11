@@ -1,5 +1,7 @@
 import { __classPrivateFieldSet, __classPrivateFieldGet } from '../../node_modules/tslib/tslib.es6.js';
+import { removeNodesWithParents } from '../lib/common.js';
 import { evaluate } from '../runtime/GlobalEnvironment.js';
+import { ignoreRender } from './index.js';
 
 var _VTagRenderer_customRenderer, _VTagRenderer_root, _VTagRenderer_symbolTable;
 class VTagRenderer {
@@ -22,9 +24,9 @@ class VTagRenderer {
     }
     render() {
         var _a;
-        const vTags = __classPrivateFieldGet(this, _VTagRenderer_root, "f").querySelectorAll("v");
+        const vTags = [...__classPrivateFieldGet(this, _VTagRenderer_root, "f").getElementsByTagName("v")];
         const renderer = (_a = __classPrivateFieldGet(this, _VTagRenderer_customRenderer, "f")) !== null && _a !== void 0 ? _a : this.defaultRenderer;
-        vTags.forEach((tag) => {
+        removeNodesWithParents(vTags, ignoreRender).forEach((tag) => {
             const rendered = tag.getAttribute("data-rendered");
             if (rendered === null) {
                 tag.setAttribute("data-rendered", "YES");

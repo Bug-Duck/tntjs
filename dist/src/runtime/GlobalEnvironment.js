@@ -1,13 +1,20 @@
 const TNTInstances = [];
 let valueEvaluator;
 let pluginList = [];
+const valueEvaluationFailedMessage = "[TNT_RENDER_ERROR]";
 const defaultValueEvaluator = (symbolTable, expr) => {
-    let toEval = "";
+    let toEval = "try {";
     symbolTable.variableNames.forEach((variableName) => {
         toEval += `const ${variableName} = ${JSON.stringify(symbolTable.getValue(variableName).value)}; `;
     });
-    toEval += expr;
-    return eval(toEval);
+    toEval += `return ${expr};`;
+    toEval += `} catch (e) { return \`${valueEvaluationFailedMessage} \${e}\`; }`;
+    try {
+        return Function(toEval)();
+    }
+    catch (e) {
+        return e;
+    }
 };
 const setValueEvaluator = (newEvaluator) => {
     valueEvaluator = newEvaluator;
@@ -34,5 +41,5 @@ const removePlugin = (pluginId) => {
     });
 };
 
-export { TNTInstances, addPlugin, defaultValueEvaluator, evaluate, getAllPlugins, hasPlugin, pluginList, removePlugin, setValueEvaluator, valueEvaluator };
+export { TNTInstances, addPlugin, defaultValueEvaluator, evaluate, getAllPlugins, hasPlugin, pluginList, removePlugin, setValueEvaluator, valueEvaluationFailedMessage, valueEvaluator };
 //# sourceMappingURL=GlobalEnvironment.js.map

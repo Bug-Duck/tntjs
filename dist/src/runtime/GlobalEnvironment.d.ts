@@ -4,6 +4,7 @@ import { Plugin } from "./Pluggable";
 export declare const TNTInstances: TNT[];
 export declare let valueEvaluator: (symbolTable: SymbolTable, expr: string) => VariableValueType;
 export declare let pluginList: Plugin[];
+export declare const valueEvaluationFailedMessage = "[TNT_RENDER_ERROR]";
 export declare const defaultValueEvaluator: (symbolTable: SymbolTable, expr: string) => VariableValueType;
 export declare const setValueEvaluator: (newEvaluator: (symbolTable: SymbolTable, expr: string) => VariableValueType) => void;
 export declare const evaluate: (symbolTable: SymbolTable, expr: string) => VariableValueType;

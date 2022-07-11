@@ -185,7 +185,7 @@ export default class TNT {
           try {
             el.setAttribute("data-tnt-plugin-value-backup", el.innerHTML);
             el.innerHTML = "";
-          } catch (e) {
+          } catch {
             // continue regardless of error
           }
         });

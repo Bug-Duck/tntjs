@@ -1,5 +1,6 @@
 import { SymbolTable } from "runtime/SymbolTable";
 import AttributeDataRenderer from "./AttributeDataRenderer";
+import ConditionTagRenderer from "./ConditionTagRenderer";
 import ForTagRenderer from "./ForTagRenderer";
 import StaticVTagRenderer from "./StaticVTagRenderer";
 import StyleDataRenderer from "./StyleDataRenderer";
@@ -16,9 +17,12 @@ const renderers = [
   AttributeDataRenderer,
   StyleDataRenderer,
   ForTagRenderer,
+  ConditionTagRenderer,
 ];
 
-export type RendererType = VTagRenderer | StaticVTagRenderer | AttributeDataRenderer | StyleDataRenderer | ForTagRenderer;
+export const ignoreRender = ["t-for"];
+
+export type RendererType = VTagRenderer | StaticVTagRenderer | AttributeDataRenderer | StyleDataRenderer | ForTagRenderer | ConditionTagRenderer;
 
 export interface Renderer {
   render: () => void;

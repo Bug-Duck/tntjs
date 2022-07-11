@@ -2,9 +2,10 @@
  * Renderer for the V tag.
  */
 
+import { removeNodesWithParents } from "lib/common";
 import { evaluate } from "runtime/GlobalEnvironment";
 import { SymbolTable } from "runtime/SymbolTable";
-import { Renderer } from "./index";
+import { ignoreRender, Renderer } from "./index";
 
 export default class VTagRenderer implements Renderer {
   #customRenderer: (vTagContent: string) => string;
@@ -27,9 +28,9 @@ export default class VTagRenderer implements Renderer {
   }
 
   render () {
-    const vTags = this.#root.querySelectorAll("v");
+    const vTags = [...this.#root.getElementsByTagName("v")];
     const renderer = this.#customRenderer ?? this.defaultRenderer;
-    vTags.forEach((tag) => {
+    removeNodesWithParents(vTags, ignoreRender).forEach((tag) => {
       const rendered = tag.getAttribute("data-rendered");
       if (rendered === null) {
         // tags should always be rendered
