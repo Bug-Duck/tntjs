@@ -5,8 +5,7 @@
   "main": "dist/src/index.js",
   "scripts": {
     "build": "rollup -c",
-    "build-old": "tsc  && javascript-obfuscator dist/tnt.js --output dist/tnt.min.js --string-array-encoding 'rc4' && rm dist/tnt.js",
-    "dev": "rollup -c"
+    "dev": "rollup -c -w & live-server --ignore=\"src,.git\" --wait=1000 --quiet"
   },
   "repository": {
     "type": "git",
