@@ -4,16 +4,16 @@ import DebugPlugin from "./dist/src/plugins/debug/index.js";
 window.onload = () => {
   const app = new TNTApp(document.getElementById("root"), () => {
     // onload
-    console.log(app.variables);
+    console.log({...app.variables});
     setTimeout(() => {
-      app.variables.testValue.setValue(456);
-      app.variables.links.setValue([
-        ...app.variables.links.value,
+      app.variables.testValue = 456;
+      app.variables.links = [
+        ...app.variables.links,
         { link: "https://new.org", target: "_blank" },
-      ]);
+      ];
     }, 5000);
     app.addPlugins([new DebugPlugin()]);
-    console.log(app.variables);
+    console.log(app.variables.links);
   });
   app.data({
     testValue: 233,

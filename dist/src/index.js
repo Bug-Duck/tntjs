@@ -1,7 +1,7 @@
 import { __classPrivateFieldSet, __classPrivateFieldGet } from '../node_modules/tslib/tslib.es6.js';
+import { Logger } from './lib/logger.js';
 import './plugins/debug/index.js';
 import './plugins/tntem/index.js';
-import { Logger } from './lib/logger.js';
 import { Variable as Variable$1, SymbolTable, jsType2TNT } from './runtime/SymbolTable.js';
 export { BoolType, HTMLStringType, JSFunctionType, NumberType, ObjectType, StringType, TNTFunctionType } from './runtime/SymbolTable.js';
 import TNT from './runtime/TNT.js';
@@ -63,6 +63,22 @@ class TNTApp {
         if (!__classPrivateFieldGet(this, _TNTApp_initialized, "f")) {
             __classPrivateFieldSet(this, _TNTApp_initialized, true, "f");
             this.TNT = new TNT(__classPrivateFieldGet(this, _TNTApp_root, "f"), this.symbolTable);
+            this.variables = new Proxy(this.variables, {
+                get(target, name) {
+                    const variable = target[name];
+                    if (variable)
+                        return variable.value;
+                    return undefined;
+                },
+                set(target, name, value) {
+                    const variable = target[name];
+                    if (variable) {
+                        variable.setValue(value);
+                        return true;
+                    }
+                    return false;
+                }
+            });
             this.onload();
         }
     }

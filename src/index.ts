@@ -1,24 +1,16 @@
+import { Logger } from "lib/logger";
 import "plugins/debug";
 import "plugins/tntem";
-import { Logger } from "lib/logger";
+import { Plugin } from "runtime/Pluggable";
 import {
-  jsType2TNT,
-  Variable as VariableBase,
-  VariableValueType,
-} from "runtime/SymbolTable";
-import TypeInfo from "runtime/TypeInfo";
-import { SymbolTable } from "runtime/SymbolTable";
-import TNT from "runtime/TNT";
-import {
-  NumberType,
   BoolType,
   HTMLStringType,
-  JSFunctionType,
-  ObjectType,
-  StringType,
-  TNTFunctionType,
+  JSFunctionType, jsType2TNT, NumberType, ObjectType,
+  StringType, SymbolTable, TNTFunctionType, Variable as VariableBase,
+  VariableValueType
 } from "runtime/SymbolTable";
-import { Plugin } from "runtime/Pluggable";
+import TNT from "runtime/TNT";
+import TypeInfo from "runtime/TypeInfo";
 
 export class Variable {
   name: string;
@@ -87,7 +79,7 @@ export default class TNTApp {
       });
   }
 
-  #isTNTData(object: any): object is TNTData {
+  #isTNTData(object): object is TNTData {
     try {
       return "type" in object;
     } catch {
@@ -119,6 +111,23 @@ export default class TNTApp {
     if (!this.#initialized) {
       this.#initialized = true;
       this.TNT = new TNT(this.#root, this.symbolTable);
+      // for better experience with setting and getting variables
+      this.variables = new Proxy(this.variables, {
+        get (target, name: string) {
+          const variable = target[name];
+          if (variable)
+            return variable.value;
+          return undefined;
+        },
+        set (target, name: string, value: VariableValueType) {
+          const variable = target[name];
+          if (variable) {
+            variable.setValue(value);
+            return true;
+          }
+          return false;
+        }
+      });
       this.onload();
     }
   }
@@ -133,11 +142,10 @@ export default class TNTApp {
 }
 
 export {
-  NumberType,
   BoolType,
   HTMLStringType,
-  JSFunctionType,
-  ObjectType,
+  JSFunctionType, NumberType, ObjectType,
   StringType,
-  TNTFunctionType,
+  TNTFunctionType
 } from "runtime/SymbolTable";
+

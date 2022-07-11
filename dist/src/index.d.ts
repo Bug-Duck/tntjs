@@ -1,11 +1,9 @@
 import "plugins/debug";
 import "plugins/tntem";
-import { Variable as VariableBase, VariableValueType } from "runtime/SymbolTable";
-import TypeInfo from "runtime/TypeInfo";
-import { SymbolTable } from "runtime/SymbolTable";
-import TNT from "runtime/TNT";
-import { NumberType, BoolType, HTMLStringType, JSFunctionType, ObjectType, StringType, TNTFunctionType } from "runtime/SymbolTable";
 import { Plugin } from "runtime/Pluggable";
+import { BoolType, HTMLStringType, JSFunctionType, NumberType, ObjectType, StringType, SymbolTable, TNTFunctionType, Variable as VariableBase, VariableValueType } from "runtime/SymbolTable";
+import TNT from "runtime/TNT";
+import TypeInfo from "runtime/TypeInfo";
 export declare class Variable {
     #private;
     name: string;
@@ -31,4 +29,4 @@ export default class TNTApp {
     addPlugins(plugins: Plugin[]): void;
     removePlugins(pluginIds: string[]): void;
 }
-export { NumberType, BoolType, HTMLStringType, JSFunctionType, ObjectType, StringType, TNTFunctionType, } from "runtime/SymbolTable";
+export { BoolType, HTMLStringType, JSFunctionType, NumberType, ObjectType, StringType, TNTFunctionType } from "runtime/SymbolTable";
