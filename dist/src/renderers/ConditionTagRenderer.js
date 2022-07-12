@@ -60,14 +60,14 @@ class ConditionTagRenderer {
             };
             ifTag.innerHTML = "";
             const { elifTags: elifTagElements, elseTag: elseTagElement } = __classPrivateFieldGet(this, _ConditionTagRenderer_instances, "m", _ConditionTagRenderer_getConditionTagsByIfTag).call(this, ifTag);
-            const elseTag = {
+            const elseTag = elseTagElement ? {
                 type: "else",
                 condition: "true",
                 children: [...elseTagElement.children],
                 show: false
-            };
+            } : null;
             const elifTags = [];
-            elseTagElement.remove();
+            elseTagElement === null || elseTagElement === void 0 ? void 0 : elseTagElement.remove();
             elifTagElements.forEach((element) => {
                 elifTags.push({
                     type: "elif",

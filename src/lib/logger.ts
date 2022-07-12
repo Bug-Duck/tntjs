@@ -15,14 +15,12 @@ export class DefaultLoggerStyle implements LoggerStyle {
 export class Logger {
   #name: string;
   #loggerStyle: LoggerStyle;
+  #isDebug: boolean;
 
   constructor(name: string, loggerStyle?: LoggerStyle) {
     this.#name = name;
     this.#loggerStyle = loggerStyle ?? new DefaultLoggerStyle();
-  }
-
-  get #isDebug() {
-    return document.getElementsByTagName("tnt-debug").length > 0;
+    this.#isDebug = document.location.hostname === "127.0.0.1";
   }
 
   info(message: string, debug = false) {

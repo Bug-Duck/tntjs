@@ -16,10 +16,8 @@ class Variable {
         __classPrivateFieldSet(this, _Variable_symbolTable, symbolTable, "f");
     }
     setValue(value) {
-        __classPrivateFieldGet(this, _Variable_logger, "f").debug(`Setting value ${value} for variable ${this.name}...`);
         this.variableBase.value = value;
         __classPrivateFieldGet(this, _Variable_symbolTable, "f").setValue(this.name, this.variableBase);
-        __classPrivateFieldGet(this, _Variable_logger, "f").debug(`Set value ${value} for variable ${this.name}.`);
         return this;
     }
     delete() {

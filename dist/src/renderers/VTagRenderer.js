@@ -37,9 +37,7 @@ class VTagRenderer {
             }
             const content = tag.getAttribute("data-original");
             const newlyRenderedContent = renderer(content);
-            tag.innerHTML = tag.innerHTML !== newlyRenderedContent ?
-                newlyRenderedContent :
-                tag.innerHTML;
+            tag.innerHTML = newlyRenderedContent;
         });
     }
 }

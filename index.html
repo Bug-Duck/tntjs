@@ -8,7 +8,7 @@
   </head>
   <body>
     <div id="root">
-      <tnt-debug></tnt-debug>
+      <!-- <tnt-debug></tnt-debug> -->
       <v data="testValue + 233">Loading variable testValue...</v>
       <a
         tnt-td="href -> links[0].link + '/example'; target -> link.target"
@@ -17,7 +17,12 @@
         Click me
       </a>
       <v data="testValue - testValue2">a</v>
-      <t-for data="i in links">
+      <t-for data="i in test">
+        <div>
+          <v data="i">Loading i...</v>
+        </div>
+      </t-for>
+      <!-- <t-for data="i in links">
         <div>
           <t-for data="j in others.links">
             <div>
@@ -50,7 +55,7 @@
             <v data="`Link: ${i.link}`">Loading link...</v>
           </p>
         </div>
-      </t-for>
+      </t-for> -->
 
       <t-if cond="i">
         <p>trlllue</p>

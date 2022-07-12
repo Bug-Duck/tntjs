@@ -12,9 +12,10 @@ export let pluginList: Plugin[] = [];
 
 export const valueEvaluationFailedMessage = "[TNT_RENDER_ERROR]";
 
-export const defaultValueEvaluator = (symbolTable: SymbolTable, expr: string): VariableValueType => {
+export const defaultValueEvaluator = (symbolTable: SymbolTable, expr: string, ignoreVariables: string[] = []): VariableValueType => {
   let toEval = "try {";
   symbolTable.variableNames.forEach((variableName) => {
+    if (ignoreVariables.includes(variableName)) return;
     toEval += `const ${variableName} = ${JSON.stringify(symbolTable.getValue(variableName).value)}; `;
   });
   toEval += `return ${expr};`;
@@ -30,8 +31,8 @@ export const setValueEvaluator = (newEvaluator: (symbolTable: SymbolTable, expr:
   valueEvaluator = newEvaluator;
 };
 
-export const evaluate = (symbolTable: SymbolTable, expr: string): VariableValueType => {
-  return (valueEvaluator ?? defaultValueEvaluator)(symbolTable, expr);
+export const evaluate = (symbolTable: SymbolTable, expr: string, ignoreVariables: string[] = []): VariableValueType => {
+  return (valueEvaluator ?? defaultValueEvaluator)(symbolTable, expr, ignoreVariables);
 };
 
 export const addPlugin = (root: HTMLElement, plugin: Plugin) => {

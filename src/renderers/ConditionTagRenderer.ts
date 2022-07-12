@@ -116,15 +116,15 @@ export default class ConditionTagRenderer implements Renderer {
       ifTag.innerHTML = "";
       const { elifTags: elifTagElements, elseTag: elseTagElement } =
           this.#getConditionTagsByIfTag(ifTag);
-      const elseTag: ConditionTagData = {
+      const elseTag: ConditionTagData = elseTagElement ? {
         type: "else",
         condition: "true",
         children: [...elseTagElement.children],
         show: false
-      };
+      } : null;
       const elifTags: ConditionTagData[] = [];
 
-      elseTagElement.remove();
+      elseTagElement?.remove();
       elifTagElements.forEach((element) => {
         elifTags.push({
           type: "elif",

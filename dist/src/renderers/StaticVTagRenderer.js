@@ -16,7 +16,7 @@ class StaticVTagRenderer {
         __classPrivateFieldSet(this, _StaticVTagRenderer_symbolTable, symbolTable, "f");
     }
     render() {
-        const svTags = __classPrivateFieldGet(this, _StaticVTagRenderer_root, "f").querySelectorAll("sv");
+        const svTags = [...__classPrivateFieldGet(this, _StaticVTagRenderer_root, "f").getElementsByTagName("sv")];
         svTags.forEach((tag) => {
             tag.innerHTML = __classPrivateFieldGet(this, _StaticVTagRenderer_renderer, "f").call(this, tag.getAttribute("data-original"));
         });

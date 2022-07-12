@@ -23,7 +23,7 @@ class ForTagRenderer {
         __classPrivateFieldSet(this, _ForTagRenderer_elementIds, {}, "f");
         this.defaultRenderer = this.defaultRenderer.bind(this);
     }
-    defaultRenderer(parentVariable, localVariableName, childElement, parentElement) {
+    defaultRenderer(parentVariable, parentVariableName, localVariableName, childElement, parentElement) {
         if (!Array.isArray(parentVariable)) {
             return `[ERROR] Cannot use non-array variables in <t-for />. Excepted Array, got ${typeof parentVariable}.`;
         }
@@ -46,9 +46,10 @@ class ForTagRenderer {
             }
             currentVariable.setValue(item);
             customSymbolTable.merge(__classPrivateFieldGet(this, _ForTagRenderer_symbolTable, "f"), (oldValue) => oldValue);
-            childElement.setAttribute("data-id", currentId);
+            customSymbolTable.remove(parentVariableName);
+            childElement.setAttribute("id", currentId);
             parentElement.appendChild(childElement.cloneNode(true));
-            const currentTNTInstance = (_b = __classPrivateFieldGet(this, _ForTagRenderer_TNTInstances, "f")[currentId]) !== null && _b !== void 0 ? _b : new TNT(parentElement.querySelector(`[data-id="${currentId}"]`), customSymbolTable);
+            const currentTNTInstance = (_b = __classPrivateFieldGet(this, _ForTagRenderer_TNTInstances, "f")[currentId]) !== null && _b !== void 0 ? _b : new TNT(document.getElementById(currentId), customSymbolTable);
             if (!__classPrivateFieldGet(this, _ForTagRenderer_TNTInstances, "f")[currentId]) {
                 __classPrivateFieldGet(this, _ForTagRenderer_TNTInstances, "f")[currentId] = currentTNTInstance;
             }
@@ -81,20 +82,20 @@ class ForTagRenderer {
                 }
                 const tagId = generateId();
                 tag.setAttribute("data-rendered", "YES");
-                tag.setAttribute("data-id", tagId);
+                tag.setAttribute("id", tagId);
                 __classPrivateFieldGet(this, _ForTagRenderer_tagChildren, "f")[tagId] = tag.children[0];
                 tag.setAttribute("data-original", tag.getAttribute("data"));
                 tag.removeAttribute("data");
                 tag.removeAttribute("data-rendering");
-                const { parentVariableValue, localVariableName } = __classPrivateFieldGet(this, _ForTagRenderer_instances, "m", _ForTagRenderer_parseOperation).call(this, tag);
-                const renderedContent = render(parentVariableValue, localVariableName, __classPrivateFieldGet(this, _ForTagRenderer_tagChildren, "f")[tagId], tag);
+                const { parentVariableValue, parentVariableName, localVariableName } = __classPrivateFieldGet(this, _ForTagRenderer_instances, "m", _ForTagRenderer_parseOperation).call(this, tag);
+                const renderedContent = render(parentVariableValue, parentVariableName, localVariableName, __classPrivateFieldGet(this, _ForTagRenderer_tagChildren, "f")[tagId], tag);
                 if (renderedContent)
                     tag.innerHTML = renderedContent;
                 return;
             }
             tag.removeAttribute("data-rendering");
-            const { parentVariableValue, localVariableName } = __classPrivateFieldGet(this, _ForTagRenderer_instances, "m", _ForTagRenderer_parseOperation).call(this, tag);
-            const newlyRenderedContent = render(parentVariableValue, localVariableName, __classPrivateFieldGet(this, _ForTagRenderer_tagChildren, "f")[tag.getAttribute("data-id")], tag);
+            const { parentVariableValue, parentVariableName, localVariableName } = __classPrivateFieldGet(this, _ForTagRenderer_instances, "m", _ForTagRenderer_parseOperation).call(this, tag);
+            const newlyRenderedContent = render(parentVariableValue, parentVariableName, localVariableName, __classPrivateFieldGet(this, _ForTagRenderer_tagChildren, "f")[tag.getAttribute("id")], tag);
             if (newlyRenderedContent)
                 tag.innerHTML = newlyRenderedContent;
         });
@@ -104,7 +105,7 @@ _ForTagRenderer_customRenderer = new WeakMap(), _ForTagRenderer_root = new WeakM
     const forOperation = tag.getAttribute("data-original").split(" in ", 2);
     const localVariableName = forOperation[0], parentVariableName = forOperation[1];
     const parentVariableValue = evaluate(__classPrivateFieldGet(this, _ForTagRenderer_symbolTable, "f"), parentVariableName);
-    return { localVariableName, parentVariableValue };
+    return { localVariableName, parentVariableName, parentVariableValue };
 }, _ForTagRenderer_validateElements = function _ForTagRenderer_validateElements(tag) {
     if (tag.children.length > 1) {
         return "[ERROR] <t-for /> elements can have at most 1 direct child element. Try wrapping your elements into a <div /> and try again.";

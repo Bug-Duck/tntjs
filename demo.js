@@ -2,19 +2,9 @@ import TNTApp from "./dist/src/index.js";
 import DebugPlugin from "./dist/src/plugins/debug/index.js";
 
 window.onload = () => {
-  const app = new TNTApp(document.getElementById("root"), () => {
-    // onload
-    console.log({...app.variables});
-    setTimeout(() => {
-      app.variables.testValue = 456;
-      app.variables.links = [
-        ...app.variables.links,
-        { link: "https://new.org", target: "_blank" },
-      ];
-    }, 5000);
-    app.addPlugins([new DebugPlugin()]);
-    console.log(app.variables.links);
-  });
+  const tmp = [];
+  for (let i = 1; i <= 10000; i++) tmp.push(i);
+  const app = new TNTApp(document.getElementById("root"));
   app.data({
     testValue: 233,
     testValue2: 456,
@@ -45,5 +35,6 @@ window.onload = () => {
         "Link B"
       ],
     },
+    test: tmp,
   });
 };

@@ -2,9 +2,11 @@ const TNTInstances = [];
 let valueEvaluator;
 let pluginList = [];
 const valueEvaluationFailedMessage = "[TNT_RENDER_ERROR]";
-const defaultValueEvaluator = (symbolTable, expr) => {
+const defaultValueEvaluator = (symbolTable, expr, ignoreVariables = []) => {
     let toEval = "try {";
     symbolTable.variableNames.forEach((variableName) => {
+        if (ignoreVariables.includes(variableName))
+            return;
         toEval += `const ${variableName} = ${JSON.stringify(symbolTable.getValue(variableName).value)}; `;
     });
     toEval += `return ${expr};`;
@@ -19,8 +21,8 @@ const defaultValueEvaluator = (symbolTable, expr) => {
 const setValueEvaluator = (newEvaluator) => {
     valueEvaluator = newEvaluator;
 };
-const evaluate = (symbolTable, expr) => {
-    return (valueEvaluator !== null && valueEvaluator !== void 0 ? valueEvaluator : defaultValueEvaluator)(symbolTable, expr);
+const evaluate = (symbolTable, expr, ignoreVariables = []) => {
+    return (valueEvaluator !== null && valueEvaluator !== void 0 ? valueEvaluator : defaultValueEvaluator)(symbolTable, expr, ignoreVariables);
 };
 const addPlugin = (root, plugin) => {
     plugin.root = root;

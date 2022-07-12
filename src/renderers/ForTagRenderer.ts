@@ -11,6 +11,7 @@ import { ignoreRender, Renderer } from "./index";
 
 export type ForTagCustomRenderer = (
   parentVariable: VariableValueType,
+  parentVariableName: string,
   localVariableName: string,
   childElement: Element,
   parentElement: Element
@@ -45,11 +46,12 @@ export default class ForTagRenderer implements Renderer {
     const localVariableName = forOperation[0],
       parentVariableName = forOperation[1];
     const parentVariableValue = evaluate(this.#symbolTable, parentVariableName);
-    return { localVariableName, parentVariableValue };
+    return { localVariableName, parentVariableName, parentVariableValue };
   }
 
   defaultRenderer(
     parentVariable: VariableValueType,
+    parentVariableName: string,
     localVariableName: string,
     childElement: Element,
     parentElement: Element
@@ -85,13 +87,14 @@ export default class ForTagRenderer implements Renderer {
       currentVariable.setValue(item);
       // merge the global table to the inner table
       customSymbolTable.merge(this.#symbolTable, (oldValue) => oldValue);
-      childElement.setAttribute("data-id", currentId);
+      customSymbolTable.remove(parentVariableName);
+      childElement.setAttribute("id", currentId);
       parentElement.appendChild(childElement.cloneNode(true));
       // inner variable renderer
       const currentTNTInstance =
         this.#TNTInstances[currentId] ??
         new TNT(
-          parentElement.querySelector(`[data-id="${currentId}"]`),
+          document.getElementById(currentId),
           customSymbolTable
         );
       if (!this.#TNTInstances[currentId]) {
@@ -138,16 +141,17 @@ export default class ForTagRenderer implements Renderer {
     
         const tagId = generateId();
         tag.setAttribute("data-rendered", "YES");
-        tag.setAttribute("data-id", tagId);
+        tag.setAttribute("id", tagId);
         // store in a separate variable instead of in attributes
         this.#tagChildren[tagId] = tag.children[0];
         tag.setAttribute("data-original", tag.getAttribute("data"));
         tag.removeAttribute("data");
         tag.removeAttribute("data-rendering");
-        const { parentVariableValue, localVariableName } =
+        const { parentVariableValue, parentVariableName, localVariableName } =
           this.#parseOperation(tag);
         const renderedContent = render(
           parentVariableValue,
+          parentVariableName,
           localVariableName,
           this.#tagChildren[tagId],
           tag
@@ -156,12 +160,13 @@ export default class ForTagRenderer implements Renderer {
         return;
       }
       tag.removeAttribute("data-rendering");
-      const { parentVariableValue, localVariableName } =
+      const { parentVariableValue, parentVariableName, localVariableName } =
         this.#parseOperation(tag);
       const newlyRenderedContent = render(
         parentVariableValue,
+        parentVariableName,
         localVariableName,
-        this.#tagChildren[tag.getAttribute("data-id")],
+        this.#tagChildren[tag.getAttribute("id")],
         tag
       );
       if (newlyRenderedContent) tag.innerHTML = newlyRenderedContent;

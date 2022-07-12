@@ -25,10 +25,8 @@ export class Variable {
   }
 
   setValue(value: VariableValueType): Variable {
-    this.#logger.debug(`Setting value ${value} for variable ${this.name}...`);
     this.variableBase.value = value;
     this.#symbolTable.setValue(this.name, this.variableBase);
-    this.#logger.debug(`Set value ${value} for variable ${this.name}.`);
     return this;
   }
 

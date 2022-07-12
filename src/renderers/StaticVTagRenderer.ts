@@ -27,7 +27,7 @@ export default class StaticVTagRenderer implements Renderer {
   }
 
   render() {
-    const svTags = this.#root.querySelectorAll("sv");
+    const svTags = [...this.#root.getElementsByTagName("sv")];
     svTags.forEach((tag) => {
       tag.innerHTML = this.#renderer(tag.getAttribute("data-original"));
     });

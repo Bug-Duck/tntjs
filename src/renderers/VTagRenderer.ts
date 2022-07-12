@@ -45,9 +45,7 @@ export default class VTagRenderer implements Renderer {
       const content = tag.getAttribute("data-original");
       const newlyRenderedContent = renderer(content);
       // compare if the element should be rerendered
-      tag.innerHTML = tag.innerHTML !== newlyRenderedContent ?
-        newlyRenderedContent :
-        tag.innerHTML;
+      tag.innerHTML = newlyRenderedContent;
     });
   }
 }
