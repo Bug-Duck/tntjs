@@ -6,7 +6,7 @@ import {
   VariableValueType,
 } from "runtime/SymbolTable";
 import TNT from "runtime/TNT";
-import { Variable } from "../index";
+import Variable from "../Variable";
 import { ignoreRender, Renderer } from "./index";
 
 export type ForTagCustomRenderer = (
@@ -45,7 +45,7 @@ export default class ForTagRenderer implements Renderer {
     const forOperation = tag.getAttribute("data-original").split(" in ", 2);
     const localVariableName = forOperation[0],
       parentVariableName = forOperation[1];
-    const parentVariableValue = evaluate(this.#symbolTable, parentVariableName);
+    const parentVariableValue = evaluate(this.#symbolTable, parentVariableName).value;
     return { localVariableName, parentVariableName, parentVariableValue };
   }
 

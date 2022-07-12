@@ -33,7 +33,7 @@ export default class StyleDataRenderer implements Renderer {
       const stylePre = style.split(CONNECTOR);
       const [styleKey, styleValue] = [stylePre[0].trim(), stylePre[1].trim()];
       try {
-        rendered[styleKey] = evaluate(this.#symbolTable, styleValue).toString();
+        rendered[styleKey] = evaluate(this.#symbolTable, styleValue).value.toString();
       } catch (e) {
         rendered[styleKey] = `[ERROR] ${e}`;
       }
@@ -61,7 +61,6 @@ export default class StyleDataRenderer implements Renderer {
         this.#setTagStyles(tag, render(tag.getAttribute("data-sd")));
         return;
       }
-      console.log(tag);
       // diff check is unnecessary here due to the time complexity of diff-checking
       // and directly reassigning is about the same
       const newlyRenderedContent = render(tag.getAttribute("data-sd"));

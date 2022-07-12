@@ -3,7 +3,7 @@
  */
 
 
-import { addPlugin, removePlugin, getAllPlugins, TNTInstances } from "./GlobalEnvironment";
+import { TNTInstances } from "./GlobalEnvironment";
 import { Logger } from "src/lib/logger";
 import { Plugin } from "./Pluggable";
 import { SymbolTable } from "./SymbolTable";
@@ -15,8 +15,9 @@ export default class TNT {
   #logger = new Logger("TNT Runtime");
   #root: HTMLElement;
   #symbolTable: SymbolTable;
+  plugins: Plugin[];
 
-  constructor(root: HTMLElement, symbolTable: SymbolTable) {
+  constructor(root: HTMLElement, symbolTable: SymbolTable, plugins: Plugin[] = []) {
     if (!root) {
       throw TypeError("TNT root element cannot be undefined.");
     }
@@ -26,6 +27,7 @@ export default class TNT {
 
     this.#root = root;
     this.#symbolTable = symbolTable;
+    this.plugins = plugins;
     // Entry point of a TNT page.
     // Register itself to the global object pool so that plugins can operate on it.
     TNTInstances.push(this);
@@ -47,8 +49,8 @@ export default class TNT {
     this.disablePlugins(pluginsToBeDisabled);
 
     // Initialize plugins
-    const plugins = getAllPlugins();
-    plugins.forEach((plugin) => {
+    this.plugins.forEach((plugin) => {
+      this.#isPluginInstantiated(plugin);
       this.#logger.debug(`Loading plugin ${plugin.id}, version ${plugin.version}...`);
       try {
         // Check each dependency
@@ -76,7 +78,7 @@ export default class TNT {
       } catch (e) {
         // If any error occurred, the plugin will NOT be loaded.
         this.#logger.error(`Error while loading plugin ${plugin.id}:\n${e}`, true);
-        removePlugin(plugin.id);
+        this.removePlugin(plugin.id);
         return;
       }
       this.#logger.debug(`Successfully loaded plugin ${plugin.id}`);
@@ -117,6 +119,13 @@ export default class TNT {
     return { isDebugModeOn, isTNTScriptOn, isPureModeOn, isFlipModeOn, pluginsToBeDisabled };
   }
 
+  #isPluginInstantiated(plugin) {
+    // plugin type check
+    if (typeof plugin.prototype !== "undefined") {
+      throw new TypeError("Plugins need to be instantiated.");
+    }
+  }
+
   #onDebugModeDisabled() {
     if (window.location.href.startsWith("file:")) {
       this.#logger.warn(
@@ -126,12 +135,12 @@ export default class TNT {
         true
       );
     }
-    removePlugin("tntdebug");
+    this.removePlugin("tntdebug");
   }
 
   #onTNTScriptDisabled() {
     this.#logger.warn("Disabling TNT script may cause some unexpected results. If you're sure you want to disable the TNT Script feature, please ignore this warning.", true);
-    removePlugin("tntscript");
+    this.removePlugin("tntscript");
   }
 
   #onPureModeOn() {
@@ -143,8 +152,8 @@ export default class TNT {
       true
     );
     // disable all plugins
-    getAllPlugins().forEach((plugin) => {
-      removePlugin(plugin.id);
+    this.plugins.forEach((plugin) => {
+      this.removePlugin(plugin.id);
     });
   }
 
@@ -157,19 +166,34 @@ export default class TNT {
   disablePlugins(pluginIds: string[]) {
     pluginIds.forEach((pluginId) => {
       if (pluginId !== null) {
-        removePlugin(pluginId);
+        this.removePlugin(pluginId);
       }
     });
   }
 
+  addPlugin(root: HTMLElement, plugin: Plugin) {
+    this.#isPluginInstantiated(plugin);
+    plugin.root = root;
+    this.plugins.push(plugin);
+  }
+
   addPlugins(plugins: Plugin[]) {
     plugins.forEach((plugin) => {
-      addPlugin(this.#root, plugin);
+      this.addPlugin(this.#root, plugin);
     });
   }
 
+  removePlugin(pluginId: string) {
+    let pluginPosition;
+    this.plugins.forEach((plugin, index) => {
+      if (plugin.id === pluginId) {
+        pluginPosition = index;
+      }
+    });
+    this.plugins.splice(pluginPosition, pluginPosition);
+  }
+
   render() {
-    const plugins = getAllPlugins();
     // lock the refreshing function to avoid infinity recursion
     this.#refreshLock = true;
 
@@ -177,7 +201,7 @@ export default class TNT {
     this.#renderers.forEach((renderer) => renderer.render());
 
     // protect tags
-    plugins.forEach((plugin) => {
+    this.plugins.forEach((plugin) => {
       plugin.tags.forEach((tag) =>  {
         const tagDOM = this.#root.querySelectorAll(tag);
         tagDOM.forEach((el) => {

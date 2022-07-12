@@ -11,7 +11,7 @@ export type ConditionTagCustomRenderer = (
 export interface ConditionTagData {
   type: "if" | "elif" | "else";
   condition: string;
-  children: Element[];
+  children: Node[];
   show: boolean;
 }
 
@@ -63,7 +63,7 @@ export default class ConditionTagRenderer implements Renderer {
     };
   }
 
-  #renderTagContents(parentElement: Element, children: Element[]) {
+  #renderTagContents(parentElement: Element, children: Node[]) {
     children.forEach((child) => {
       parentElement.appendChild(child);
     });
@@ -76,13 +76,13 @@ export default class ConditionTagRenderer implements Renderer {
     const ifTagValue = evaluate(
       this.#symbolTable,
       conditionTag.ifTag.condition
-    );
+    ).value;
     if (ifTagValue && !ifTagValue.toString().startsWith(valueEvaluationFailedMessage)) {
       this.#renderTagContents(parentElement, conditionTag.ifTag.children);
       return;
     }
     for (const elifTag of conditionTag.elifTags) {
-      const elifTagValue = evaluate(this.#symbolTable, elifTag.condition);
+      const elifTagValue = evaluate(this.#symbolTable, elifTag.condition).value;
       if (elifTagValue && !elifTagValue.toString().startsWith(valueEvaluationFailedMessage)) {
         this.#renderTagContents(parentElement, elifTag.children);
         return;
@@ -106,11 +106,10 @@ export default class ConditionTagRenderer implements Renderer {
       }
       ifTag.setAttribute("data-rendered", "YES");
       ifTag.setAttribute("data-original", ifTag.getAttribute("cond"));
-      // ifTag.removeAttribute("cond");
       const ifTagData: ConditionTagData = {
         type: "if",
         condition: ifTag.getAttribute("data-original"),
-        children: [...ifTag.children],
+        children: [...ifTag.childNodes],
         show: false,
       };
       ifTag.innerHTML = "";
@@ -119,7 +118,7 @@ export default class ConditionTagRenderer implements Renderer {
       const elseTag: ConditionTagData = elseTagElement ? {
         type: "else",
         condition: "true",
-        children: [...elseTagElement.children],
+        children: [...elseTagElement.childNodes],
         show: false
       } : null;
       const elifTags: ConditionTagData[] = [];
@@ -129,7 +128,7 @@ export default class ConditionTagRenderer implements Renderer {
         elifTags.push({
           type: "elif",
           condition: element.getAttribute("cond"),
-          children: [...element.children],
+          children: [...element.childNodes],
           show: false,
         });
         element.remove();

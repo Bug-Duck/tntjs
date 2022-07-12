@@ -1,4 +1,4 @@
-import { ObjectType, Variable, VariableValueType } from "runtime/SymbolTable";
+import { ObjectType, VariableBase, VariableValueType } from "runtime/SymbolTable";
 import { Template } from "./Template";
 import { Component } from "./Template";
 import { SymbolTable } from "runtime/SymbolTable";
@@ -59,7 +59,7 @@ export class Globals {
     ) => {
       const HTMLCodes = dom.innerHTML;
       [...iterateOverObject as unknown as VariableValueType[]].forEach((iter, key) => {
-        this.#symbolTable.setValue(traversalBody as string, new Variable(iter, ObjectType));
+        this.#symbolTable.setValue(traversalBody as string, new VariableBase(iter, ObjectType));
         // TODO: 渲染列表
       });
     }));

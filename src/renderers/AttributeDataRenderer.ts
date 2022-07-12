@@ -46,11 +46,13 @@ export default class AttributeDataRenderer implements Renderer {
 
   defaultRenderer(tagContent: string): Record<string, string> {
     const rendered: Record<string, string> = {};
+    const attributesTrigger = ["onclick"];
     tagContent.split(SEPARATOR).forEach((tag) => {
       const tagPre = tag.split(CONNECTOR);
       const [tagName, tagContent] = [tagPre[0].trim(), tagPre[1].trim()];
       try {
-        rendered[tagName] = evaluate(this.#symbolTable, tagContent).toString();
+        if (attributesTrigger.includes(tagName)) rendered[tagName] = evaluate(this.#symbolTable, tagContent, [], true).expr;
+        else rendered[tagName] = evaluate(this.#symbolTable, tagContent).value?.toString();
       } catch (e) {
         rendered[tagName] = `[ERROR] ${e}`;
       }

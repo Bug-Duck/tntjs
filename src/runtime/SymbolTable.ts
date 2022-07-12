@@ -24,7 +24,7 @@ export const TNTTypeMap = {
 };
 export type VariableValueType = string | number | object | boolean | (() => unknown);
 
-export class Variable {
+export class VariableBase {
   #value: VariableValueType;
   #type: TypeInfo;
   #logger: Logger;
@@ -77,15 +77,15 @@ export class Variable {
 
 export class SymbolTable {
   #onSetValueHandlers: Array<() => void> = [];
-  #content: Record<string, Variable> = {};
+  #content: Record<string, VariableBase> = {};
 
   // Get value via the variable name.
-  getValue(key: string): Variable {
+  getValue(key: string): VariableBase {
     return this.#content[key];
   }
 
   // Set value by the variable name.
-  setValue(key: string, v: Variable): void {
+  setValue(key: string, v: VariableBase): void {
     this.#content[key] = v;
     this.#onSetValueHandlers.forEach((eventHandler) => eventHandler());
   }
@@ -106,7 +106,7 @@ export class SymbolTable {
   }
 
   // Merge table.
-  merge(anotherTable: SymbolTable, ifExists: (oldValue: Variable, newValue: Variable) => Variable): void {
+  merge(anotherTable: SymbolTable, ifExists: (oldValue: VariableBase, newValue: VariableBase) => VariableBase): void {
     anotherTable.variableNames.forEach((variable) => {
       const newValue =
         this.containsVariable(variable) ?

@@ -1,49 +1,21 @@
-import { Logger } from "lib/logger";
 import "plugins/debug";
+import DebugPlugin from "plugins/debug/index";
 import "plugins/tntem";
 import { Plugin } from "runtime/Pluggable";
 import {
   BoolType,
   HTMLStringType,
-  JSFunctionType, jsType2TNT, NumberType, ObjectType,
-  StringType, SymbolTable, TNTFunctionType, Variable as VariableBase,
-  VariableValueType
+  JSFunctionType,
+  jsType2TNT,
+  NumberType,
+  ObjectType,
+  StringType,
+  SymbolTable,
+  TNTFunctionType,
+  VariableValueType,
 } from "runtime/SymbolTable";
 import TNT from "runtime/TNT";
-import TypeInfo from "runtime/TypeInfo";
-
-export class Variable {
-  name: string;
-  variableBase: VariableBase;
-  #logger = new Logger("tntjs");
-  #symbolTable: SymbolTable;
-
-  constructor(symbolTable: SymbolTable, name: string, type: TypeInfo) {
-    this.name = name;
-    this.variableBase = new VariableBase(type.defaultValue, type);
-    this.#symbolTable = symbolTable;
-  }
-
-  setValue(value: VariableValueType): Variable {
-    this.variableBase.value = value;
-    this.#symbolTable.setValue(this.name, this.variableBase);
-    return this;
-  }
-
-  delete(): void {
-    this.#logger.debug(`Deleting variable ${this.name}...`);
-    this.#symbolTable.remove(this.name);
-    this.#logger.debug(`Deleted variable ${this.name}.`);
-  }
-
-  get value() {
-    return this.variableBase.value;
-  }
-
-  get type() {
-    return this.variableBase.type;
-  }
-}
+import Variable from "./Variable";
 
 export interface TNTData {
   type:
@@ -57,24 +29,35 @@ export interface TNTData {
   value: VariableValueType;
 }
 
-export default class TNTApp {
+export interface TNTAppProps {
+  root: HTMLElement;
+  onload?: () => unknown;
+  plugins?: Plugin[];
+  variables: Record<string, TNTData | VariableValueType>;
+}
+
+export class TNTApp {
   symbolTable: SymbolTable;
   TNT: TNT;
   variables: Record<string, Variable>;
-  onload: () => unknown;
+  onload: (app: TNTApp) => unknown;
   #root: HTMLElement;
-  #initialized: boolean;
+  #firstPlugins: Plugin[];
 
-  constructor(root: HTMLElement, onload?: () => unknown) {
+  constructor({ root, onload, plugins, variables }: TNTAppProps) {
     this.#root = root;
     this.symbolTable = new SymbolTable();
     this.variables = {};
-    this.#initialized = false;
+    this.#firstPlugins = plugins;
     this.onload =
       onload ??
       (() => {
         /* */
       });
+    
+    this.#setData(variables);
+    this.#onInit();
+    this.onload(this);
   }
 
   #isTNTData(object): object is TNTData {
@@ -90,7 +73,30 @@ export default class TNTApp {
     return typeof object;
   }
 
-  data(variables: Record<string, TNTData | VariableValueType>) {
+  #onInit() {
+    this.TNT = new TNT(this.#root, this.symbolTable, this.#firstPlugins);
+    // for better experience with setting and getting variables
+    this.variables = new Proxy(this.variables, {
+      get(target, name: string) {
+        const variable = target[name];
+        if (variable) return variable.value;
+        return undefined;
+      },
+      set(target, name: string, value: VariableValueType) {
+        const variable = target[name];
+        if (variable) {
+          variable.setValue(value);
+          return true;
+        }
+        return false;
+      },
+    });
+    window["variables"] = this.variables;
+    window["TNT"] = this.TNT;
+    window["TNTApp"] = this;
+  }
+
+  #setData(variables: Record<string, TNTData | VariableValueType>) {
     for (const variableName in variables) {
       const variablePre = variables[variableName];
       const variable: TNTData = this.#isTNTData(variablePre)
@@ -106,28 +112,6 @@ export default class TNTApp {
       );
       this.variables[variableName].setValue(variable.value);
     }
-    if (!this.#initialized) {
-      this.#initialized = true;
-      this.TNT = new TNT(this.#root, this.symbolTable);
-      // for better experience with setting and getting variables
-      this.variables = new Proxy(this.variables, {
-        get (target, name: string) {
-          const variable = target[name];
-          if (variable)
-            return variable.value;
-          return undefined;
-        },
-        set (target, name: string, value: VariableValueType) {
-          const variable = target[name];
-          if (variable) {
-            variable.setValue(value);
-            return true;
-          }
-          return false;
-        }
-      });
-      this.onload();
-    }
   }
 
   addPlugins(plugins: Plugin[]) {
@@ -139,11 +123,16 @@ export default class TNTApp {
   }
 }
 
-export {
+export const plugins = [
+  DebugPlugin,
+];
+
+export const TNTTypes = {
   BoolType,
   HTMLStringType,
-  JSFunctionType, NumberType, ObjectType,
+  JSFunctionType,
+  NumberType,
+  ObjectType,
   StringType,
-  TNTFunctionType
-} from "runtime/SymbolTable";
-
+  TNTFunctionType,
+};

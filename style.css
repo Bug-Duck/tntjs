@@ -1,0 +1,95 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap");
+#root,
+#root * {
+  font-family: "Poppins", sans-serif;
+}
+
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  display: block;
+  width: 500px;
+}
+
+button {
+  background-color: #ef4444;
+  color: #fff;
+  border-radius: 10px;
+  border: none;
+  padding: 10px;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+p {
+  font-size: 20px;
+}
+
+input {
+  padding: 10px;
+  width: 200px;
+  border-radius: 10px;
+  border: 2px solid #d4d4d8;
+  transition: all 0.1s;
+}
+
+input:focus {
+  border: 2px solid #ef4444;
+  outline: none;
+}
+
+.header {
+  margin-bottom: 40px;
+  margin-top: 50px;
+}
+
+.header input {
+  width: calc(100% - 24px);
+}
+
+.header button {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  margin-right: 0px !important;
+}
+
+.completed {
+  text-decoration: line-through;
+}
+
+.completed-text {
+  color: #71717a;
+}
+
+.actions button {
+  margin-right: 10px;
+}
+
+.edit {
+  margin-top: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  body,
+  #root {
+    background-color: #0f172a;
+    color: #e2e8f0;
+  }
+
+  input {
+    background-color: #0f172a;
+    border-color: #475569;
+    color: #e2e8f0;
+  }
+
+  .completed-text {
+    color: #64748b;
+  }
+}

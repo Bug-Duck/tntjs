@@ -2,57 +2,40 @@
  * The global environment of the tntjs.
  */
 
-import { SymbolTable, VariableValueType } from "./SymbolTable";
+import { JSFunctionType, SymbolTable, VariableValueType } from "./SymbolTable";
 import TNT from "./TNT";
-import { Plugin } from "./Pluggable";
 
 export const TNTInstances: TNT[] = [];
-export let valueEvaluator: (symbolTable: SymbolTable, expr: string) => VariableValueType;
-export let pluginList: Plugin[] = [];
+
+export interface EvaluateResult {
+  value: VariableValueType;
+  expr: string;
+}
+
+export let valueEvaluator: (symbolTable: SymbolTable, expr: string) => EvaluateResult;
 
 export const valueEvaluationFailedMessage = "[TNT_RENDER_ERROR]";
 
-export const defaultValueEvaluator = (symbolTable: SymbolTable, expr: string, ignoreVariables: string[] = []): VariableValueType => {
-  let toEval = "try {";
+export const defaultValueEvaluator = (symbolTable: SymbolTable, expr: string, ignoreVariables: string[] = [], dontEval = false): EvaluateResult => {
+  let variables = "";
   symbolTable.variableNames.forEach((variableName) => {
     if (ignoreVariables.includes(variableName)) return;
-    toEval += `const ${variableName} = ${JSON.stringify(symbolTable.getValue(variableName).value)}; `;
+    const variableValue = symbolTable.getValue(variableName);
+    variables += `const ${variableName} = ${variableValue.type === JSFunctionType ? variableValue.value : JSON.stringify(variableValue.value)}; `;
   });
-  toEval += `return ${expr};`;
-  toEval += `} catch (e) { return \`${valueEvaluationFailedMessage} \${e}\`; }`;
+  const toEval = `try {${variables}; return ${expr};} catch (e) { return \`${valueEvaluationFailedMessage} \${e}\`; }`;
+  variables += expr;
   try {
-    return Function(toEval)();
+    return { value: dontEval ? null : Function(toEval)(), expr: variables };
   } catch (e) {
-    return e;
+    return { value: e, expr: variables };
   }
 };
 
-export const setValueEvaluator = (newEvaluator: (symbolTable: SymbolTable, expr: string) => VariableValueType) => {
+export const setValueEvaluator = (newEvaluator: (symbolTable: SymbolTable, expr: string) => EvaluateResult) => {
   valueEvaluator = newEvaluator;
 };
 
-export const evaluate = (symbolTable: SymbolTable, expr: string, ignoreVariables: string[] = []): VariableValueType => {
-  return (valueEvaluator ?? defaultValueEvaluator)(symbolTable, expr, ignoreVariables);
-};
-
-export const addPlugin = (root: HTMLElement, plugin: Plugin) => {
-  plugin.root = root;
-  pluginList.push(plugin);
-};
-
-export const getAllPlugins = () => {
-  return pluginList;
-};
-
-export const hasPlugin = (pluginId: string) => {
-  const pluginsFound = pluginList.filter((plugin) => {
-    return plugin.id === pluginId;
-  });
-  return pluginsFound.length > 0;
-};
-
-export const removePlugin = (pluginId: string) => {
-  pluginList = pluginList.filter((plugin) => {
-    return plugin.id !== pluginId;
-  });
+export const evaluate = (symbolTable: SymbolTable, expr: string, ignoreVariables: string[] = [], dontEval = false): EvaluateResult => {
+  return (valueEvaluator ?? defaultValueEvaluator)(symbolTable, expr, ignoreVariables, dontEval);
 };

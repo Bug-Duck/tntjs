@@ -4,75 +4,62 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Todo App - TNTjs</title>
+    <script src="./dist/tnt.min.js"></script>
   </head>
   <body>
     <div id="root">
-      <!-- <tnt-debug></tnt-debug> -->
-      <v data="testValue + 233">Loading variable testValue...</v>
-      <a
-        tnt-td="href -> links[0].link + '/example'; target -> link.target"
-        tnt-sd="font-size -> `${style.fontSize - 190}px`"
-      >
-        Click me
-      </a>
-      <v data="testValue - testValue2">a</v>
-      <t-for data="i in test">
-        <div>
-          <v data="i">Loading i...</v>
+      <div class="container">
+        <div class="header">
+          <h1>Todo App</h1>
+          <p>A simple todo app built with TNTjs.</p>
+          <input
+            type="text"
+            id="todoInput"
+            placeholder="Your todo item..."
+          />
+          <button onclick="addTodo()">Add Todo</button>
         </div>
-      </t-for>
-      <!-- <t-for data="i in links">
-        <div>
-          <t-for data="j in others.links">
-            <div>
-              <t-if cond="i">
-                <p>
-                  <a tnt-td="href -> i.link" tnt-sd="color -> 'orange'">
-                    <v data="j">Loading variable j...</v>
-                  </a>
-                </p>
-                <p>
-                  Demo!
-                </p>
+        <t-for data="item in todo">
+          <div>
+            <p tnt-td="class -> item.completed && completed">
+              <v data="item.text">Loading todo...</v>
+              <t-if cond="item.completed">
+                <span class="completed-text">(completed)</span>
               </t-if>
-              <t-elif cond="!testValue">
-                <p>elif</p>
-              </t-elif>
-              <t-elif cond="!testValue">
-                <p>elif2</p>
-              </t-elif>
-              <t-elif cond="!testValue">
-                <p>elif3</p>
-              </t-elif>
+            </p>
+            <div class="actions">
+              <button tnt-td="onclick -> showEditPanel(item)">Edit</button>
+              <t-if cond="!item.completed">
+                <button tnt-td="onclick -> deleteTodo(item)">
+                  Set as Completed
+                </button>
+              </t-if>
               <t-else>
-                <p>else!</p>
+                <button tnt-td="onclick -> deleteTodo(item, true)">
+                  Set as Uncompleted
+                </button>
               </t-else>
-              <v data="i.link + '; ' + j">Loading variables...</v>
             </div>
-          </t-for>
-          <p>
-            <v data="`Link: ${i.link}`">Loading link...</v>
-          </p>
-        </div>
-      </t-for> -->
-
-      <t-if cond="i">
-        <p>trlllue</p>
-      </t-if>
-      <t-elif cond="!testValue">
-        <p>elif</p>
-      </t-elif>
-      <t-elif cond="!testValue">
-        <p>elif2</p>
-      </t-elif>
-      <t-elif cond="!testValue">
-        <p>elif3</p>
-      </t-elif>
-      <t-else>
-        <p>else!</p>
-      </t-else>
+            <div class="edit">
+              <t-if cond="currentlyEditing === item.id">
+                <input
+                  tnt-td="id -> `edit-${item.id}`; value -> item.text"
+                  placeholder="Edit your todo..."
+                  class="edit"
+                />
+                <button tnt-td="onclick -> editTodo(item)">Submit</button>
+              </t-if>
+            </div>
+          </div>
+        </t-for>
+      </div>
     </div>
-    <script type="module" src="./demo.js"></script>
+
+    <style>
+      @import "./style.css";
+    </style>
+
+    <script src="./App.js"></script>
   </body>
 </html>

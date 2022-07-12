@@ -20,7 +20,7 @@ export default class StaticVTagRenderer implements Renderer {
 
   #defaultRenderer(s: string): string {
     try {
-      return `${evaluate(this.#symbolTable, s)}`;
+      return `${evaluate(this.#symbolTable, s).value}`;
     } catch (e) {
       return `Error while rendering element: ${e}`;
     }
