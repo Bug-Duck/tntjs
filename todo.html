@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App - TNTjs</title>
+    <script src="./dist/tnt.min.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <div class="container">
+        <div class="header">
+          <h1>Todo App</h1>
+          <p>A simple todo app built with TNTjs.</p>
+          <input type="text" id="todoInput" placeholder="Your todo item..." />
+          <button onclick="addTodo()">Add Todo</button>
+        </div>
+        <t-for data="item in todo">
+          <div>
+            <p :class="item.completed && completed">
+              <v data="item.text"></v>
+              <t-if cond="item.completed">
+                <span class="completed-text">(completed)</span>
+              </t-if>
+            </p>
+            <div class="actions">
+              <button onclick="showEditPanel(item)">Edit</button>
+              <t-if cond="!item.completed">
+                <button onclick="deleteTodo(item)">Set as Completed</button>
+              </t-if>
+              <t-else>
+                <button onclick="deleteTodo(item, true)">
+                  Set as Uncompleted
+                </button>
+              </t-else>
+            </div>
+            <t-if cond="data.currentlyEditing.value === item.id">
+              <div class="edit">
+                <input
+                  :id="`edit-${item.id}`"
+                  :value="item.text"
+                  placeholder="Edit your todo..."
+                  class="edit"
+                />
+                <button onclick="editTodo(item)">Submit</button>
+              </div>
+            </t-if>
+          </div>
+        </t-for>
+      </div>
+    </div>
+
+    <style>
+      @import "./style.css";
+    </style>
+
+    <script>
+      function deleteTodo(todo, reverse = false) {
+        // const todoCopy = data.todo;
+        for (const i in data.todo) {
+          if (data.todo[i].id === todo.id) {
+            data.todo[i].completed = !reverse;
+            break;
+          }
+        }
+        // data.todo = todoCopy;
+      }
+
+      function showEditPanel(todo) {
+        console.log(data.currentlyEditing);
+        data.currentlyEditing =
+        data.currentlyEditing === todo.id ? -1 : todo.id;
+      }
+
+      function editTodo(todo) {
+        const inputElement = document.getElementById(`edit-${todo.id}`);
+        if (!inputElement.value) return;
+        for (const i in data.todo) {
+          if (data.todo[i].id === todo.id) {
+            data.todo[i].text = inputElement.value;
+            break;
+          }
+        }
+        data.currentlyEditing = -1;
+      }
+
+      function addTodo() {
+        const inputElement = document.getElementById("todoInput");
+        if (!inputElement.value) return;
+        data.todo.push({
+          text: inputElement.value,
+          id: Math.round(Math.random() * 100),
+          completed: false,
+        });
+        inputElement.value = "";
+      }
+
+      const app = new TNT.TNTApp()
+        .useData({
+          todo: [],
+          currentlyEditing: -1,
+        })
+        .useEffect(() => {
+          console.log(data.todo);
+        })
+        .mount(document.getElementById("root"));
+    </script>
+  </body>
+</html>
