@@ -19,13 +19,6 @@ The JavaScript framework for modern web.
 
 Please refer to [TNT.js Roadmap](https://github.com/Bug-Duck/tntjs/blob/master/roadmap.md).
 
-## Introduction
-
-TNTjs was separated into two parts:
-
-- TNT is a lightweight hot update language framework
-- TNTScript is a script language based on JavaScript. Its main goal is to create a lightweight, easy-to-learn but still powerful language like Python. TNTScript solved the issue that TypeScript can't be ran directly in the browsers. The topmost feature of TNTScript is dynamic, meaning that the values on the webpage will change regarding to the actual values stored inside TNT!
-
 ## Demo
 
 ### Installation
@@ -41,53 +34,19 @@ $ yarn add tntjs
 Then add two files `App.js` and `index.html`:
 
 ```js
-import TNTApp from "tntjs/src/index.js";
-import DebugPlugin from "tntjs/src/plugins/debug/index.js";
+import TNTApp from "tnt.min.js";
 
-window.onload = () => {
-  const app = new TNTApp(
-    document.getElementById("root"),  // TNTjs root element
-    () => {  // the onload event
-      console.log(app.variables);
-      setTimeout(() => {  // testValue will be set to `456` in one second
-        app.variables.testValue.setValue(456);
-      }, 1000);
-      // add a plugin
-      app.addPlugins([new DebugPlugin()]);
-      console.log(app.variables);
-    }
-  );
-  app.data({  // custom data
-    testValue: 233,
-    testValue2: 456,
-    link: {
-      link: "https://example.com",
-      target: "_blank",
-    },
-    style: {
-      fontSize: 200,
-    },
-    links: [
-      {
-        link: "https://example.org",
-        target: "_blank",
-      },
-      {
-        link: "https://example.com",
-        target: "_blank",
-      },
-      {
-        link: "https://example.com",
-        target: "_blank",
-      },
-    ],
-    test: {
-      a: [
-        "a", "b", "c"
-      ]
-    }
-  });
-};
+const app = new TNTApp()
+  .useData({
+    x: 233333,
+    list: [
+      "Alice",
+      "Bob",
+      "Candy"
+    ]
+  })
+  .mount(document.getElementById("root"))
+
 ```
 
 ```html
@@ -98,26 +57,13 @@ window.onload = () => {
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>tntjs demo</title>
   </head>
   <body>
     <div id="root">
-      <tnt-debug></tnt-debug>
-      <v data="testValue + 233">Loading variable testValue...</v>  <!-- variable display -->
-      <!-- Tag data rendering: tnt-td stands for `tnt-tag-data` and tnt-sd stands for `tnt-stylesheet-data` -->
-      <!-- Both will change according to the variable values -->
-      <a
-        tnt-td="href -> links[0].link + '/example'; target -> link.target"
-        tnt-sd="font-size -> `${style.fontSize}px`"
-      >
-        Click me
-      </a>
-      <v data="testValue - testValue2">a</v>  <!-- operations between variables are allowed! -->
-      <t-for data="i in test.a">  <!-- for loops -->
-        <p>
-          <v data="i + testValue">Loading link...</v>  <!-- value display inside a for loop! -->
-          LOL
-        </p>
+      <v data="x"></v>
+      <t-for data="i in list">
+        <v data="i"></v>
       </t-for>
     </div>
     <script type="module" src="./App.js"></script>  <!-- ES Modules! -->
@@ -127,42 +73,11 @@ window.onload = () => {
 
 This is a kitchen-sink example of the current version of TNTjs. Might not be up-to-date though.
 
+use `<v data="variableName"/>` to set variable and the bound variables are all reactive variables. They change the page as the value changes, and support expressions.
+
 ## Documentation
 
 Please refer to <https://tntjs.bugduck.cn/doc.html> for more information.
-
-## File structure
-
-Below is the basic structure of TNTjs (might not be up-to-date):
-
-<details>
-
-- LICENSE 开源许可证
-- src 主文件
-  - runtime tntjs的底层实现
-    - TNT.ts
-    - TypeInfo.ts
-    - SymbolTable.ts
-    - GlobalEnvironment.ts
-    - Pliggable.ts
-    - VTagRenderer.ts
-  - plugins
-    - tntscript TNTscript 轻量编程语言开发目录
-      - ScriptExecutor.ts 主文件
-      - PluginMain.ts
-      - TagRenderer.ts
-      - lexicalAnalysis.ts 词法分析
-    - debug
-      - DebugRenderTracer.ts
-      - PluginMain.ts
-  - dist 编译产物
-    - tnt.d.ts
-    - tnt.js 代码
-    - tnt.js.map
-    - tnt.min.js 发布版混淆文件
-    - tnt.fuck.js ♂♂♂ 哲学文件 ♂♂♂
-
-</details>
 
 ## Sponsoring
 
@@ -189,7 +104,7 @@ We're all middle school students and we don't have that much money. So sponsorin
 - 2022.4.1 开始在学校构思
 - 2022.4.5 项目启动
 - 2022.4.9 `<v></v>`标签功能实现
-- 2022.4.10 变量赋值功能实现
+- 2022.4.10 变量赋值功能实现(TNTScript已废弃)
 - 2022.4.17 函数调用功能实现
 - 2022.4.24 TypeScript 重构项目
 - 2022.5.22 项目重构完成
@@ -197,5 +112,7 @@ We're all middle school students and we don't have that much money. So sponsorin
 - 2022.5.29 取消发布 0.1.0 版本
 - 2022.6.9 ES6重构完成
 - 2022.7.1 开发者们都放暑假啦!恢复开发
+- 2022.7.20 vdom(虚拟dom)实现
+- 2022.8.3 重写完成
 
 Enjoy!
