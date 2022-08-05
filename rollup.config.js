@@ -1,19 +1,16 @@
 import alias from "@rollup/plugin-alias";
 import resolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
-import babel from "@rollup/plugin-babel";
-import { terser } from "rollup-plugin-terser";
 
 export default {
   input: "src/index.ts",
-  treeshake: true,
+  preserveModules: true,
+  treeshake: false,
   output: {
-    name: "TNT",
-    file: "dist/tnt.min.js",
-    format: "iife",
+    format: "esm",
     sourcemap: true,
-    exports: "named",
-    minifyInternalExports: true,
+    dir: "./dist",
+    name: "TNT",
   },
   plugins: [
     alias({
@@ -25,10 +22,5 @@ export default {
     }),
     resolve(),
     typescript(),
-    babel({
-      babelHelpers: "bundled",
-      exclude: ["node_modules/**"]
-    }),
-    terser(),
   ],
 };
