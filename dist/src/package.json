@@ -1,0 +1,35 @@
+{
+  "name": "tntjs",
+  "version": "0.2.1",
+  "description": "The JavaScript framework for modern web.",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "build": "rollup --config",
+    "dev": "rollup --config --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bug-Duck/tntjs.git"
+  },
+  "author": "BugDuck, 27Onion, Acbox",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.18.6",
+    "@rollup/plugin-alias": "^3.1.9",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.3.2",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-minify": "^0.5.2",
+    "eslint": "^8.17.0",
+    "javascript-obfuscator": "^4.0.0",
+    "rollup-plugin-serve": "^1.1.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.7.3",
+    "webpack-cli": "^4.9.2"
+  }
+}
