@@ -5,12 +5,17 @@
  * description: The plugin API.
  */
 
-
+/**
+ * An interface that represents a renderable class.
+ */
 export interface Renderable {
   root?: HTMLElement;
   render(): void;
 }
 
+/**
+ * An interface that represents a tntjs plugin.
+ */
 export interface Plugin {
   get id(): string;
   get rendererList(): Renderable[];
