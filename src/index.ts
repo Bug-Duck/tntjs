@@ -37,9 +37,25 @@ export interface TNTData {
  * The properties to configure a TNTJs application.
  */
 export interface TNTAppProps {
+
+  /**
+   * The root element of the application.
+   */
   root: HTMLElement;
+
+  /**
+   * The loading event listener callback.
+   */
   onload?: () => unknown;
+
+  /**
+   * The plugins that should be loaded when loading the application.
+   */
   plugins?: Plugin[];
+
+  /**
+   * The default variables.
+   */
   variables: Record<string, TNTData | VariableValueType>;
 }
 
