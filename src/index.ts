@@ -59,13 +59,24 @@ export class TNTApp {
   TNT: TNT;
 
   /**
-   * 
+   * All global variables.
    */
   variables: Record<string, Variable>;
+
+  /**
+   * A loader that will be called when the application is loaded.
+   */
   onload: (app: TNTApp) => unknown;
+
   #root: HTMLElement;
+
   #firstPlugins: Plugin[];
 
+  /**
+   * Construct a TNTJs application instance.
+   * @param {TNTAppProps} props The application's properties
+   * @see TNTAppProps
+   */
   constructor({ root, onload, plugins, variables }: TNTAppProps) {
     this.#root = root;
     this.symbolTable = new SymbolTable();
@@ -136,19 +147,33 @@ export class TNTApp {
     }
   }
 
+  /**
+   * Add plugins.
+   * @param {Plugin[]} plugins An array of plugins' instances.
+   */
   addPlugins(plugins: Plugin[]) {
     this.TNT.addPlugins(plugins);
   }
 
+  /**
+   * Remove plugins, or say, disable plugins with given ids.
+   * @param {string[]} pluginIds The ids of these plugins.
+   */
   removePlugins(pluginIds: string[]) {
     this.TNT.disablePlugins(pluginIds);
   }
 }
 
+/**
+ * The default plugins.
+ */
 export const plugins = [
   DebugPlugin,
 ];
 
+/**
+ * All types that TNT uses.
+ */
 export const TNTTypes = {
   BoolType,
   HTMLStringType,
