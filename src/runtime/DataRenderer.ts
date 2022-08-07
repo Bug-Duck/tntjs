@@ -39,7 +39,7 @@ export class DataRenderer {
   }
 
   /**
-   * Render the attributes of tnt-sd elements.
+   * Render the attributes of `tnt-sd` elements.
    */
   tagStyleRender() {
     this.#tagDataAttributes = this.#root.querySelectorAll("[tnt-sd]");
