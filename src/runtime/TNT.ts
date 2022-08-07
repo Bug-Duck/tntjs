@@ -9,14 +9,27 @@ import { Plugin } from "./Pluggable";
 import { SymbolTable } from "./SymbolTable";
 import renderers, { RendererType } from "src/renderers/index";
 
+/**
+ * The runtime object.
+ */
 export default class TNT {
   #renderers: RendererType[];
   #refreshLock = true;
   #logger = new Logger("TNT Runtime");
   #root: HTMLElement;
   #symbolTable: SymbolTable;
+
+  /**
+   * All the plugins.
+   */
   plugins: Plugin[];
 
+  /**
+   * Construct a runtime instance.
+   * @param {HTMLElement} root The root element of the current runtime context.
+   * @param {SymbolTable} symbolTable The symbol table of the current runtime context.
+   * @param {Plugin[]} plugins Preloaded plugins.
+   */
   constructor(root: HTMLElement, symbolTable: SymbolTable, plugins: Plugin[] = []) {
     if (!root) {
       throw TypeError("TNT root element cannot be undefined.");
@@ -163,6 +176,10 @@ export default class TNT {
     });
   }
 
+  /**
+   * Disable the given plugins.
+   * @param {string[]} pluginIds The ids of the plugins.
+   */
   disablePlugins(pluginIds: string[]) {
     pluginIds.forEach((pluginId) => {
       if (pluginId !== null) {
@@ -171,18 +188,31 @@ export default class TNT {
     });
   }
 
+  /**
+   * Add a plugin to the runtime.
+   * @param {HTMLElement} root The root element that will be used in the plugin.
+   * @param {Plugin} plugin The plugin instance that will be added.
+   */
   addPlugin(root: HTMLElement, plugin: Plugin) {
     this.#isPluginInstantiated(plugin);
     plugin.root = root;
     this.plugins.push(plugin);
   }
 
+  /**
+   * Add plugins.
+   * @param {Plugin[]} plugins The instances of plugins that will be added.
+   */
   addPlugins(plugins: Plugin[]) {
     plugins.forEach((plugin) => {
       this.addPlugin(this.#root, plugin);
     });
   }
 
+  /**
+   * Remove a plugin by the id of the plugin.
+   * @param pluginId The id of the plugin that will be removed.
+   */
   removePlugin(pluginId: string) {
     let pluginPosition;
     this.plugins.forEach((plugin, index) => {
@@ -193,6 +223,9 @@ export default class TNT {
     this.plugins.splice(pluginPosition, pluginPosition);
   }
 
+  /**
+   * Render everything.
+   */
   render() {
     // lock the refreshing function to avoid infinity recursion
     this.#refreshLock = true;
