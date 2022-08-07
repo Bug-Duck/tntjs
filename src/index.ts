@@ -17,6 +17,10 @@ import {
 import TNT from "runtime/TNT";
 import Variable from "./Variable";
 
+/**
+ * The data types that will be used in TNTJs.  
+ * Notice the `JSFunctionType` and `TNTFunctionType` are different types.
+ */
 export interface TNTData {
   type:
     | typeof NumberType
@@ -29,6 +33,9 @@ export interface TNTData {
   value: VariableValueType;
 }
 
+/**
+ * The properties to configure a TNTJs application.
+ */
 export interface TNTAppProps {
   root: HTMLElement;
   onload?: () => unknown;
@@ -36,9 +43,24 @@ export interface TNTAppProps {
   variables: Record<string, TNTData | VariableValueType>;
 }
 
+/**
+ * The class presents a TNTJs application.
+ */
 export class TNTApp {
+
+  /**
+   * The global symbol table of a TNTJs application.
+   */
   symbolTable: SymbolTable;
+
+  /**
+   * The core of a TNT application.
+   */
   TNT: TNT;
+
+  /**
+   * 
+   */
   variables: Record<string, Variable>;
   onload: (app: TNTApp) => unknown;
   #root: HTMLElement;
@@ -52,7 +74,7 @@ export class TNTApp {
     this.onload =
       onload ??
       (() => {
-        /* */
+        /* Do nothing here */
       });
     
     this.#setData(variables);
@@ -60,7 +82,7 @@ export class TNTApp {
     this.onload(this);
   }
 
-  #isTNTData(object): object is TNTData {
+  #isTNTData(object: any): object is TNTData {
     try {
       return "type" in object;
     } catch {
