@@ -15,5 +15,5 @@ var renderers$1 = {
     renderers,
 };
 
-export { renderers$1 as default };
+export { renderers$1 as default, renderers };
 //# sourceMappingURL=index.js.map

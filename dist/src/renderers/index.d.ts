@@ -9,6 +9,7 @@ export interface Renderer {
     shouldFire: (node: VNode) => boolean;
     fireOnMounted?: boolean;
 }
+export declare const renderers: Renderer[];
 declare const _default: {
     renderers: Renderer[];
 };

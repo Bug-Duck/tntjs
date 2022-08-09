@@ -18,6 +18,7 @@ import {
 
 export type TNTData = object;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TNTEffect = () => any;
 
 export type TNTComputed = Record<string, TNTEffect>;
@@ -47,9 +48,14 @@ export class TNTApp {
   #hooksCalled: string[];
   /** Effects watched in {@link TNTApp.useEffect()} */
   #watchEffects: TNTEffect[];
+  /** HTML Files's page-id */
+  #pageId: string;
+  /** TNTApp function export*/
+  exp: symbol;
 
   constructor() {
-    this.#onMounted = () => {};
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    this.#onMounted = () => { };
     this.#hooksCalled = [];
     this.#computedData = {};
     this.#reactiveData = {};
@@ -57,6 +63,27 @@ export class TNTApp {
     this.#watchEffects = [];
     this.#originalData = {};
     window.data = {};
+    this.exp = Symbol();
+
+    // pageID
+    const pageIdElement = document.getElementsByTagName("page-id")[0];
+    this.#pageId = pageIdElement.innerHTML;
+    pageIdElement.innerHTML = "";
+  }
+
+  /**
+   * Determine whether the id group contains the id of the current page.
+   * @param IdList: id group set by user.
+   * @return Whether the current page is the id in it.
+   */
+  #isPageId(IdList: (string[] | string)): boolean {
+    if (typeof IdList[0] === "undefined") return true;
+    for (const i of IdList) {
+      if (i === this.#pageId) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -64,7 +91,8 @@ export class TNTApp {
    * @param container The container element to mount with.
    * @returns Mounted TNTApp instance.
    */
-  mount(container: Element) {
+  mount(container: Element, ...idList: string[]) {
+    if (!this.#isPageId(idList)) return;
     let isMounted = false;
     let prevVdom: VNode | null = null;
     let currentNode = null;
@@ -190,7 +218,8 @@ export class TNTApp {
    * @param data Data to become reactive.
    * @returns Current `TNTApp` instance.
    */
-  useData(data: TNTData) {
+  useData(data: TNTData, ...idList: string[]) {
+    if (!this.#isPageId(idList)) return;
     this.#hooksCalled.push("data");
     this.#originalData = deepClone(data);
     this.#reactiveData = {};
@@ -212,7 +241,8 @@ export class TNTApp {
    * @param computedValues Functions to calcuate each computed value.
    * @returns Current `TNTApp` instance.
    */
-  useComputed(computedValues: TNTComputed) {
+  useComputed(computedValues: TNTComputed, ...idList: string[]) {
+    if (!this.#isPageId(idList)) return;
     this.#hooksCalled.push("computed");
     if (!this.#hooksCalled.includes("data")) {
       console.warn(
@@ -233,7 +263,8 @@ export class TNTApp {
    * @param effect Effect function to watch.
    * @returns Current `TNTApp` instance.
    */
-  useEffect(effect: TNTEffect) {
+  useEffect(effect: TNTEffect, ...idList: string[]) {
+    if (!this.#isPageId(idList)) return;
     this.#hooksCalled.push("effect");
     this.#watchEffects.push(effect);
     watchEffect(effect);
@@ -245,7 +276,8 @@ export class TNTApp {
    * @param effect Effect to run when application is mounted.
    * @returns Current `TNTApp` instance.
    */
-  onMounted(effect: TNTEffect) {
+  onMounted(effect: TNTEffect, ...idList: string[]) {
+    if (!this.#isPageId(idList)) return;
     this.#onMounted = effect;
     return this;
   }

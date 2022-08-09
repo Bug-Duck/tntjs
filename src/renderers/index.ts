@@ -40,7 +40,7 @@ export interface Renderer {
   fireOnMounted?: boolean;
 }
 
-const renderers: Renderer[] = [
+export const renderers: Renderer[] = [
   variableRenderer,
   conditionRenderer,
   loopRenderer,

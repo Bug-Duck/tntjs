@@ -1,9 +1,9 @@
 {
   "name": "tntjs",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "The JavaScript framework for modern web.",
   "main": "dist/src/index.js",
-  "files":[
+  "files": [
     "dist/src/**"
   ],
   "scripts": {
@@ -34,5 +34,8 @@
     "ts-loader": "^9.3.0",
     "typescript": "^4.7.3",
     "webpack-cli": "^4.9.2"
+  },
+  "dependencies": {
+    "tslib": "^2.4.0"
   }
 }

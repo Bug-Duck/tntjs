@@ -8,13 +8,14 @@ declare global {
 }
 export declare class TNTApp {
     #private;
+    exp: symbol;
     constructor();
-    mount(container: Element): this;
+    mount(container: Element, ...idList: string[]): this;
     get data(): object;
-    useData(data: TNTData): this;
-    useComputed(computedValues: TNTComputed): this;
-    useEffect(effect: TNTEffect): this;
-    onMounted(effect: TNTEffect): this;
+    useData(data: TNTData, ...idList: string[]): this;
+    useComputed(computedValues: TNTComputed, ...idList: string[]): this;
+    useEffect(effect: TNTEffect, ...idList: string[]): this;
+    onMounted(effect: TNTEffect, ...idList: string[]): this;
 }
 export { computed, getTrackableObject, reactive, ref, targetMap, watchEffect, trigger, track, } from "./reactivity";
 export { h, mount, patch } from "./vdom";
