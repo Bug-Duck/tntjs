@@ -15,6 +15,9 @@ import {
   patch,
   VNode,
 } from "./vdom";
+import {
+  TNTPlugin
+} from "./plugin";
 
 export type TNTData = object;
 
@@ -50,8 +53,8 @@ export class TNTApp {
   #watchEffects: TNTEffect[];
   /** HTML Files's page-id */
   #pageId: string;
-  /** TNTApp function export*/
-  exp: symbol;
+  /** TNTPlugin data list*/
+  #pluginData: TNTPlugin[];
 
   constructor() {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -62,8 +65,8 @@ export class TNTApp {
     this.#refData = {};
     this.#watchEffects = [];
     this.#originalData = {};
+    this.#pluginData = [];
     window.data = {};
-    this.exp = Symbol();
 
     // pageID
     const pageIdElement = document.getElementsByTagName("page-id")[0];
@@ -86,13 +89,28 @@ export class TNTApp {
     return false;
   }
 
+  #loadPlugin(plugin: TNTPlugin) {
+    const funcs = plugin.addFunction();
+    for (const i in funcs) {
+      this[i] = funcs[i]();
+    }
+    plugin.onload();
+  }
+
+  mount(idbooks: Record<string, string>) {
+    for (const i in idbooks) {
+      if (i === this.#pageId) {
+        this.#useMount(document.getElementById(idbooks[i]));
+      }
+    }
+  }
+
   /**
    * Initialize and mount a new TNT Application.
    * @param container The container element to mount with.
    * @returns Mounted TNTApp instance.
    */
-  mount(container: Element, ...idList: string[]) {
-    if (!this.#isPageId(idList)) return;
+  #useMount(container: Element) {
     let isMounted = false;
     let prevVdom: VNode | null = null;
     let currentNode = null;
@@ -127,6 +145,10 @@ export class TNTApp {
       patch(prevVdom, newVdom, {});
       prevVdom = deepClone(newVdom);
       this.#removeUpdatedElements(container, currentContainer);
+    });
+
+    this.#pluginData.forEach(i => {
+      this.#loadPlugin(i);
     });
 
     return this;
@@ -213,13 +235,19 @@ export class TNTApp {
     );
   }
 
+  usePlugin(plugin: TNTPlugin, ...idList: string[]) {
+    if (!this.#isPageId(idList)) return this;
+    this.#pluginData.push(plugin);
+    return this;
+  }
+
   /**
    * Hook to create reactive data objects.
    * @param data Data to become reactive.
    * @returns Current `TNTApp` instance.
    */
   useData(data: TNTData, ...idList: string[]) {
-    if (!this.#isPageId(idList)) return;
+    if (!this.#isPageId(idList)) return this;
     this.#hooksCalled.push("data");
     this.#originalData = deepClone(data);
     this.#reactiveData = {};
@@ -242,7 +270,7 @@ export class TNTApp {
    * @returns Current `TNTApp` instance.
    */
   useComputed(computedValues: TNTComputed, ...idList: string[]) {
-    if (!this.#isPageId(idList)) return;
+    if (!this.#isPageId(idList)) return this;
     this.#hooksCalled.push("computed");
     if (!this.#hooksCalled.includes("data")) {
       console.warn(
@@ -264,7 +292,7 @@ export class TNTApp {
    * @returns Current `TNTApp` instance.
    */
   useEffect(effect: TNTEffect, ...idList: string[]) {
-    if (!this.#isPageId(idList)) return;
+    if (!this.#isPageId(idList)) return this;
     this.#hooksCalled.push("effect");
     this.#watchEffects.push(effect);
     watchEffect(effect);
@@ -277,7 +305,7 @@ export class TNTApp {
    * @returns Current `TNTApp` instance.
    */
   onMounted(effect: TNTEffect, ...idList: string[]) {
-    if (!this.#isPageId(idList)) return;
+    if (!this.#isPageId(idList)) return this;
     this.#onMounted = effect;
     return this;
   }
@@ -303,4 +331,5 @@ export {
   track,
 } from "./reactivity";
 export { h, mount, patch } from "./vdom";
+export { TNTPlugin } from "./plugin";
 // export { Router, Route, r } from "./route";

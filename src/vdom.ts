@@ -55,6 +55,8 @@ export const mount = (
 
   // processing children
   if (typeof vnode.children === "string") {
+
+    
     el.textContent = vnode.children;
     container.appendChild(el);
     return;
