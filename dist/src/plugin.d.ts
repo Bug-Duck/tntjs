@@ -4,5 +4,5 @@ export declare class TNTPlugin {
     onload(): void;
     render(): void;
     watchEffect(): void;
-    addFunction(): Record<string, (() => any)>;
+    methods(): Record<string, (() => any)>;
 }

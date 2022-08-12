@@ -2,7 +2,7 @@ class TNTPlugin {
     onload() { }
     render() { }
     watchEffect() { }
-    addFunction() {
+    methods() {
         return {};
     }
 }

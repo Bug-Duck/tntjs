@@ -52,9 +52,10 @@ export class TNTApp {
   /** Effects watched in {@link TNTApp.useEffect()} */
   #watchEffects: TNTEffect[];
   /** HTML Files's page-id */
-  #pageId: string;
+  #pageid: string;
   /** TNTPlugin data list*/
   #pluginData: TNTPlugin[];
+
 
   constructor() {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -70,39 +71,29 @@ export class TNTApp {
 
     // pageID
     const pageIdElement = document.getElementsByTagName("page-id")[0];
-    this.#pageId = pageIdElement.innerHTML;
+    this.#pageid = pageIdElement.innerHTML;
     pageIdElement.innerHTML = "";
   }
 
-  /**
-   * Determine whether the id group contains the id of the current page.
-   * @param IdList: id group set by user.
-   * @return Whether the current page is the id in it.
-   */
-  #isPageId(IdList: (string[] | string)): boolean {
-    if (typeof IdList[0] === "undefined") return true;
-    for (const i of IdList) {
-      if (i === this.#pageId) {
-        return true;
-      }
-    }
-    return false;
+  page(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    createFunctions: Record<string, any>,
+    ...page_id: string[]
+  ) {
+    if (this.#pageid in page_id) return;
+    (typeof createFunctions.data !== "undefined") ? this.#useData(createFunctions.data) : undefined;
+    (typeof createFunctions.computed !== "undefined") ? this.#useComputed(createFunctions.computed) : undefined;
+    (typeof createFunctions.effect !== "undefined") ? this.#useEffect(createFunctions.effect) : undefined;
+    (typeof createFunctions.mounted !== "undefined") ? this.#onMounted_(createFunctions.mounted) : undefined;
+    (typeof createFunctions.mount !== "undefined") ? this.#mount(createFunctions.mount) : undefined;
   }
 
   #loadPlugin(plugin: TNTPlugin) {
-    const funcs = plugin.addFunction();
+    const funcs = plugin.methods();
     for (const i in funcs) {
-      this[i] = funcs[i]();
+      this[i] = funcs[i];
     }
     plugin.onload();
-  }
-
-  mount(idbooks: Record<string, string>) {
-    for (const i in idbooks) {
-      if (i === this.#pageId) {
-        this.#useMount(document.getElementById(idbooks[i]));
-      }
-    }
   }
 
   /**
@@ -110,7 +101,7 @@ export class TNTApp {
    * @param container The container element to mount with.
    * @returns Mounted TNTApp instance.
    */
-  #useMount(container: Element) {
+  #mount(container: Element) {
     let isMounted = false;
     let prevVdom: VNode | null = null;
     let currentNode = null;
@@ -235,8 +226,7 @@ export class TNTApp {
     );
   }
 
-  usePlugin(plugin: TNTPlugin, ...idList: string[]) {
-    if (!this.#isPageId(idList)) return this;
+  usePlugin(plugin: TNTPlugin) {
     this.#pluginData.push(plugin);
     return this;
   }
@@ -246,8 +236,7 @@ export class TNTApp {
    * @param data Data to become reactive.
    * @returns Current `TNTApp` instance.
    */
-  useData(data: TNTData, ...idList: string[]) {
-    if (!this.#isPageId(idList)) return this;
+  #useData(data: TNTData) {
     this.#hooksCalled.push("data");
     this.#originalData = deepClone(data);
     this.#reactiveData = {};
@@ -269,8 +258,7 @@ export class TNTApp {
    * @param computedValues Functions to calcuate each computed value.
    * @returns Current `TNTApp` instance.
    */
-  useComputed(computedValues: TNTComputed, ...idList: string[]) {
-    if (!this.#isPageId(idList)) return this;
+  #useComputed(computedValues: TNTComputed) {
     this.#hooksCalled.push("computed");
     if (!this.#hooksCalled.includes("data")) {
       console.warn(
@@ -291,8 +279,7 @@ export class TNTApp {
    * @param effect Effect function to watch.
    * @returns Current `TNTApp` instance.
    */
-  useEffect(effect: TNTEffect, ...idList: string[]) {
-    if (!this.#isPageId(idList)) return this;
+  #useEffect(effect: TNTEffect) {
     this.#hooksCalled.push("effect");
     this.#watchEffects.push(effect);
     watchEffect(effect);
@@ -304,8 +291,7 @@ export class TNTApp {
    * @param effect Effect to run when application is mounted.
    * @returns Current `TNTApp` instance.
    */
-  onMounted(effect: TNTEffect, ...idList: string[]) {
-    if (!this.#isPageId(idList)) return this;
+  #onMounted_(effect: TNTEffect) {
     this.#onMounted = effect;
     return this;
   }
@@ -332,4 +318,3 @@ export {
 } from "./reactivity";
 export { h, mount, patch } from "./vdom";
 export { TNTPlugin } from "./plugin";
-// export { Router, Route, r } from "./route";

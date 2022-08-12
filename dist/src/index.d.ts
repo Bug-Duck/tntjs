@@ -10,13 +10,9 @@ declare global {
 export declare class TNTApp {
     #private;
     constructor();
-    mount(idbooks: Record<string, string>): void;
+    page(createFunctions: Record<string, any>, ...page_id: string[]): void;
     get data(): object;
-    usePlugin(plugin: TNTPlugin, ...idList: string[]): this;
-    useData(data: TNTData, ...idList: string[]): this;
-    useComputed(computedValues: TNTComputed, ...idList: string[]): this;
-    useEffect(effect: TNTEffect, ...idList: string[]): this;
-    onMounted(effect: TNTEffect, ...idList: string[]): this;
+    usePlugin(plugin: TNTPlugin): this;
 }
 export { computed, getTrackableObject, reactive, ref, targetMap, watchEffect, trigger, track, } from "./reactivity";
 export { h, mount, patch } from "./vdom";

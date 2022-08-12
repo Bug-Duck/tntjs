@@ -1,12 +1,12 @@
 import { __classPrivateFieldSet, __classPrivateFieldGet } from '../node_modules/tslib/tslib.es6.js';
 import { deepClone } from './lib/common.js';
-import { reactive, ref, computed, watchEffect, trigger, track } from './reactivity.js';
+import { watchEffect, trigger, track, reactive, ref, computed } from './reactivity.js';
 export { computed, getTrackableObject, reactive, ref, targetMap, track, trigger, watchEffect } from './reactivity.js';
 import { h, getAttributesOfElement, createVdomFromExistingElement, mount, patch } from './vdom.js';
 export { h, mount, patch } from './vdom.js';
 export { TNTPlugin } from './plugin.js';
 
-var _TNTApp_instances, _TNTApp_reactiveData, _TNTApp_computedData, _TNTApp_refData, _TNTApp_dataProxy, _TNTApp_originalData, _TNTApp_onMounted, _TNTApp_hooksCalled, _TNTApp_watchEffects, _TNTApp_pageId, _TNTApp_pluginData, _TNTApp_isPageId, _TNTApp_loadPlugin, _TNTApp_useMount, _TNTApp_getDataProxy, _TNTApp_removeUpdatedElements;
+var _TNTApp_instances, _TNTApp_reactiveData, _TNTApp_computedData, _TNTApp_refData, _TNTApp_dataProxy, _TNTApp_originalData, _TNTApp_onMounted, _TNTApp_hooksCalled, _TNTApp_watchEffects, _TNTApp_pageid, _TNTApp_pluginData, _TNTApp_loadPlugin, _TNTApp_mount, _TNTApp_getDataProxy, _TNTApp_useData, _TNTApp_useComputed, _TNTApp_useEffect, _TNTApp_onMounted_, _TNTApp_removeUpdatedElements;
 class TNTApp {
     constructor() {
         _TNTApp_instances.add(this);
@@ -18,7 +18,7 @@ class TNTApp {
         _TNTApp_onMounted.set(this, void 0);
         _TNTApp_hooksCalled.set(this, void 0);
         _TNTApp_watchEffects.set(this, void 0);
-        _TNTApp_pageId.set(this, void 0);
+        _TNTApp_pageid.set(this, void 0);
         _TNTApp_pluginData.set(this, void 0);
         __classPrivateFieldSet(this, _TNTApp_onMounted, () => { }, "f");
         __classPrivateFieldSet(this, _TNTApp_hooksCalled, [], "f");
@@ -30,88 +30,33 @@ class TNTApp {
         __classPrivateFieldSet(this, _TNTApp_pluginData, [], "f");
         window.data = {};
         const pageIdElement = document.getElementsByTagName("page-id")[0];
-        __classPrivateFieldSet(this, _TNTApp_pageId, pageIdElement.innerHTML, "f");
+        __classPrivateFieldSet(this, _TNTApp_pageid, pageIdElement.innerHTML, "f");
         pageIdElement.innerHTML = "";
     }
-    mount(idbooks) {
-        for (const i in idbooks) {
-            if (i === __classPrivateFieldGet(this, _TNTApp_pageId, "f")) {
-                __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_useMount).call(this, document.getElementById(idbooks[i]));
-            }
-        }
+    page(createFunctions, ...page_id) {
+        if (__classPrivateFieldGet(this, _TNTApp_pageid, "f") in page_id)
+            return;
+        (typeof createFunctions.data !== "undefined") ? __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_useData).call(this, createFunctions.data) : undefined;
+        (typeof createFunctions.computed !== "undefined") ? __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_useComputed).call(this, createFunctions.computed) : undefined;
+        (typeof createFunctions.effect !== "undefined") ? __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_useEffect).call(this, createFunctions.effect) : undefined;
+        (typeof createFunctions.mounted !== "undefined") ? __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_onMounted_).call(this, createFunctions.mounted) : undefined;
+        (typeof createFunctions.mount !== "undefined") ? __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_mount).call(this, createFunctions.mount) : undefined;
     }
     get data() {
         return __classPrivateFieldGet(this, _TNTApp_dataProxy, "f");
     }
-    usePlugin(plugin, ...idList) {
-        if (!__classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_isPageId).call(this, idList))
-            return this;
+    usePlugin(plugin) {
         __classPrivateFieldGet(this, _TNTApp_pluginData, "f").push(plugin);
         return this;
     }
-    useData(data, ...idList) {
-        if (!__classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_isPageId).call(this, idList))
-            return this;
-        __classPrivateFieldGet(this, _TNTApp_hooksCalled, "f").push("data");
-        __classPrivateFieldSet(this, _TNTApp_originalData, deepClone(data), "f");
-        __classPrivateFieldSet(this, _TNTApp_reactiveData, {}, "f");
-        __classPrivateFieldSet(this, _TNTApp_refData, {}, "f");
-        for (const key in data) {
-            if (typeof data[key] === "object") {
-                __classPrivateFieldGet(this, _TNTApp_reactiveData, "f")[key] = reactive(data[key]);
-                continue;
-            }
-            __classPrivateFieldGet(this, _TNTApp_refData, "f")[key] = ref(data[key]);
-        }
-        __classPrivateFieldSet(this, _TNTApp_dataProxy, __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_getDataProxy).call(this), "f");
-        window.data = __classPrivateFieldGet(this, _TNTApp_dataProxy, "f");
-        return this;
-    }
-    useComputed(computedValues, ...idList) {
-        if (!__classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_isPageId).call(this, idList))
-            return this;
-        __classPrivateFieldGet(this, _TNTApp_hooksCalled, "f").push("computed");
-        if (!__classPrivateFieldGet(this, _TNTApp_hooksCalled, "f").includes("data")) {
-            console.warn("[TNT warn] useComputed() hook is called before useData(). Any reactive data accessed from computed functions will not be accessable.", "This may lead to unpredictable results or errors.");
-        }
-        for (const key in computedValues) {
-            __classPrivateFieldGet(this, _TNTApp_computedData, "f")[key] = computed(computedValues[key]);
-        }
-        __classPrivateFieldSet(this, _TNTApp_dataProxy, __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_getDataProxy).call(this), "f");
-        window.data = __classPrivateFieldGet(this, _TNTApp_dataProxy, "f");
-        return this;
-    }
-    useEffect(effect, ...idList) {
-        if (!__classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_isPageId).call(this, idList))
-            return this;
-        __classPrivateFieldGet(this, _TNTApp_hooksCalled, "f").push("effect");
-        __classPrivateFieldGet(this, _TNTApp_watchEffects, "f").push(effect);
-        watchEffect(effect);
-        return this;
-    }
-    onMounted(effect, ...idList) {
-        if (!__classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_isPageId).call(this, idList))
-            return this;
-        __classPrivateFieldSet(this, _TNTApp_onMounted, effect, "f");
-        return this;
-    }
 }
-_TNTApp_reactiveData = new WeakMap(), _TNTApp_computedData = new WeakMap(), _TNTApp_refData = new WeakMap(), _TNTApp_dataProxy = new WeakMap(), _TNTApp_originalData = new WeakMap(), _TNTApp_onMounted = new WeakMap(), _TNTApp_hooksCalled = new WeakMap(), _TNTApp_watchEffects = new WeakMap(), _TNTApp_pageId = new WeakMap(), _TNTApp_pluginData = new WeakMap(), _TNTApp_instances = new WeakSet(), _TNTApp_isPageId = function _TNTApp_isPageId(IdList) {
-    if (typeof IdList[0] === "undefined")
-        return true;
-    for (const i of IdList) {
-        if (i === __classPrivateFieldGet(this, _TNTApp_pageId, "f")) {
-            return true;
-        }
-    }
-    return false;
-}, _TNTApp_loadPlugin = function _TNTApp_loadPlugin(plugin) {
-    const funcs = plugin.addFunction();
+_TNTApp_reactiveData = new WeakMap(), _TNTApp_computedData = new WeakMap(), _TNTApp_refData = new WeakMap(), _TNTApp_dataProxy = new WeakMap(), _TNTApp_originalData = new WeakMap(), _TNTApp_onMounted = new WeakMap(), _TNTApp_hooksCalled = new WeakMap(), _TNTApp_watchEffects = new WeakMap(), _TNTApp_pageid = new WeakMap(), _TNTApp_pluginData = new WeakMap(), _TNTApp_instances = new WeakSet(), _TNTApp_loadPlugin = function _TNTApp_loadPlugin(plugin) {
+    const funcs = plugin.methods();
     for (const i in funcs) {
-        this[i] = funcs[i]();
+        this[i] = funcs[i];
     }
     plugin.onload();
-}, _TNTApp_useMount = function _TNTApp_useMount(container) {
+}, _TNTApp_mount = function _TNTApp_mount(container) {
     let isMounted = false;
     let prevVdom = null;
     let currentNode = null;
@@ -193,6 +138,40 @@ _TNTApp_reactiveData = new WeakMap(), _TNTApp_computedData = new WeakMap(), _TNT
         computed: __classPrivateFieldGet(this, _TNTApp_computedData, "f"),
         ref: __classPrivateFieldGet(this, _TNTApp_refData, "f"),
     }, handlers);
+}, _TNTApp_useData = function _TNTApp_useData(data) {
+    __classPrivateFieldGet(this, _TNTApp_hooksCalled, "f").push("data");
+    __classPrivateFieldSet(this, _TNTApp_originalData, deepClone(data), "f");
+    __classPrivateFieldSet(this, _TNTApp_reactiveData, {}, "f");
+    __classPrivateFieldSet(this, _TNTApp_refData, {}, "f");
+    for (const key in data) {
+        if (typeof data[key] === "object") {
+            __classPrivateFieldGet(this, _TNTApp_reactiveData, "f")[key] = reactive(data[key]);
+            continue;
+        }
+        __classPrivateFieldGet(this, _TNTApp_refData, "f")[key] = ref(data[key]);
+    }
+    __classPrivateFieldSet(this, _TNTApp_dataProxy, __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_getDataProxy).call(this), "f");
+    window.data = __classPrivateFieldGet(this, _TNTApp_dataProxy, "f");
+    return this;
+}, _TNTApp_useComputed = function _TNTApp_useComputed(computedValues) {
+    __classPrivateFieldGet(this, _TNTApp_hooksCalled, "f").push("computed");
+    if (!__classPrivateFieldGet(this, _TNTApp_hooksCalled, "f").includes("data")) {
+        console.warn("[TNT warn] useComputed() hook is called before useData(). Any reactive data accessed from computed functions will not be accessable.", "This may lead to unpredictable results or errors.");
+    }
+    for (const key in computedValues) {
+        __classPrivateFieldGet(this, _TNTApp_computedData, "f")[key] = computed(computedValues[key]);
+    }
+    __classPrivateFieldSet(this, _TNTApp_dataProxy, __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_getDataProxy).call(this), "f");
+    window.data = __classPrivateFieldGet(this, _TNTApp_dataProxy, "f");
+    return this;
+}, _TNTApp_useEffect = function _TNTApp_useEffect(effect) {
+    __classPrivateFieldGet(this, _TNTApp_hooksCalled, "f").push("effect");
+    __classPrivateFieldGet(this, _TNTApp_watchEffects, "f").push(effect);
+    watchEffect(effect);
+    return this;
+}, _TNTApp_onMounted_ = function _TNTApp_onMounted_(effect) {
+    __classPrivateFieldSet(this, _TNTApp_onMounted, effect, "f");
+    return this;
 }, _TNTApp_removeUpdatedElements = function _TNTApp_removeUpdatedElements(element, toRemove) {
     if (element.children.length > 1)
         toRemove.remove();

@@ -1,43 +1,32 @@
-import { TNTApp, TNTPlugin } from "./dist/src/index.js";
+import { TNTApp } from "./dist/src/index.js";
 
-export class testPlugin extends TNTPlugin {
-  constructor() {
-    super();
-    this.name = "testPlugin";
-    this.version = "1.0.0";
-  }
+// export class testPlugin extends TNTPlugin {
+//   constructor() {
+//     super();
+//     this.name = "testPlugin";
+//     this.version = "1.0.0";
+//   }
 
-  onload() {
-    console.log("testPlugin!");
-  }
+//   onload() {
+//     console.log("testPlugin!");
+//   }
 
-  addFunction() {
-    return {
-      testfunc() {
-        console.log("test!!!!!!");
-      }
-    };
-  }
-}
+//   methods() {
+//     return {
+//       print(...text) {
+//         console.log(...text);
+//       }
+//     };
+//   }
+// }
 
-const app = new TNTApp()
-  .useData({
+const app = new TNTApp();
+
+app.page({
+  data: {
     x: 233333
-  }, "page1", "page2")
-  .useEffect(() => {
-    console.log("num change!");
-  })
-  .useComputed({
-    y() {
-      let y = 0;
-      y += 1;
-      return y;
-    }
-  })
-  .usePlugin(new testPlugin());
-// app.testfunc();
-app.mount({
-  page1: "root",
-});
+  },
+  mount: document.getElementById("root")
+}, "id1");
 
 export default app;

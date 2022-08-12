@@ -12,7 +12,7 @@ export class TNTPlugin {
   onload() {}
   render() {}
   watchEffect() {}
-  addFunction(): Record<string, (() => any)> {
+  methods(): Record<string, (() => any)> {
     return {};
   }
 }
