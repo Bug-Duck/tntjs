@@ -88,6 +88,10 @@ export class TNTApp {
     (typeof createFunctions.mount !== "undefined") ? this.#mount(createFunctions.mount) : undefined;
   }
 
+  useExportPlugin(plugin: TNTPlugin) {
+    this.#pluginData.push(plugin);
+  }
+
   #loadPlugin(plugin: TNTPlugin) {
     const funcs = plugin.methods();
     for (const i in funcs) {
