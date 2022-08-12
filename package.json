@@ -4,7 +4,8 @@
   "description": "The JavaScript framework for modern web.",
   "main": "dist/src/index.js",
   "files": [
-    "dist/src/**"
+    "dist/src/**",
+    "dist/node_modules"
   ],
   "scripts": {
     "build": "rollup --config",
