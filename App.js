@@ -26,6 +26,9 @@ app.page({
   data: {
     x: 233333
   },
+  mounted() {
+    console.log("end!!!");
+  },
   mount: document.getElementById("root")
 }, "id1");
 

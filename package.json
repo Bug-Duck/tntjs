@@ -1,6 +1,6 @@
 {
   "name": "tntjs",
-  "version": "0.2.3x",
+  "version": "0.2.4",
   "description": "The JavaScript framework for modern web.",
   "main": "dist/src/index.js",
   "files": [

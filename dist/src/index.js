@@ -34,13 +34,16 @@ class TNTApp {
         pageIdElement.innerHTML = "";
     }
     page(createFunctions, ...page_id) {
-        if (__classPrivateFieldGet(this, _TNTApp_pageid, "f") in page_id)
+        if (!(page_id.includes(__classPrivateFieldGet(this, _TNTApp_pageid, "f"))))
             return;
         (typeof createFunctions.data !== "undefined") ? __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_useData).call(this, createFunctions.data) : undefined;
         (typeof createFunctions.computed !== "undefined") ? __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_useComputed).call(this, createFunctions.computed) : undefined;
         (typeof createFunctions.effect !== "undefined") ? __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_useEffect).call(this, createFunctions.effect) : undefined;
         (typeof createFunctions.mounted !== "undefined") ? __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_onMounted_).call(this, createFunctions.mounted) : undefined;
         (typeof createFunctions.mount !== "undefined") ? __classPrivateFieldGet(this, _TNTApp_instances, "m", _TNTApp_mount).call(this, createFunctions.mount) : undefined;
+    }
+    useExportPlugin(plugin) {
+        __classPrivateFieldGet(this, _TNTApp_pluginData, "f").push(plugin);
     }
     get data() {
         return __classPrivateFieldGet(this, _TNTApp_dataProxy, "f");

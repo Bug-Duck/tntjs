@@ -80,7 +80,7 @@ export class TNTApp {
     createFunctions: Record<string, any>,
     ...page_id: string[]
   ) {
-    if (this.#pageid in page_id) return;
+    if (!(page_id.includes(this.#pageid))) return ;
     (typeof createFunctions.data !== "undefined") ? this.#useData(createFunctions.data) : undefined;
     (typeof createFunctions.computed !== "undefined") ? this.#useComputed(createFunctions.computed) : undefined;
     (typeof createFunctions.effect !== "undefined") ? this.#useEffect(createFunctions.effect) : undefined;

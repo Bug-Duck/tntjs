@@ -11,6 +11,7 @@ export declare class TNTApp {
     #private;
     constructor();
     page(createFunctions: Record<string, any>, ...page_id: string[]): void;
+    useExportPlugin(plugin: TNTPlugin): void;
     get data(): object;
     usePlugin(plugin: TNTPlugin): this;
 }
