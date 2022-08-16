@@ -67,7 +67,7 @@ app.page({
     x: "Hello world!"
   },
   mount: document.getElementById("app")
-}, "page")
+}, "id1")
 ```
 * Each html file has a separate pageid, you can use `<page-id>` to set it in `<head>`, which is the page identifier for tntjs multi-page programming
 ```html
