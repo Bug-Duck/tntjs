@@ -1,21 +1,2 @@
-import { evaluate } from '../lib/common.js';
-import { watchEffect } from '../reactivity.js';
-
-const variableRenderer = (currentNode, extraContext) => {
-    watchEffect(() => {
-        currentNode.children = [
-            evaluate(currentNode.props.data, extraContext).toString(),
-        ];
-    });
-    return true;
-};
-const renderer = {
-    renderer: variableRenderer,
-    name: "variableRenderer",
-    shouldFire(node) {
-        return node.tag === "v";
-    },
-};
-
-export { renderer as default };
+import{evaluate as r}from"../lib/common.js";import{watchEffect as e}from"../reactivity.js";const o={renderer:(o,t)=>(e((()=>{o.children=[r(o.props.data,t).toString()]})),!0),name:"variableRenderer",shouldFire:r=>"v"===r.tag};export{o as default};
 //# sourceMappingURL=variableRenderer.js.map

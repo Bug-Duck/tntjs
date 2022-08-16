@@ -1,1 +1,1 @@
-{"version":3,"file":"plugin.js","sources":["../../../src/plugin.ts"],"sourcesContent":[null],"names":[],"mappings":"MAKa,SAAS,CAAA;AAMpB,IAAA,MAAM,MAAK;AACX,IAAA,MAAM,MAAK;AACX,IAAA,WAAW,MAAK;IAChB,OAAO,GAAA;AACL,QAAA,OAAO,EAAE,CAAC;KACX;AACF;;;;"}
+{"version":3,"file":"plugin.js","sources":["../../../src/plugin.ts"],"sourcesContent":[null],"names":["TNTPlugin","onload","render","watchEffect","methods"],"mappings":"MAKaA,EAMXC,UACAC,UACAC,eACAC,UACE,MAAO"}

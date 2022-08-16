@@ -13,7 +13,7 @@
 
 # TNT.js
 
-The JavaScript framework for modern web.
+The JavaScript framework for modern web.This is a front-end framework that can control multiple pages. Writing JavaScript is like writing back-end code, which truly realizes efficient native development. In addition, we will add native component writing and debugging in future versions.
 
 ## Roadmap
 
@@ -21,63 +21,88 @@ Please refer to [TNT.js Roadmap](https://github.com/Bug-Duck/tntjs/blob/master/r
 
 ## Demo
 
-### Installation
+### Install tntjs
+Although tntjs is a more native front-end framework, you can still install them using a package manager just like any other framework
 
-Simply use package managers to install TNT.js:
-
-```bash
-$ npm i tntjs
-$ # or
-$ yarn add tntjs
+First we need a project directory, assuming you are developing in a Linux environment, let's create a new `MyFirstTNTJsProject`
+```shell
+$ mkdir MFTJP #here is the abbreviation
+$ cd MFTJP
+$ code ./
 ```
 
-Then add two files `App.js` and `index.html`:
+Then let's install it
+```shell
+$ npm install tntjs #npm
+$ yarn add tntjs #yarn
+$ pnpm install tntjs #pnpm
+```
+Or you can also use the files on the cdn
+```url
+https://cdn.jsdelivr.net/npm/tntjs@latest/dist/src/index.js
+```
 
+### How to use?
+
+Now you can happily control multiple pages with tntjs!
+
+Next, let's write the simplest Hello world. tntjs uses `<v>` to realize the two-way binding of responsive variables and pages, that is to say, the value bound on the page will change as the variable changes.
+```html
+<v data="variableName"/>
+```
+Fill in the expression in the `data` attribute
+
+The js part needs to instantiate a TNTApp
 ```js
-import TNTApp from "tnt.min.js";
-
-const app = new TNTApp()
-  .useData({
-    x: 233333,
-    list: [
-      "Alice",
-      "Bob",
-      "Candy"
-    ]
-  })
-  .mount(document.getElementById("root"))
-
+export const app = new TNTApp();
 ```
+
+Then use `page` to preset the page:
+```js
+// App.js
+export const app = new TNTApp();
+
+app.page({
+  data: {
+    x: "Hello world!"
+  },
+  mount: document.getElementById("app")
+}, "page")
+```
+* Each html file has a separate pageid, you can use `<page-id>` to set it in `<head>`, which is the page identifier for tntjs multi-page programming
+```html
+<page-id>page1</page-id>
+```
+* Use data in the first parameter to set the initial value of the responsive variable
+* The first parameter uses `mount` to specify the Element object of the scope of the tntjs application (the specified node can only have one child node)
+
+### Now, Import it in html file
 
 ```html
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tntjs demo</title>
-  </head>
-  <body>
-    <div id="root">
+<head>
+  <script src="./App.js" type="module"></script>
+  <title>tntjs demo</title>
+  <page-id>id1</page-id>
+</head>
+<body>
+  <div id="root">
+    <div>
       <v data="x"></v>
-      <t-for data="i in list">
-        <v data="i"></v>
-      </t-for>
     </div>
-    <script type="module" src="./App.js"></script>  <!-- ES Modules! -->
-  </body>
+  </div>
+</body>
 </html>
 ```
-
-This is a kitchen-sink example of the current version of TNTjs. Might not be up-to-date though.
-
-use `<v data="variableName"/>` to set variable and the bound variables are all reactive variables. They change the page as the value changes, and support expressions.
+Open it in browser, You can see:
+```text
+Hello world!
+```
 
 ## Documentation
 
-Please refer to <https://tntjs.bugduck.cn/doc.html> for more information.
+Please refer to <https://tnt.js.org> for more information.
 
 ## Sponsoring
 

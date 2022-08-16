@@ -1,33 +1,22 @@
 import { TNTApp } from "./dist/src/index.js";
 
-// export class testPlugin extends TNTPlugin {
-//   constructor() {
-//     super();
-//     this.name = "testPlugin";
-//     this.version = "1.0.0";
-//   }
-
-//   onload() {
-//     console.log("testPlugin!");
-//   }
-
-//   methods() {
-//     return {
-//       print(...text) {
-//         console.log(...text);
-//       }
-//     };
-//   }
-// }
-
 const app = new TNTApp();
 
 app.page({
   data: {
-    x: 233333
+    x: 233333,
+    bool: true,
+    lib: [true, false, true]
+    
   },
   mounted() {
     console.log("end!!!");
+  },
+  effect() {
+    console.log(data.x);
+  },
+  ready() {
+    console.log("Hello world");
   },
   mount: document.getElementById("root")
 }, "id1");

@@ -30,6 +30,7 @@ const loopRenderer = (currentNode: VNode, extraContext: object) => {
     // FIXME: condition tags in t-for tags will not update reactively with arrays
     renderers.renderers.forEach((renderer) => {
       if (!renderer.shouldFire(currentChild)) return;
+      // if (currentChild.tag === ("t-elif" || "t-else")) return;
       const renderResult = renderer.renderer(
         currentChild,
         { ...extraContext, [localName]: currentData },

@@ -17,9 +17,14 @@ export const CONDITION_TAGS = ["t-if", "t-elif", "t-else"];
  */
 const ifRenderer = (currentNode: VNode, extraContext: object) => {
   let shouldRender = false;
+  let oldShouldRender = false;
   watchEffect(() => {
     const result = evaluate(currentNode.props.cond, extraContext);
     shouldRender = !!result;
+    oldShouldRender = shouldRender;
+    if (shouldRender !== oldShouldRender) {
+      currentNode.props.rendered = "false";
+    }
     currentNode.props.rendered = shouldRender.toString();
   });
   return shouldRender;
@@ -82,6 +87,7 @@ const elseRenderer = (
   if (index - 1 === 0 || !TAGS_WITH_CONDITION.includes(previousElement.tag))
     return false;
   watchEffect(() => {
+    console.log("else!!!!!!");
     const result = evaluate(previousElement.props.cond, extraContext);
     shouldRender = !result;
     currentNode.props.rendered = shouldRender.toString();

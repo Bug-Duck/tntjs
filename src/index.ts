@@ -47,6 +47,8 @@ export class TNTApp {
   #originalData: object;
   /** Function to run when application was first mounted */
   #onMounted: (app: TNTApp) => void;
+  /** Function to run before tntjs app load*/
+  #onReady: (app: TNTApp) => void;
   /** Helper array for storing currently called `TNTApp.use*` hooks. */
   #hooksCalled: string[];
   /** Effects watched in {@link TNTApp.useEffect()} */
@@ -60,6 +62,8 @@ export class TNTApp {
   constructor() {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.#onMounted = () => { };
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    this.#onReady = () => { };
     this.#hooksCalled = [];
     this.#computedData = {};
     this.#reactiveData = {};
@@ -80,11 +84,21 @@ export class TNTApp {
     createFunctions: Record<string, any>,
     ...page_id: string[]
   ) {
-    if (!(page_id.includes(this.#pageid))) return ;
+    if (!(page_id.includes(this.#pageid))) return;
+    (typeof createFunctions.main !== "undefined") ? (() => {
+      window.onload = createFunctions.main;
+    })() : undefined;
+    (typeof createFunctions.ready !== "undefined") ? (() => {
+      this.#onReady = createFunctions.ready;
+      // run ready function before mount.
+      this.#onReady(this);
+    })() : undefined;
     (typeof createFunctions.data !== "undefined") ? this.#useData(createFunctions.data) : undefined;
     (typeof createFunctions.computed !== "undefined") ? this.#useComputed(createFunctions.computed) : undefined;
     (typeof createFunctions.effect !== "undefined") ? this.#useEffect(createFunctions.effect) : undefined;
-    (typeof createFunctions.mounted !== "undefined") ? this.#onMounted_(createFunctions.mounted) : undefined;
+    (typeof createFunctions.mounted !== "undefined") ? (() => {
+      this.#onMounted = createFunctions.mounted;
+    })() : undefined;
     (typeof createFunctions.mount !== "undefined") ? this.#mount(createFunctions.mount) : undefined;
   }
 
@@ -287,16 +301,6 @@ export class TNTApp {
     this.#hooksCalled.push("effect");
     this.#watchEffects.push(effect);
     watchEffect(effect);
-    return this;
-  }
-
-  /**
-   * Run the specified effect when application is mounted.
-   * @param effect Effect to run when application is mounted.
-   * @returns Current `TNTApp` instance.
-   */
-  #onMounted_(effect: TNTEffect) {
-    this.#onMounted = effect;
     return this;
   }
 

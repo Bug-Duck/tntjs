@@ -11,8 +11,26 @@
 <body>
   <div id="root">
     <div>
-      <v data="x"></v>
-      <button onclick="data.x += 1">plusone</button>
+      <v data="x"></v><br/>
+      <v data="bool"></v><br/>
+      <button onclick="data.x += 1">plusone</button><br/>
+      <button onclick="data.bool = !data.bool">Change boolean value true or false</button>
+      <t-if cond="bool">
+        wc
+      </t-if>
+      <t-else>
+        <t-for data="i in lib">
+          <v data="i"></v>
+        </t-for>
+      </t-else><br/>
+      <t-for data="i in lib">
+        <t-if cond="i">
+          Yes
+        </t-if>
+        <t-else>
+          No
+        </t-else>
+      </t-for>
     </div>
   </div>
 </body>

@@ -54,3 +54,10 @@ export const evaluate = (
     return e.toString();
   }
 };
+
+export const addCssText = (cssText: string, member: string) => {
+  const css = cssText.trim();
+  const lastChar = css[length - 1];
+  if (lastChar === ";") return css + member;
+  else return ";" + css + member;
+};
