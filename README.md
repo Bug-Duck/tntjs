@@ -73,7 +73,7 @@ app.page({
 ```html
 <page-id>page1</page-id>
 ```
-* Use data in the first parameter to set the initial value of the responsive variable
+* Use `data` in the first parameter to set the initial value of the responsive variable
 * The first parameter uses `mount` to specify the Element object of the scope of the tntjs application (the specified node can only have one child node)
 
 ### Now, Import it in html file
